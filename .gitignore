@@ -1,0 +1,5 @@
+.vs
+bin
+**/obj
+GamePath.props
+build/*.zip

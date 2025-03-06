@@ -1,0 +1,91 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Platform>Any CPU</Platform>
+    <AssemblyName>ModMenu</AssemblyName>
+    <Description>An in game mod menu for Peaks of Yore</Description>
+    <Version>0.1.0</Version>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <Configurations>Debug-BepInEx;Release-BepInEx;Debug-MelonLoader;Release-MelonLoader</Configurations>
+    <Configuration Condition="'$(Configuration)' == ''">Debug-BepInEx</Configuration>
+    <IntermediateOutputPath>obj/$(Configuration)</IntermediateOutputPath>
+    <OutputPath>bin/$(Configuration.ToLower())/</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug-'))">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.StartsWith('Release-'))">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.EndsWith('-BepInEx'))">
+    <DefineConstants>BEPINEX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.EndsWith('-MelonLoader'))">
+    <DefineConstants>MELONLOADER</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(Configuration.EndsWith('-BepInEx'))">
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
+    <PackageReference Include="BepInEx.Core" Version="5.*"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(Configuration.EndsWith('-MelonLoader'))">
+    <PackageReference Include="LavaGang.MelonLoader" Version="0.6.6"/>
+    <PackageReference Include="Lib.Harmony" Version="2.3.3"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UnityEngine.Modules" Version="2019.4.36" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OS)' == 'Unix'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <Import Condition="Exists('GamePath.props')" Project="GamePath.props"/>
+
+  <PropertyGroup Condition="'$(GamePath)' == ''">
+    <GamePath Condition="'$(OS)' == 'Unix'">$(HOME)/.local/share/Steam/steamapps/common/Peaks of Yore</GamePath>
+    <GamePath Condition="'$(OS)' == 'Windows_NT'">C:/Program Files (x86)/Steam/steamapps/common/Peaks of Yore</GamePath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GameLibPath>$(GamePath)/Peaks of Yore_Data/Managed</GameLibPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp.dll">
+      <HintPath>$(GameLibPath)/Assembly-CSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyPackageAssembliesToSubFolder" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths
+        Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != ''"
+        Update="$(ReferenceCopyLocalPaths)"
+        DestinationSubDirectory="libs/"/>
+    </ItemGroup>
+  </Target>
+
+  <Target
+    Name="GeneratePluginVersion"
+    BeforeTargets="BeforeCompile">
+    <WriteLinesToFile
+      File="$(IntermediateOutputPath)/PluginInfo.cs"
+      Lines="public static class PluginInfo { public const string PLUGIN_VERSION=&quot;$(Version)&quot;%3B }"
+      Overwrite="true"/>
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)/PluginInfo.cs"/>
+    </ItemGroup>
+  </Target>
+</Project>
+<!-- vim: set et sw=2 ts=2 ft=xml: -->
