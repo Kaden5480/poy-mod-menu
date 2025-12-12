@@ -1,0 +1,31 @@
+using System.Reflection;
+
+namespace ModMenu.Config {
+    /**
+     * <summary>
+     * A field which wraps around a plain value.
+     * </summary>
+     */
+    internal class PlainField : BaseField {
+        private FieldInfo info;
+        private object instance;
+
+        internal override object value {
+            get => info.GetValue(instance);
+            set => info.SetValue(instance, value);
+        }
+
+        /**
+         * <summary>
+         * Initializes a plain field.
+         * </summary>
+         * <param name="info">The field info to wrap around</param>
+         * <param name="instance">The instance to access this field with</param>
+         */
+        internal PlainField(FieldInfo info, object instance) : base(info.FieldType) {
+            this.info = info;
+            this.instance = instance;
+            name = info.Name;
+        }
+    }
+}

@@ -11,6 +11,10 @@ namespace ModMenuExamples {
          * </summary>
          */
         private void Awake() {
+            Config config = new Config(this.Config);
+
+            ModInfo info = ModManager.Register(this);
+            info.Add(config);
         }
     }
 }
