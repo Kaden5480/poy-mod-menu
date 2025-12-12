@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 
 using BepInEx;
+using ModMenu.Config;
 
 namespace ModMenu {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]
@@ -14,6 +16,26 @@ namespace ModMenu {
          */
         private void Awake() {
             instance = this;
+        }
+
+        /**
+         * <summary>
+         * Executes when the plugin has started.
+         * </summary>
+         */
+        private void Start() {
+            foreach (KeyValuePair<BaseUnityPlugin, ModInfo> entry in ModManager.mods) {
+                LogDebug($"Looking at: \"{entry.Key}\": \"{entry.Value.name}\"");
+                entry.Value.Generate();
+
+                foreach (KeyValuePair<string, List<BaseField>> category in entry.Value.config) {
+                    LogDebug($"> {category.Key}:");
+
+                    foreach (BaseField field in category.Value) {
+                        LogDebug($"  - {field.name}, {field.fieldType}, {field.value}");
+                    }
+                }
+            }
         }
 
         /**

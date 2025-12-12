@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using BepInEx;
+using BepInEx.Configuration;
+using HarmonyLib;
 
 using ModMenu.Config;
 
@@ -24,7 +27,7 @@ namespace ModMenu {
         private List<Type> configTypes = new List<Type>();
 
         // Generated config info
-        private Dictionary<string, List<BaseField>> config
+        internal Dictionary<string, List<BaseField>> config
             = new Dictionary<string, List<BaseField>>();
 
         /**
@@ -110,20 +113,107 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Generates config info from a type.
+         * Gets an attribute of type T from a given type.
          * </summary>
-         * <param name="type">The type to generate config info for</param>
+         * <param name="type">The type to get the attribute from</param>
          */
-        private void Generate(Type type) {
+        private static T GetAttr<T>(Type type) where T : Attribute {
+            return (T) Attribute.GetCustomAttribute(type, typeof(T));
         }
 
         /**
          * <summary>
-         * Generates config info from an instance.
+         * Gets an attribute of type T from a given field.
          * </summary>
-         * <param name="obj">The object to generate config info for</param>
+         * <param name="info">The field info to get attributes for</param>
          */
-        private void Generate(object obj) {
+        private static T GetAttr<T>(FieldInfo info) where T : Attribute {
+            return (T) Attribute.GetCustomAttribute(info, typeof(T));
+        }
+
+        /**
+         * <summary>
+         * Gets attributes of type T from a given field.
+         * </summary>
+         * <param name="info">The field info to get attributes for</param>
+         */
+        private static T[] GetAttrs<T>(FieldInfo info) where T : Attribute {
+            return (T[]) Attribute.GetCustomAttributes(info, typeof(T));
+        }
+
+        /**
+         * <summary>
+         * Generates config info for a given field.
+         * </summary>
+         * <param name="category">The category this field is in</param>
+         * <param name="info">This field's info</param>
+         * <param name="instance">The parent instance</param>
+         */
+        private void GenerateField(string category, FieldInfo info, object instance) {
+            BaseField field;
+            Type type = info.FieldType;
+
+            // Override category
+            CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(info);
+            if (categoryAttr != null) {
+                category = categoryAttr.name;
+            }
+
+            // Determine the kind of field wrapper to use
+            if (type.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
+                field = new BepInField((ConfigEntryBase) info.GetValue(instance));
+            }
+            else {
+                field = new PlainField(info, instance);
+            }
+
+            // Determine extra metadata
+            foreach (FieldAttribute fieldAttr in GetAttrs<FieldAttribute>(info)) {
+                if (fieldAttr.name != null) {
+                    field.name = fieldAttr.name;
+                }
+
+                if (fieldAttr.description != null) {
+                    field.description = fieldAttr.description;
+                }
+
+                if (fieldAttr.fieldType != FieldType.None) {
+                    field.fieldType = fieldAttr.fieldType;
+                }
+                else {
+                    field.GuessFieldType();
+                }
+            }
+
+            if (config.ContainsKey(category) == false) {
+                config[category] = new List<BaseField>();
+            }
+
+            config[category].Add(field);
+        }
+
+        /**
+         * <summary>
+         * Generates config info for a given type and instance.
+         * </summary>
+         * <param name="type">The type to generate config info for</param>
+         * <param name="obj">The instance to generate config info for</param>
+         */
+        private void Generate(Type type, object obj) {
+            string category = "General";
+
+            CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(type);
+            if (categoryAttr != null) {
+                category = categoryAttr.name;
+            }
+
+            foreach (FieldInfo info in AccessTools.GetDeclaredFields(type)) {
+                GenerateField(
+                    category,
+                    info,
+                    (info.IsStatic == true) ? null : obj
+                );
+            }
         }
 
         /**
@@ -133,11 +223,11 @@ namespace ModMenu {
          */
         internal void Generate() {
             foreach (Type type in configTypes) {
-                Generate(type);
+                Generate(type, null);
             }
 
             foreach (object obj in configObjects) {
-                Generate(obj);
+                Generate(obj.GetType(), obj);
             }
         }
 

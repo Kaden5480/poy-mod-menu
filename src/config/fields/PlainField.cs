@@ -8,11 +8,10 @@ namespace ModMenu.Config {
      */
     internal class PlainField : BaseField {
         private FieldInfo info;
-        private object instance;
 
         internal override object value {
-            get => info.GetValue(instance);
-            set => info.SetValue(instance, value);
+            get => info.GetValue(parentInstance);
+            set => info.SetValue(parentInstance, value);
         }
 
         /**
@@ -24,7 +23,7 @@ namespace ModMenu.Config {
          */
         internal PlainField(FieldInfo info, object instance) : base(info.FieldType) {
             this.info = info;
-            this.instance = instance;
+            parentInstance = instance;
             name = info.Name;
         }
     }

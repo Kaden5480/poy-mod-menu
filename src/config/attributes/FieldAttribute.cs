@@ -2,14 +2,18 @@ using System;
 
 namespace ModMenu.Config {
     public class FieldAttribute : Attribute {
-        private string _name;
-        private string _description;
-        private FieldType _fieldType;
+        private string _name = null;
+        private string _description = null;
+        private FieldType _fieldType = FieldType.None;
 
-        private object _min;
-        private object _max;
+        private object _min = null;
+        private object _max = null;
 
         public FieldAttribute() {}
+
+        public FieldAttribute(string name) {
+            this.name = name;
+        }
 
         public virtual string name {
             get => _name;

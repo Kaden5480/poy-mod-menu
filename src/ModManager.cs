@@ -13,7 +13,7 @@ namespace ModMenu {
         private static Logger logger = new Logger(typeof(ModManager));
 
         // Registered mods
-        private static Dictionary<BaseUnityPlugin, ModInfo> mods
+        internal static Dictionary<BaseUnityPlugin, ModInfo> mods
             = new Dictionary<BaseUnityPlugin, ModInfo>();
 
         /**

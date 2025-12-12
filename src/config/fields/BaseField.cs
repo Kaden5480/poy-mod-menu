@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+
+using UnityEngine;
 
 namespace ModMenu.Config {
     /**
@@ -10,11 +13,10 @@ namespace ModMenu.Config {
     internal abstract class BaseField {
         // Information about the parent class this
         // is stored in
-        private Type parentType       = null;
-        private object parentInstance = null;
+        protected object parentInstance = null;
 
         // The underlying type this field holds
-        private Type type;
+        internal Type type { get; private set; }
 
         // Which type of UI component should
         // be displayed for this field
@@ -34,6 +36,41 @@ namespace ModMenu.Config {
          */
         internal BaseField(Type type) {
             this.type = type;
+        }
+
+        private bool IsNumeric(Type type) {
+            return type == typeof(int)
+                || type == typeof(float)
+                || type == typeof(double);
+        }
+
+        internal void GuessFieldType() {
+            if (fieldType != FieldType.None) {
+                return;
+            }
+
+            if (type == typeof(Color)) {
+                fieldType = FieldType.Color;
+            }
+            else if (type == typeof(KeyCode)) {
+                fieldType = FieldType.KeyCode;
+            }
+            else if (type == typeof(bool)) {
+                fieldType = FieldType.Toggle;
+            }
+            else if (IsNumeric(type) == true) {
+                fieldType = FieldType.Slider;
+            }
+            else if (type == typeof(string)) {
+                fieldType = FieldType.Text;
+            }
+            else if (type == typeof(Enum)) {
+                fieldType = FieldType.Dropdown;
+            }
+
+            if (fieldType == FieldType.None) {
+                Plugin.LogError($"Unable to guess best field type for: {type}");
+            }
         }
     }
 }
