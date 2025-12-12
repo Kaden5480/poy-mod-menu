@@ -1,0 +1,8 @@
+.vs
+**/bin
+**/obj
+Config.props
+build/*.zip
+docs/.config
+docs/_site
+docs/api
