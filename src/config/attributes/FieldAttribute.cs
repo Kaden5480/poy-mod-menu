@@ -1,6 +1,7 @@
 using System;
 
 namespace ModMenu.Config {
+    [AttributeUsage(AttributeTargets.Field)]
     public class FieldAttribute : Attribute {
         private string _name = null;
         private string _description = null;
