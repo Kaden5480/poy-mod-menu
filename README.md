@@ -18,12 +18,12 @@ mod menu (made with
     - [Build configuration](#build-configuration)
 
 # Installing
-## BepInEx
+### BepInEx
 If you haven't installed BepInEx yet, follow the install instructions here:
 - [Windows](https://github.com/Kaden5480/modloader-instructions#bepinex-windows)
 - [Linux](https://github.com/Kaden5480/modloader-instructions#bepinex-linux)
 
-## UILib
+### UILib
 If you haven't installed UILib yet, follow the install instructions here:
 - [UILib](https://github.com/Kaden5480/poy-ui-lib/?tab=readme-ov-file#installing)
 
