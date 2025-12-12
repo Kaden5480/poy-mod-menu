@@ -180,9 +180,10 @@ namespace ModMenu {
                 if (fieldAttr.fieldType != FieldType.None) {
                     field.fieldType = fieldAttr.fieldType;
                 }
-                else {
-                    field.GuessFieldType();
-                }
+            }
+
+            if (field.fieldType == FieldType.None) {
+                field.GuessFieldType();
             }
 
             if (config.ContainsKey(category) == false) {
