@@ -90,6 +90,10 @@ namespace ModMenu.Parsing {
                 if (attr.max != null) {
                     field.max = attr.max;
                 }
+
+                if (attr.defaultValue != null) {
+                    field.defaultValue = attr.defaultValue;
+                }
             }
 
             // If the field type hasn't been defined
@@ -112,7 +116,10 @@ namespace ModMenu.Parsing {
 
             // Determine the kind of field wrapper to use
             if (info.FieldType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
-                field = new BepInField((ConfigEntryBase) info.GetValue(instance));
+                ConfigEntryBase entry = (ConfigEntryBase) info.GetValue(instance);
+                category = entry.Definition.Section;
+
+                field = new BepInField(entry);
             }
             else {
                 field = new PlainField(info, instance);
