@@ -102,25 +102,39 @@ namespace ModMenu.Parsing {
          * <returns>Whether this configuration is valid</returns>
          */
         internal bool Validate() {
+            bool valid = true;
+
             // Sliders must be numeric
             if (fieldType == FieldType.Slider && IsNumeric(type) == false) {
                 Plugin.LogError($"{name}: A `Slider` field must be numeric");
-                return false;
+                valid = false;
             }
 
             // Min or max requires numerics
             if ((min != null || max != null) && IsNumeric(type) == false) {
                 Plugin.LogError($"{name}: Fields with `min`/`max` must be numeric");
-                return false;
+                valid = false;
             }
 
+            // Min and max must be same as type
+            if (min != null && (min.GetType() != type)) {
+                Plugin.LogError($"{name}: `min` must be the same type as the field");
+                valid = false;
+            }
+            if (max != null && (max.GetType() != type)) {
+                Plugin.LogError($"{name}: `max` must be the same type as the field");
+                valid = false;
+            }
+
+            // Check for weird choices
             if (defaultTypes.TryGetValue(type, out FieldType compare) == true
                 && fieldType != compare
             ) {
                 Plugin.LogError($"{name}: A `{type}` field can't be a `{compare}`");
+                valid = false;
             }
 
-            return true;
+            return valid;
         }
     }
 }

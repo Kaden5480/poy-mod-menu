@@ -27,6 +27,17 @@ namespace ModMenu {
         // Generated config
         internal Dictionary<string, List<BaseField>> config;
 
+        // Generated UI
+        internal ConfigBuilder builder;
+
+        /**
+         * <summary>
+         * Invokes listeners with a <see cref="ConfigBuilder"/>
+         * when this mod's config UI is being built.
+         * </summary>
+         */
+        public BuildEvent onBuild { get; } = new BuildEvent();
+
         /**
          * <summary>
          * The name of this mod.
@@ -113,13 +124,37 @@ namespace ModMenu {
          */
         internal void Generate() {
             if (config != null) {
-                logger.LogDebug("Config has already been generated");
+                logger.LogError("Config has already been generated");
                 return;
             }
 
             config = new TypeParser(
                 configTypes, configObjects
             ).Parse();
+        }
+
+        /**
+         * <summary>
+         * Build the UI for this mod.
+         * </summary>
+         */
+        internal void Build() {
+            if (config == null) {
+                Generate();
+            }
+
+            if (builder != null) {
+                logger.LogError("UI has already been built");
+                return;
+            }
+
+            builder = new ConfigBuilder(this);
+
+            // Allow any extra customisations
+            onBuild.Invoke(builder);
+
+            // Fully build the UI
+            builder.Build();
         }
     }
 }

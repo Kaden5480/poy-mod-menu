@@ -27,7 +27,7 @@ namespace ModMenu {
         private void Start() {
             foreach (KeyValuePair<BaseUnityPlugin, ModInfo> entry in ModManager.mods) {
                 LogDebug($"Looking at: \"{entry.Key}\": \"{entry.Value.name}\"");
-                entry.Value.Generate();
+                entry.Value.Build();
 
                 foreach (KeyValuePair<string, List<BaseField>> category in entry.Value.config) {
                     LogDebug($"> {category.Key}:");
