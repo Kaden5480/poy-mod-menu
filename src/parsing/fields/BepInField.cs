@@ -1,6 +1,6 @@
 using BepInEx.Configuration;
 
-namespace ModMenu.Config {
+namespace ModMenu.Parsing {
     /**
      * <summary>
      * A field which wraps around a BepInEx ConfigEntry.

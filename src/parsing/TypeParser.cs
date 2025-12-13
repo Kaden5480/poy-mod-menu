@@ -92,8 +92,8 @@ namespace ModMenu.Parsing {
                 }
             }
 
-            // If the field type hasn't been defined yet,
-            // try guessing the best one
+            // If the field type hasn't been defined
+            // by an attribute, try guessing the best one
             if (field.fieldType == FieldType.None) {
                 field.GuessFieldType();
             }

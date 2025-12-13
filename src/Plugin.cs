@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using BepInEx;
 using ModMenu.Config;
+using ModMenu.Parsing;
 
 namespace ModMenu {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]

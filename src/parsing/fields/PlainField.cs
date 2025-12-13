@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace ModMenu.Config {
+namespace ModMenu.Parsing {
     /**
      * <summary>
      * A field which wraps around a plain value.
