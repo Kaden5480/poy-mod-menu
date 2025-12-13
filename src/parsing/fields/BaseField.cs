@@ -88,9 +88,9 @@ namespace ModMenu.Parsing {
 
             if (fieldType == FieldType.None) {
                 Plugin.LogError(
-                    $"{name}: Unable to guess best field type."
-                    + " You may want to explicitly define it "
-                    + " or you may be trying to use a type that ModMenu can't use"
+                    $"{type}({name}): Unable to guess best FieldType."
+                    + " You may want to explicitly define/exclude this field,"
+                    + " you may even be trying to use a type that ModMenu can't use."
                 );
             }
         }

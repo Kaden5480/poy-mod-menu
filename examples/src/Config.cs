@@ -13,6 +13,9 @@ namespace ModMenuExamples {
 
         internal ConfigEntry<int> myHiddenInt;
 
+        [Exclude]
+        internal ConfigFile avoid = null;
+
         internal Config(ConfigFile configFile) {
             myOpt = configFile.Bind(
                 "General", "myOption", true,
