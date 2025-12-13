@@ -44,6 +44,10 @@ namespace ModMenu.Config {
                 || type == typeof(double);
         }
 
+        internal bool Validate() {
+            return true;
+        }
+
         internal void GuessFieldType() {
             if (fieldType != FieldType.None) {
                 return;
