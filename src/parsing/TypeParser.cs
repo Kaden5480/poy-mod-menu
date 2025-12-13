@@ -148,16 +148,30 @@ namespace ModMenu.Parsing {
          * <param name="obj">The instance to generate config info for</param>
          */
         private void Parse(Type type, object obj) {
-            // If a CategoryAttribute doesn't exist, just default to "General"
-            string category = "General";
+            // If a CategoryAttribute doesn't exist, just default to the name of the type
+            string category = type.Name;
 
             CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(type);
             if (categoryAttr != null) {
                 category = categoryAttr.name;
             }
 
+            IncludeAllAttribute includeAll = GetAttr<IncludeAllAttribute>(type);
+
             // Iterate over all fields declared under this type and parse them
             foreach (FieldInfo info in AccessTools.GetDeclaredFields(type)) {
+                // Check if this even has a field attribute
+                if (includeAll == null
+                    && GetAttr<FieldAttribute>(info) == null
+                ) {
+                    continue;
+                }
+
+                // Check if this field has an exclude attribute
+                if (GetAttr<ExcludeAttribute>(info) != null) {
+                    continue;
+                }
+
                 ParseField(
                     category, info,
                     (info.IsStatic == true) ? null : obj
