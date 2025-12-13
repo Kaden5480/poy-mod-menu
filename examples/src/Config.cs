@@ -3,13 +3,15 @@ using ModMenu.Config;
 
 namespace ModMenuExamples {
     [Category("Custom Category")]
+    [IncludeAll]
     internal class Config {
         [Category("Another category override")]
         [Field("My Option", fieldType=FieldType.Toggle)]
         internal ConfigEntry<bool> myOpt;
 
-        [Field]
         internal ConfigEntry<float> myFl;
+
+        internal ConfigEntry<int> myHiddenInt;
 
         internal Config(ConfigFile configFile) {
             myOpt = configFile.Bind(
@@ -19,6 +21,10 @@ namespace ModMenuExamples {
             myFl = configFile.Bind(
                 "Cool Category", "myFloat", 0f,
                 "A random float"
+            );
+            myHiddenInt = configFile.Bind(
+                "General", "hidden", 123,
+                "A hidden int"
             );
         }
     }

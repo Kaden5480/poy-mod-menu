@@ -15,6 +15,7 @@ namespace ModMenuExamples {
 
             ModInfo info = ModManager.Register(this);
             info.Add(config);
+            info.Add(typeof(StaticConfig));
         }
     }
 }
