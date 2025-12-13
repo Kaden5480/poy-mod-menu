@@ -16,6 +16,7 @@ namespace ModMenu.Config {
         private FieldType _fieldType = FieldType.None;
         private object _min = null;
         private object _max = null;
+        private object _defaultValue = null;
 
         /**
          * <summary>
@@ -89,6 +90,16 @@ namespace ModMenu.Config {
         public virtual object max {
             get => _max;
             set => _max = value;
+        }
+
+        /**
+         * <summary>
+         * The default value.
+         * </summary>
+         */
+        public virtual object defaultValue {
+            get => _defaultValue;
+            set => _defaultValue = value;
         }
     }
 }
