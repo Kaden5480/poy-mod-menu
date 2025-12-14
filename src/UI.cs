@@ -17,7 +17,8 @@ namespace ModMenu {
         private bool builtModList = false;
 
         private Overlay overlay;
-        private ScrollView modList;
+        private ScrollView scrollView;
+        private Area modList;
 
         /**
          * <summary>
@@ -50,15 +51,19 @@ namespace ModMenu {
             topBar.Add(topBarTitle);
 
             // Mod list
-            modList = new ScrollView();
+            scrollView = new ScrollView();
+            scrollView.SetFill(FillType.All);
+            // Leave room for topbar
+            scrollView.SetSize(0f, -100f);
+            scrollView.SetOffset(0, -50f);
+            overlay.Add(scrollView);
+
+            modList = new Area();
+            modList.SetAnchor(AnchorType.TopMiddle);
             modList.SetContentLayout(LayoutType.Vertical);
             modList.SetContentPadding(20, 20, 60, 60);
             modList.SetElementSpacing(20);
-            modList.SetFill(FillType.All);
-            // Leave room for topbar
-            modList.SetSize(0f, -100f);
-            modList.SetOffset(0, -50f);
-            overlay.Add(modList);
+            scrollView.Add(modList);
 
             Label modTitle = new Label("Installed Mods", 45);
             modTitle.SetSize(400f, 40f);
@@ -81,7 +86,7 @@ namespace ModMenu {
             }
 
             overlay.Show();
-            modList.ScrollToTop();
+            scrollView.ScrollToTop();
         }
 
         /**
