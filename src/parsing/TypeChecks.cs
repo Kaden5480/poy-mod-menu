@@ -39,6 +39,12 @@ namespace ModMenu.Parsing {
             object[] args = new[] { str, null };
             result = null;
 
+            // string types don't need parsing
+            if (type == typeof(string)) {
+                result = str;
+                return true;
+            }
+
             MethodInfo info = AccessTools.Method(
                 type, "TryParse",
                 new[] { typeof(string), type.MakeByRefType() }

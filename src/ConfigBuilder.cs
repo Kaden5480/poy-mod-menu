@@ -139,13 +139,26 @@ namespace ModMenu {
             TextField textField = new TextField(field.value.ToString(), 20);
             textField.SetSize(200f, 40f);
             textField.SetPredicate((string value) => {
-                if (TypeChecks.TryParse(field.type, value,
-                    out object result
-                ) == true) {
+                // Try parsing the value
+                if (TypeChecks.TryParse(
+                    field.type, value, out object result
+                ) == false) {
+                    return false;
+                }
+
+                // If no min/max defined, no more validation is needed
+                if (field.min == null || field.max == null) {
                     field.SetValue(result);
                     return true;
                 }
-                return false;
+
+                // Otherwise validate min and max
+                if (TypeChecks.InLimits(result, field.min, field.max) == false) {
+                    return false;
+                }
+
+                field.SetValue(result);
+                return true;
             });
 
             return textField;
