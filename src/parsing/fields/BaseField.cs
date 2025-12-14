@@ -129,6 +129,19 @@ namespace ModMenu.Parsing {
                 valid = false;
             }
 
+            // Min/max are only valid on some fields
+            if (min != null || max != null) {
+                switch (fieldType) {
+                    case FieldType.Slider:
+                    case FieldType.Text:
+                        break;
+                    default:
+                        Plugin.LogError($"{name}: min/max can't be applied to `{fieldType}`");
+                        valid = false;
+                        break;
+                }
+            }
+
             // Min or max requires numerics
             if ((min != null || max != null) && TypeChecks.IsNumeric(type) == false) {
                 Plugin.LogError($"{name}: Fields with `min`/`max` must be numeric");
