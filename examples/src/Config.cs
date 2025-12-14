@@ -6,7 +6,7 @@ namespace ModMenuExamples {
     [IncludeAll]
     internal class Config {
         [Category("Another category override")]
-        [Field("My Option", fieldType=FieldType.Toggle)]
+        [Field("My Option", FieldType.Toggle)]
         internal ConfigEntry<bool> myOpt;
 
         internal ConfigEntry<float> myFl;
