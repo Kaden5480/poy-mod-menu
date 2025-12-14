@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 
 using BepInEx;
+using UILib;
+using UILib.Patches;
+
 using ModMenu.Config;
 using ModMenu.Parsing;
 
@@ -9,6 +12,7 @@ namespace ModMenu {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin {
         private static Plugin instance;
+        internal static UI ui { get; private set; }
 
         /**
          * <summary>
@@ -17,6 +21,14 @@ namespace ModMenu {
          */
         private void Awake() {
             instance = this;
+
+            UIRoot.onInit.AddListener(() => {
+                ui = new UI();
+            });
+
+            SceneLoads.onLoad.AddListener(
+                Patches.MenuButtons.Inject
+            );
         }
 
         /**
