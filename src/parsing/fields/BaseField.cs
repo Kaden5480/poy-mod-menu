@@ -89,22 +89,6 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
-         * Checks if the provided type is
-         * numeric.
-         * </summary>
-         */
-        private bool IsNumeric(Type type) {
-            return type == typeof(byte)
-                || type == typeof(sbyte)
-                || type == typeof(char)
-                || type == typeof(int)
-                || type == typeof(long)
-                || type == typeof(float)
-                || type == typeof(double);
-        }
-
-        /**
-         * <summary>
          * Guesses the most likely field type for
          * the underlying type.
          * </summary>
@@ -114,7 +98,7 @@ namespace ModMenu.Parsing {
                 return;
             }
 
-            if (IsNumeric(type) == true) {
+            if (TypeChecks.IsNumeric(type) == true) {
                 fieldType = FieldType.Text;
             }
             else if (defaultTypes.TryGetValue(type, out FieldType newType) == true) {
@@ -140,13 +124,13 @@ namespace ModMenu.Parsing {
             bool valid = true;
 
             // Sliders must be numeric
-            if (fieldType == FieldType.Slider && IsNumeric(type) == false) {
+            if (fieldType == FieldType.Slider && TypeChecks.IsNumeric(type) == false) {
                 Plugin.LogError($"{name}: A `Slider` field must be numeric");
                 valid = false;
             }
 
             // Min or max requires numerics
-            if ((min != null || max != null) && IsNumeric(type) == false) {
+            if ((min != null || max != null) && TypeChecks.IsNumeric(type) == false) {
                 Plugin.LogError($"{name}: Fields with `min`/`max` must be numeric");
                 valid = false;
             }
