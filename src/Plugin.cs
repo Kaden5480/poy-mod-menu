@@ -33,26 +33,6 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Executes when the plugin has started.
-         * </summary>
-         */
-        private void Start() {
-            foreach (KeyValuePair<BaseUnityPlugin, ModInfo> entry in ModManager.mods) {
-                LogDebug($"Looking at: \"{entry.Key}\": \"{entry.Value.name}\"");
-                entry.Value.Build();
-
-                foreach (KeyValuePair<string, List<BaseField>> category in entry.Value.config) {
-                    LogDebug($"> {category.Key}:");
-
-                    foreach (BaseField field in category.Value) {
-                        LogDebug($"  - {field.name}, {field.fieldType}, {field.value}");
-                    }
-                }
-            }
-        }
-
-        /**
-         * <summary>
          * Logs a debug message.
          * </summary>
          * <param name="message">The message to log</param>

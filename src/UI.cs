@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+
+using BepInEx;
 using UILib;
 using UILib.Components;
 using UILib.Layouts;
@@ -7,7 +10,11 @@ using UIButton = UILib.Components.Button;
 
 namespace ModMenu {
     internal class UI {
+        private static UI instance;
+
         private Logger logger = new Logger(typeof(UI));
+
+        private bool builtModList = false;
 
         private Overlay overlay;
         private ScrollView modList;
@@ -18,6 +25,8 @@ namespace ModMenu {
          * </summary>
          */
         internal UI() {
+            instance = this;
+
             Theme theme = new Theme();
 
             overlay = new Overlay(0f, 0f);
@@ -28,8 +37,7 @@ namespace ModMenu {
             background.SetFill(FillType.All);
             overlay.Add(background);
 
-#region Top Bar
-
+            // Top bar
             Image topBar = new Image(theme.accent);
             topBar.SetAnchor(AnchorType.TopMiddle);
             topBar.SetFill(FillType.Horizontal);
@@ -41,10 +49,7 @@ namespace ModMenu {
             topBarTitle.SetSize(300f, 0f);
             topBar.Add(topBarTitle);
 
-#endregion
-
-#region Main Content
-
+            // Mod list
             modList = new ScrollView();
             modList.SetContentLayout(LayoutType.Vertical);
             modList.SetContentPadding(20, 20, 60, 60);
@@ -62,35 +67,37 @@ namespace ModMenu {
             Area space = new Area();
             space.SetSize(0f, 20f);
             modList.Add(space);
+        }
 
-#endregion
+        /**
+         * <summary>
+         * Shows the UI.
+         * </summary>
+         */
+        internal void Show() {
+            if (builtModList == false) {
+                BuildModList();
+                builtModList = true;
+            }
 
-#region Mod Listing
+            overlay.Show();
+            modList.ScrollToTop();
+        }
 
-            string[] modNames = new[] {
-                "Bag With Friends",
-                "Colorblind Holds",
-                "Fast Coffee",
-                "Fast Reset",
-                "In Game Logs",
-                "Mod Menu",
-                "PeakSweeper",
-                "Potato Mod",
-                "Time Attack Resetter",
-                "Tweaks of Yore",
-                "UILib",
-                "Unity Logger",
-                "Velocity HUD",
-                "Workshop ID Editor",
-            };
+        /**
+         * <summary>
+         * Builds the mod list view.
+         * </summary>
+         */
+        internal void BuildModList() {
+            foreach (KeyValuePair<BaseUnityPlugin, ModInfo> entry in ModManager.mods) {
+                ModInfo modInfo = entry.Value;
 
-            foreach (string name in modNames) {
                 Area listing = new Area();
                 listing.SetContentLayout(LayoutType.Horizontal);
                 listing.SetSize(800f, 40f);
-                modList.Add(listing);
 
-                Label modName = new Label(name, 25);
+                Label modName = new Label(modInfo.name, 25);
                 modName.SetSize(350f, 40f);
                 listing.Add(modName);
 
@@ -98,18 +105,15 @@ namespace ModMenu {
                 buttonArea.SetSize(350f, 40f);
                 listing.Add(buttonArea);
 
-                UIButton modConfig = new UIButton("Edit", 25);
-                modConfig.SetSize(150f, 40f);
-                buttonArea.Add(modConfig);
+                UIButton editButton = new UIButton("Edit", 25);
+                editButton.SetSize(150f, 40f);
+                editButton.onClick.AddListener(() => {
+                    modInfo.Build();
+                });
+                buttonArea.Add(editButton);
+
+                modList.Add(listing);
             }
-
-#endregion
-
-        }
-
-        internal void Show() {
-            overlay.Show();
-            modList.ScrollToTop();
         }
     }
 }

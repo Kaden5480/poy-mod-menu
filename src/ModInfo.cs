@@ -144,7 +144,6 @@ namespace ModMenu {
             }
 
             if (builder != null) {
-                logger.LogError("UI has already been built");
                 return;
             }
 
