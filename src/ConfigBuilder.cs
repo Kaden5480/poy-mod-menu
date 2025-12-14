@@ -38,6 +38,7 @@ namespace ModMenu {
             Start();
         }
 
+
 #region Building Specific Types
 
         /**
@@ -51,7 +52,7 @@ namespace ModMenu {
             Toggle toggle = new Toggle((bool) field.value);
             toggle.SetSize(40f, 40f);
             toggle.onValueChanged.AddListener((bool value) => {
-                field.value = value;
+                field.SetValue(value);
             });
 
             return toggle;
@@ -68,7 +69,7 @@ namespace ModMenu {
             ColorField colorField = new ColorField((Color) field.value);
             colorField.SetSize(40f, 40f);
             colorField.onValueChanged.AddListener((Color color) => {
-                field.value = color;
+                field.SetValue(color);
             });
 
             return colorField;
@@ -87,7 +88,7 @@ namespace ModMenu {
             );
             keyCodeField.SetSize(200f, 40f);
             keyCodeField.onValueChanged.AddListener((KeyCode keyCode) => {
-                field.value = keyCode;
+                field.SetValue(keyCode);
             });
 
             return keyCodeField;
@@ -104,7 +105,7 @@ namespace ModMenu {
             Slider slider = new Slider((float) field.min, (float) field.max);
             slider.SetSize(200f, 10f);
             slider.onValueChanged.AddListener((float value) => {
-                field.value = value;
+                field.SetValue(value);
             });
 
             return slider;
@@ -127,6 +128,29 @@ namespace ModMenu {
             return label;
         }
 
+        /**
+         * <summary>
+         * Builds a `TextField` component.
+         * </summary>
+         * <param name="field">The field to build for</param>
+         * <returns>The component</returns>
+         */
+        private TextField BuildText(BaseField field) {
+            TextField textField = new TextField(field.value.ToString(), 20);
+            textField.SetSize(200f, 40f);
+            textField.SetPredicate((string value) => {
+                if (TypeChecks.TryParse(field.type, value,
+                    out object result
+                ) == true) {
+                    field.SetValue(result);
+                    return true;
+                }
+                return false;
+            });
+
+            return textField;
+        }
+
 #endregion
 
 #region Main Building Logic
@@ -139,7 +163,6 @@ namespace ModMenu {
          * <returns>The component</returns>
          */
         private UIComponent BuildComponent(BaseField field) {
-            // TODO: TextFields need a lot of verification
             // TODO: Dropdowns can have custom display names
 
             switch (field.fieldType) {
@@ -151,8 +174,8 @@ namespace ModMenu {
                     return BuildKeyCode(field);
                 case FieldType.Slider:
                     return BuildSlider(field);
-                //case FieldType.Text:
-                //    return BuildText(field);
+                case FieldType.Text:
+                    return BuildText(field);
                 //case FieldType.Dropdown:
                 //    return BuildDropdown(field);
                 case FieldType.ReadOnly:

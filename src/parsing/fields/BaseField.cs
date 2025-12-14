@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 using ModMenu.Config;
 
@@ -32,6 +33,9 @@ namespace ModMenu.Parsing {
 
         internal abstract object value { get; set; }
 
+        internal ValueEvent<object> onValueChanged { get; }
+            = new ValueEvent<object>();
+
         // Types which are correct
         private static Dictionary<Type, FieldType> defaultTypes
             = new Dictionary<Type, FieldType>() {
@@ -50,6 +54,37 @@ namespace ModMenu.Parsing {
          */
         internal BaseField(Type type) {
             this.type = type;
+        }
+
+        /**
+         * <summary>
+         * Invokes `onValueChanged` with the current value.
+         * </summary>
+         */
+        internal void Update() {
+            onValueChanged.Invoke(value);
+        }
+
+        /**
+         * <summary>
+         * Sets the value of this field, also
+         * invoking `onValueChanged`.
+         * </summary>
+         * <param name="value">The value to set this field to</param>
+         */
+        internal void SetValue(object value) {
+            this.value = value;
+            Update();
+        }
+
+        /**
+         * <summary>
+         * Restores the default value of this field,
+         * also invoking `onValueChanged`.
+         * </summary>
+         */
+        internal void Restore() {
+            SetValue(defaultValue);
         }
 
         /**

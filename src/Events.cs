@@ -8,4 +8,11 @@ namespace ModMenu {
      * </summary>
      */
     public class BuildEvent : UnityEvent<ConfigBuilder> {}
+
+    /**
+     * <summary>
+     * An event which passes a value to listeners.
+     * </summary>
+     */
+    public class ValueEvent<T> : UnityEvent<T> {}
 }
