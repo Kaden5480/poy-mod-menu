@@ -1,17 +1,19 @@
 using System;
+using System.Reflection;
+
+using HarmonyLib;
 
 namespace ModMenu.Parsing {
     /**
      * <summary>
-     * A painful class with some code I really don't like,
-     * but I couldn't think of anything better in the moment.
+     * A class for validating some information about
+     * certain types.
      * </summary>
      */
     internal static class TypeChecks {
         /**
          * <summary>
-         * Checks if the provided type is
-         * numeric.
+         * Checks if the provided type is numeric.
          * </summary>
          */
         internal static bool IsNumeric(Type type) {
@@ -26,7 +28,7 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
-         * Validates numeric types from strings.
+         * Parses numeric types from strings.
          * </summary>
          * <param name="type">The type to validate for</param>
          * <param name="str">The string to validate</param>
@@ -34,48 +36,47 @@ namespace ModMenu.Parsing {
          * <returns>Whether the string parsed successfully</returns>
          */
         internal static bool TryParse(Type type, string str, out object result) {
-            bool valid = false;
+            object[] args = new[] { str, null };
+            result = null;
 
-            if (type == typeof(byte)) {
-                byte res;
-                valid = byte.TryParse(str, out res);
-                result = (object) res;
-            }
-            else if (type == typeof(sbyte)) {
-                sbyte res;
-                valid = sbyte.TryParse(str, out res);
-                result = (object) res;
-            }
-            else if (type == typeof(char)) {
-                char res;
-                valid = char.TryParse(str, out res);
-                result = (object) res;
-            }
-            else if (type == typeof(int)) {
-                int res;
-                valid = int.TryParse(str, out res);
-                result = (object) res;
-            }
-            else if (type == typeof(long)) {
-                long res;
-                valid = long.TryParse(str, out res);
-                result = (object) res;
-            }
-            else if (type == typeof(float)) {
-                float res;
-                valid = float.TryParse(str, out res);
-                result = (object) res;
-            }
-            else if (type == typeof(double)) {
-                double res;
-                valid = double.TryParse(str, out res);
-                result = (object) res;
-            }
-            else {
-                result = null;
+            MethodInfo info = AccessTools.Method(
+                type, "TryParse",
+                new[] { typeof(string), type.MakeByRefType() }
+            );
+
+            if (info == null) {
+                return false;
             }
 
-            return valid;
+            if ((bool) info.Invoke(null, args) == true) {
+                result = args[1];
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * <summary>
+         * Checks a value is within the provided limits
+         * </summary>
+         * <param name="value">The value to check</param>
+         * <param name="min">The minimum value</param>
+         * <param name="max">The maximum value</param>
+         * <returns>Whether the value is within the provided limits</returns>
+         */
+        internal static bool InLimits(object value, object min, object max) {
+            MethodInfo info = AccessTools.Method(
+                value.GetType(), "CompareTo",
+                new[] { typeof(string), value.GetType().MakeByRefType() }
+            );
+
+            if (info == null) {
+                return false;
+            }
+
+            return ((int) info.Invoke(value, new[] { max })) <= 0
+                && ((int) info.Invoke(min, new[] { value })) <= 0;
         }
     }
 }
