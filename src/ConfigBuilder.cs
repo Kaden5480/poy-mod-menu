@@ -19,12 +19,16 @@ namespace ModMenu {
         private Logger logger = new Logger(typeof(ConfigBuilder));
         private ModInfo modInfo;
 
+        // The root of the generated UI
+        internal Area root;
+
         // Categorised UI components which will be
         // placed under their `string` categories in the UI
         private Dictionary<string, List<UIComponent>> categories;
 
-        // The root of the generated UI
-        internal Area root;
+        // The header and footer
+        private UIComponent header;
+        private UIComponent footer;
 
         /**
          * <summary>
@@ -326,6 +330,28 @@ namespace ModMenu {
 
         /**
          * <summary>
+         * Sets the header.
+         * This will be placed above all categories, including the title of the mod.
+         * </summary>
+         * <param name="header">The header to use</param>
+         */
+        public void SetHeader(UIComponent header) {
+            this.header = header;
+        }
+
+        /**
+         * <summary>
+         * Sets the footer.
+         * This will be placed at the very bottom of the config, below all categories.
+         * </summary>
+         * <param name="footer">The footer to use</param>
+         */
+        public void SetFooter(UIComponent footer) {
+            this.footer = footer;
+        }
+
+        /**
+         * <summary>
          * Completes building the UI.
          * </summary>
          */
@@ -336,6 +362,10 @@ namespace ModMenu {
             root.SetContentLayout(LayoutType.Vertical);
             root.SetContentPadding(top: 40, bottom: 40);
             root.SetElementSpacing(40);
+
+            if (header != null) {
+                root.Add(header);
+            }
 
             // TODO: Alphabetical order
             // Build all the categories
@@ -354,6 +384,10 @@ namespace ModMenu {
                 }
 
                 root.Add(area);
+            }
+
+            if (footer != null) {
+                root.Add(footer);
             }
         }
 
