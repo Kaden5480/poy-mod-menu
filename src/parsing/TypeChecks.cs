@@ -94,8 +94,15 @@ namespace ModMenu.Parsing {
                 return false;
             }
 
-            return ((int) info.Invoke(value, new[] { max })) <= 0
-                && ((int) info.Invoke(min, new[] { value })) <= 0;
+            if (max != null && (int) info.Invoke(value, new[] { max }) > 0) {
+                return false;
+            }
+
+            if (min != null && (int) info.Invoke(min, new[] { value }) > 0) {
+                return false;
+            }
+
+            return true;
         }
 
         /**

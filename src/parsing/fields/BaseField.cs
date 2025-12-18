@@ -129,6 +129,12 @@ namespace ModMenu.Parsing {
                 valid = false;
             }
 
+            // Sliders require both limits
+            if (fieldType == FieldType.Slider && (min == null || max == null)) {
+                Plugin.LogError($"{name}: A `Slider` field requires both `min` and `max` to be defined");
+                valid = false;
+            }
+
             // Min/max are only valid on some fields
             if (min != null || max != null) {
                 switch (fieldType) {

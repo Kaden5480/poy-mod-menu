@@ -40,6 +40,31 @@ namespace ModMenu {
         }
 
 
+        /**
+         * <summary>
+         * Creates an error message for invalid values.
+         * </summary>
+         * <param name="field">The field to generate errors for</param>
+         * <returns>The string error</returns>
+         */
+        private string ShowInputError(BaseField field) {
+            string error = $"Expected a {TypeChecks.TypeToString(field.type).ToLower()}";
+
+            if (field.min != null && field.max != null) {
+                return $"{error} between {field.min} and {field.max}";
+            }
+
+            if (field.min != null) {
+                return $"{error} that's at least {field.min}";
+            }
+
+            if (field.max != null) {
+                return $"{error} that's at least {field.max}";
+            }
+
+            return error;
+        }
+
 #region Building Specific Types
 
         /**
@@ -174,26 +199,19 @@ namespace ModMenu {
                 if (TypeChecks.TryParse(
                     field.type, value, out object result
                 ) == false) {
-                    Notifier.Notify(
-                        "Mod Menu",
-                        $"Expected a {TypeChecks.TypeToString(field.type).ToLower()}"
-                    );
+                    Notifier.Notify("Mod Menu", ShowInputError(field));
                     return false;
                 }
 
                 // If no min/max defined, no more validation is needed
-                if (field.min == null || field.max == null) {
+                if (field.min == null && field.max == null) {
                     field.SetValue(result);
                     return true;
                 }
 
                 // Otherwise validate min and max
                 if (TypeChecks.InLimits(result, field.min, field.max) == false) {
-                    Notifier.Notify(
-                        "Mod Menu",
-                        $"Expected a {TypeChecks.TypeToString(field.type).ToLower()}"
-                        + $" between {field.min} and {field.max}"
-                    );
+                    Notifier.Notify("Mod Menu", ShowInputError(field));
                     return false;
                 }
 
