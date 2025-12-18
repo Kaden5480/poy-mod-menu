@@ -27,14 +27,14 @@ namespace ModMenuExamples {
                 //font               = arial,
                 //fontAlt            = arial,
                 //fontLineSpacing    = 1f,
-                background         = Colors.HSL(120, 10, 10),
-                foreground         = Colors.HSL(120, 100, 90),
-                accent             = Colors.HSL(120, 10, 15),
-                accentAlt          = Colors.HSL(120, 10, 20),
-                selectNormal       = Colors.HSL(120, 20, 20),
-                selectHighlight    = Colors.HSL(120, 20, 30),
-                selectAltNormal    = Colors.HSL(120, 30, 20),
-                selectAltHighlight = Colors.HSL(120, 30, 30),
+                background         = Colors.HSL(240, 10, 10),
+                foreground         = Colors.HSL(240, 100, 90),
+                accent             = Colors.HSL(240, 10, 15),
+                accentAlt          = Colors.HSL(240, 10, 20),
+                selectNormal       = Colors.HSL(240, 20, 40),
+                selectHighlight    = Colors.HSL(240, 20, 50),
+                selectAltNormal    = Colors.HSL(240, 30, 60),
+                selectAltHighlight = Colors.HSL(240, 30, 70),
             };
 
             ModInfo info = ModManager.Register(this);
