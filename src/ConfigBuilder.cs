@@ -316,15 +316,18 @@ namespace ModMenu {
             root.gameObject.name = $"{modInfo.name} Root";
             root.SetAnchor(AnchorType.TopMiddle);
             root.SetContentLayout(LayoutType.Vertical);
+            root.SetContentPadding(top: 40, bottom: 40);
+            root.SetElementSpacing(40);
 
             // TODO: Alphabetical order
             // Build all the categories
             foreach (KeyValuePair<string, List<UIComponent>> entry in categories) {
                 Area area = new Area();
                 area.SetContentLayout(LayoutType.Vertical);
+                area.SetElementSpacing(10);
                 area.SetFill(FillType.All);
 
-                Label title = new Label(entry.Key, 50);
+                Label title = new Label(entry.Key, 30);
                 title.SetSize(600f, 50f);
                 area.Add(title);
 
