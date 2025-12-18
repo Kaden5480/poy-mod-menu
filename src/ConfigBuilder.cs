@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UILib;
 using UILib.Components;
 using UILib.Layouts;
+using UILib.Notifications;
 using UnityEngine;
 
 using ModMenu.Config;
@@ -55,6 +56,10 @@ namespace ModMenu {
                 field.SetValue(value);
             });
 
+            field.onValueChanged.AddListener((object value) => {
+                toggle.SetValue((bool) value);
+            });
+
             return toggle;
         }
 
@@ -70,6 +75,10 @@ namespace ModMenu {
             colorField.SetSize(40f, 40f);
             colorField.onValueChanged.AddListener((Color color) => {
                 field.SetValue(color);
+            });
+
+            field.onValueChanged.AddListener((object color) => {
+                colorField.SetValue((Color) color);
             });
 
             return colorField;
@@ -91,6 +100,10 @@ namespace ModMenu {
                 field.SetValue(keyCode);
             });
 
+            field.onValueChanged.AddListener((object keyCode) => {
+                keyCodeField.SetValue((KeyCode) keyCode);
+            });
+
             return keyCodeField;
         }
 
@@ -101,14 +114,28 @@ namespace ModMenu {
          * <param name="field">The field to build for</param>
          * <returns>The component</returns>
          */
-        private Slider BuildSlider(BaseField field) {
+        private Area BuildSlider(BaseField field) {
+            Area area = new Area();
+            area.SetContentLayout(LayoutType.Horizontal);
+            area.SetElementSpacing(10);
+            area.SetSize(200f, 30f);
+
             Slider slider = new Slider((float) field.min, (float) field.max);
-            slider.SetSize(200f, 10f);
+            slider.SetSize(200f*0.6f, 10f);
             slider.onValueChanged.AddListener((float value) => {
                 field.SetValue(value);
             });
 
-            return slider;
+            field.onValueChanged.AddListener((object value) => {
+                slider.SetValue((float) value);
+            });
+            area.Add(slider);
+
+            TextField textField = BuildText(field);
+            textField.SetSize(200f*0.3f, 30f);
+            area.Add(textField);
+
+            return area;
         }
 
         /**
@@ -119,11 +146,12 @@ namespace ModMenu {
          * <returns>The component</returns>
          */
         private Label BuildReadOnly(BaseField field) {
-            string display = (field.value == null)
-                ? "" : field.value.ToString();
-
-            Label label = new Label(display, 20);
+            Label label = new Label(field.ToString(), 20);
             label.SetSize(200f, 40f);
+
+            field.onValueChanged.AddListener((object value) => {
+                label.SetText(field.ToString());
+            });
 
             return label;
         }
@@ -136,13 +164,20 @@ namespace ModMenu {
          * <returns>The component</returns>
          */
         private TextField BuildText(BaseField field) {
-            TextField textField = new TextField(field.value.ToString(), 20);
+            TextField textField = new TextField(
+                TypeChecks.TypeToString(field.type), 20
+            );
+            textField.SetValue(field.ToString());
             textField.SetSize(200f, 40f);
             textField.SetPredicate((string value) => {
                 // Try parsing the value
                 if (TypeChecks.TryParse(
                     field.type, value, out object result
                 ) == false) {
+                    Notifier.Notify(
+                        "Mod Menu",
+                        $"Expected a {TypeChecks.TypeToString(field.type).ToLower()}"
+                    );
                     return false;
                 }
 
@@ -154,11 +189,20 @@ namespace ModMenu {
 
                 // Otherwise validate min and max
                 if (TypeChecks.InLimits(result, field.min, field.max) == false) {
+                    Notifier.Notify(
+                        "Mod Menu",
+                        $"Expected a {TypeChecks.TypeToString(field.type).ToLower()}"
+                        + $" between {field.min} and {field.max}"
+                    );
                     return false;
                 }
 
                 field.SetValue(result);
                 return true;
+            });
+
+            field.onValueChanged.AddListener((object value) => {
+                textField.SetValue(field.ToString());
             });
 
             return textField;

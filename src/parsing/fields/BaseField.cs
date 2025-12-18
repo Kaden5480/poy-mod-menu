@@ -168,5 +168,31 @@ namespace ModMenu.Parsing {
 
             return valid;
         }
+
+        /**
+         * <summary>
+         * Converts this field's value to a string.
+         * </summary>
+         * <returns>This field's current value as a string</returns>
+         */
+        public override string ToString() {
+            if (value == null) {
+                return "";
+            }
+
+            if (TypeChecks.IsInteger(type) == true) {
+                return value.ToString();
+            }
+
+            if (type == typeof(float)) {
+                return ((float) value).ToString("0.00");
+            }
+
+            if (type == typeof(double)) {
+                return ((double) value).ToString("0.00");
+            }
+
+            return value.ToString();
+        }
     }
 }

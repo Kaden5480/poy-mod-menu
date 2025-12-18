@@ -13,15 +13,28 @@ namespace ModMenu.Parsing {
     internal static class TypeChecks {
         /**
          * <summary>
-         * Checks if the provided type is numeric.
+         * Checks if the provided type is a whole number type.
          * </summary>
+         * <param name="type">The type to check</param>
+         * <returns>Whether the type is a whole number</returns>
          */
-        internal static bool IsNumeric(Type type) {
+        internal static bool IsInteger(Type type) {
             return type == typeof(byte)
                 || type == typeof(sbyte)
                 || type == typeof(char)
                 || type == typeof(int)
-                || type == typeof(long)
+                || type == typeof(long);
+        }
+
+        /**
+         * <summary>
+         * Checks if the provided type is numeric.
+         * </summary>
+         * <param name="type">The type to check</param>
+         * <returns>Whether the type is numeric</returns>
+         */
+        internal static bool IsNumeric(Type type) {
+            return IsInteger(type) == true
                 || type == typeof(float)
                 || type == typeof(double);
         }
@@ -74,7 +87,7 @@ namespace ModMenu.Parsing {
         internal static bool InLimits(object value, object min, object max) {
             MethodInfo info = AccessTools.Method(
                 value.GetType(), "CompareTo",
-                new[] { typeof(string), value.GetType().MakeByRefType() }
+                new[] { value.GetType().MakeByRefType() }
             );
 
             if (info == null) {
@@ -83,6 +96,29 @@ namespace ModMenu.Parsing {
 
             return ((int) info.Invoke(value, new[] { max })) <= 0
                 && ((int) info.Invoke(min, new[] { value })) <= 0;
+        }
+
+        /**
+         * <summary>
+         * Returns a more user friendly string representation of a type.
+         * </summary>
+         * <param name="type">The type to get a string for</param>
+         * <returns>The string representation</returns>
+         */
+        internal static string TypeToString(Type type) {
+            if (IsInteger(type) == true) {
+                return "Whole Number";
+            }
+
+            if (IsNumeric(type) == true) {
+                return "Number";
+            }
+
+            if (type == typeof(string)) {
+                return "Text";
+            }
+
+            return type.ToString();
         }
     }
 }
