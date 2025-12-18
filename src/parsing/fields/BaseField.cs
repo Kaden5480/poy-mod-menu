@@ -168,7 +168,7 @@ namespace ModMenu.Parsing {
             if (defaultTypes.TryGetValue(type, out FieldType compare) == true
                 && fieldType != compare
             ) {
-                Plugin.LogError($"{name}: A `{type}` field can't be a `{compare}`");
+                Plugin.LogError($"{name}: A `{type}` field can't be a `{fieldType}`");
                 valid = false;
             }
 

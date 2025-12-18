@@ -129,6 +129,7 @@ namespace ModMenu {
             }
 
             currentView = view;
+            scrollView.SetContent(currentView.root);
             SetTheme(currentView.modInfo.theme);
             currentView.Show();
         }

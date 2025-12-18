@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using BepInEx;
 using UILib;
 using UILib.Patches;
+using UnityEngine;
 
 using ModMenu.Config;
 using ModMenu.Parsing;
@@ -29,6 +31,33 @@ namespace ModMenu {
             SceneLoads.onLoad.AddListener(
                 Patches.MenuButtons.Inject
             );
+        }
+
+        /**
+         * <summary>
+         * Executes when the plugin has started.
+         * </summary>
+         */
+        private void Start() {
+            // Register mods which haven't registered themselves
+            foreach (BaseUnityPlugin mod in GameObject.FindObjectsOfType<BaseUnityPlugin>()) {
+                if (ModManager.mods.ContainsKey(mod) == true) {
+                    continue;
+                }
+
+                ModInfo info = ModManager.Register(mod);
+
+                // Add the config entries
+                info.Add(mod.Config);
+
+                // Try finding description
+                AssemblyDescriptionAttribute attr = mod.GetType().Assembly
+                    .GetCustomAttribute<AssemblyDescriptionAttribute>();
+
+                if (attr != null) {
+                    info.description = attr.Description;
+                }
+            }
         }
 
         /**

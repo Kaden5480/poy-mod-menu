@@ -12,6 +12,7 @@ namespace ModMenu.Parsing {
         // Things to parse
         private List<Type> types;
         private List<object> objects;
+        private List<ConfigFile> configFiles;
 
         // Generated config info
         private Dictionary<string, List<BaseField>> config;
@@ -23,9 +24,14 @@ namespace ModMenu.Parsing {
          * <param name="types">The types to parse</param>
          * <param name="objects">The objects to parse</param>
          */
-        internal TypeParser(List<Type> types, List<object> objects) {
+        internal TypeParser(
+            List<Type> types,
+            List<object> objects,
+            List<ConfigFile> configFiles
+        ) {
             this.types = types;
             this.objects = objects;
+            this.configFiles = configFiles;
 
             config = new Dictionary<string, List<BaseField>>();
         }
@@ -188,6 +194,41 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
+         * Parses a `ConfigFile`.
+         * </summary>
+         * <param name="configFile">The config file to parse</param>
+         */
+        private void ParseConfigFile(ConfigFile configFile) {
+            Dictionary<ConfigDefinition, ConfigEntryBase> entries;
+
+            MethodInfo entriesInfo = AccessTools.PropertyGetter(
+                typeof(ConfigFile), "Entries"
+            );
+
+            entries = (Dictionary<ConfigDefinition, ConfigEntryBase>)
+                entriesInfo.Invoke(configFile, new object[] {});
+
+            foreach (KeyValuePair<ConfigDefinition, ConfigEntryBase> entry in entries) {
+                BepInField field = new BepInField(entry.Value);
+                string category = entry.Value.Definition.Section;
+
+                field.GuessFieldType();
+
+                if (field.Validate() == false) {
+                    continue;
+                }
+
+                // Add to the config
+                if (config.ContainsKey(category) == false) {
+                    config[category] = new List<BaseField>();
+                }
+
+                config[category].Add(field);
+            }
+        }
+
+        /**
+         * <summary>
          * Parses provided types and objects to generate a config.
          * </summary>
          * <returns>The generated config</returns>
@@ -199,6 +240,10 @@ namespace ModMenu.Parsing {
 
             foreach (object obj in objects) {
                 Parse(obj.GetType(), obj);
+            }
+
+            foreach (ConfigFile configFile in configFiles) {
+                ParseConfigFile(configFile);
             }
 
             // Return generated config

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using BepInEx;
+using BepInEx.Configuration;
 using UILib;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ namespace ModMenu {
         // Registered configs
         private List<Type> configTypes = new List<Type>();
         private List<object> configObjects = new List<object>();
+        private List<ConfigFile> configFiles = new List<ConfigFile>();
 
         // Generated config
         internal Dictionary<string, List<BaseField>> config;
@@ -148,6 +150,21 @@ namespace ModMenu {
 
         /**
          * <summary>
+         * Adds a ConfigFile to display in mod menu.
+         * </summary>
+         * <param name="configFile">The ConfigFile to add</param>
+         */
+        public void Add(ConfigFile configFile) {
+            if (configFiles.Contains(configFile) == true) {
+                logger.LogError($"{name} already registered config file: {configFile}");
+                return;
+            }
+
+            configFiles.Add(configFile);
+        }
+
+        /**
+         * <summary>
          * Generate a config from types and instances.
          * </summary>
          */
@@ -158,7 +175,7 @@ namespace ModMenu {
             }
 
             config = new TypeParser(
-                configTypes, configObjects
+                configTypes, configObjects, configFiles
             ).Parse();
         }
 
