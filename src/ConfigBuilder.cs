@@ -198,10 +198,15 @@ namespace ModMenu {
             area.SetElementSpacing(10);
             area.SetSize(200f, 30f);
 
+            TextField textField = BuildText(field);
+            textField.SetSize(200f*0.3f, 30f);
+            area.Add(textField);
+
             Slider slider = new Slider((float) field.min, (float) field.max);
             slider.SetSize(200f*0.6f, 10f);
             slider.onValueChanged.AddListener((float value) => {
                 field.SetValue(value);
+                textField.SetValue(field.ToString());
             });
 
             field.onValueChanged.AddListener((object value) => {
@@ -209,9 +214,9 @@ namespace ModMenu {
             });
             area.Add(slider);
 
-            TextField textField = BuildText(field);
-            textField.SetSize(200f*0.3f, 30f);
-            area.Add(textField);
+            textField.onValidSubmit.AddListener(delegate {
+                slider.SetValue((float) field.value);
+            });
 
             return area;
         }
