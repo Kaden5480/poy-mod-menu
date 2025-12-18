@@ -59,7 +59,7 @@ namespace ModMenu {
             }
 
             if (field.max != null) {
-                return $"{error} that's at least {field.max}";
+                return $"{error} that's at most {field.max}";
             }
 
             return error;
