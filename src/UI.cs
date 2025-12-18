@@ -15,12 +15,12 @@ namespace ModMenu {
         private Logger logger = new Logger(typeof(UI));
 
         private bool builtModList = false;
-
-        private Overlay overlay;
-        private ScrollView scrollView;
         private Area modList;
 
-        private UIComponent currentView;
+        internal Overlay overlay;
+        internal ScrollView scrollView;
+
+        private ConfigBuilder currentView;
 
         /**
          * <summary>
@@ -74,8 +74,6 @@ namespace ModMenu {
             Area space = new Area();
             space.SetSize(0f, 20f);
             modList.Add(space);
-
-            currentView = modList;
         }
 
         /**
@@ -97,10 +95,15 @@ namespace ModMenu {
          * <summary>
          * Switches to another view.
          * </summary>
-         * <param name="view">The view to switch to</param>
+         * <param name="view">The mod to switch to</param>
          */
-        private void SwitchView(UIComponent view) {
-            currentView.Hide();
+        private void SwitchView(ConfigBuilder view) {
+            modList.Hide();
+
+            if (currentView != null) {
+                currentView.Hide();
+            }
+
             currentView = view;
             currentView.Show();
         }
@@ -129,17 +132,8 @@ namespace ModMenu {
                 UIButton editButton = new UIButton("Edit", 25);
                 editButton.SetSize(150f, 40f);
                 editButton.onClick.AddListener(() => {
-                    if (modInfo.builder == null) {
-                        modInfo.Build();
-
-                        // Do manually to prevent unnecessary
-                        // recursion with themes
-                        modInfo.builder.root.gameObject.transform.SetParent(
-                            scrollView.scrollContent.gameObject.transform, false
-                        );
-                    }
-
-                    SwitchView(modInfo.builder.root);
+                    modInfo.Build(this);
+                    SwitchView(modInfo.builder);
                 });
                 buttonArea.Add(editButton);
 

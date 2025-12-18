@@ -11,7 +11,7 @@ using ModMenu.Parsing;
 namespace ModMenu {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin {
-        private static Plugin instance;
+        internal static Plugin instance { get; private set; }
         internal static UI ui { get; private set; }
 
         /**

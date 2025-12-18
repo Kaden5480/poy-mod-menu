@@ -21,6 +21,14 @@ namespace ModMenuExamples {
             UIRoot.onInit.AddListener(BuildUI);
 
             ModInfo info = ModManager.Register(this);
+            info.thumbnailUrl = "https://avatars.githubusercontent.com/u/67208843";
+            info.license = "GPLv3.0";
+            info.description = "A mod for testing Mod Menu."
+                + " This provides a variety of examples demonstrating how"
+                + " you can interact with Mod Menu."
+                + " It is not a complete reference, so it's worth checking"
+                + " out the official API reference as well.";
+
             info.Add(config);
             info.Add(typeof(StaticConfig));
             info.onBuild.AddListener((ConfigBuilder builder) => {

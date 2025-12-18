@@ -1,10 +1,14 @@
+using System.Collections;
 using System.Collections.Generic;
 
 using UILib;
 using UILib.Components;
 using UILib.Layouts;
 using UILib.Notifications;
+using UIButton = UILib.Components.Button;
 using UnityEngine;
+using UnityEngine.Networking;
+using UEImage = UnityEngine.UI.Image;
 
 using ModMenu.Config;
 using ModMenu.Parsing;
@@ -22,6 +26,9 @@ namespace ModMenu {
         // The root of the generated UI
         internal Area root;
 
+        // The info area
+        internal Area infoArea;
+
         // Categorised UI components which will be
         // placed under their `string` categories in the UI
         private Dictionary<string, List<UIComponent>> categories;
@@ -29,6 +36,9 @@ namespace ModMenu {
         // The header and footer
         private UIComponent header;
         private UIComponent footer;
+
+        // The mod's thumbnail
+        private Image thumbnail;
 
         /**
          * <summary>
@@ -42,7 +52,6 @@ namespace ModMenu {
 
             Start();
         }
-
 
         /**
          * <summary>
@@ -67,6 +76,46 @@ namespace ModMenu {
             }
 
             return error;
+        }
+
+        /**
+         * <summary>
+         * Coroutine for downloading the mod's thumbnail.
+         * </summary>
+         * <param name="url">The URL to download from</param>
+         */
+        private IEnumerator DownloadThumbnailRoutine(string url) {
+            UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError == true
+                || request.isHttpError == true
+            ) {
+                Notifier.Notify("Mod Menu", "Failed downloading mod's thumbnail");
+                yield break;
+            }
+
+            if (thumbnail == null) {
+                yield break;
+            }
+
+            thumbnail.SetTexture((
+                (DownloadHandlerTexture) request.downloadHandler
+            ).texture);
+            thumbnail.Show();
+        }
+
+        /**
+         * <summary>
+         * Downloads a texture from a given URL, setting the
+         * mod's thumbnail once complete.
+         * </summary>
+         * <param name="url">The URL to download from</param>
+         */
+        private void DownloadThumbnail(string url) {
+            Plugin.instance.StartCoroutine(
+                DownloadThumbnailRoutine(url)
+            );
         }
 
 #region Building Specific Types
@@ -352,10 +401,113 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Completes building the UI.
+         * Builds a single info entry.
+         * </summary>
+         * <param name="title">The title of the entry</param>
+         * <param name="value">The value of the entry</param>
+         * <returns>The entry which was built</returns>
+         */
+        private Area BuildInfoEntry(string title, string value) {
+            Area area = new Area();
+            area.SetContentLayout(LayoutType.Horizontal);
+            area.SetElementSpacing(10);
+            area.SetFill(FillType.All);
+
+            Label titleLabel = new Label(title, 20);
+            titleLabel.SetSize(100f, 30f);
+            area.Add(titleLabel);
+
+            Label valueLabel = new Label(value, 20);
+            valueLabel.SetSize(100f, 30f);
+            valueLabel.SetColor(valueLabel.theme.selectAltNormal);
+            area.Add(valueLabel);
+
+            return area;
+        }
+
+        /**
+         * <summary>
+         * Builds the mod info tab.
          * </summary>
          */
-        internal void Build() {
+        private void BuildInfo() {
+            infoArea = new Area();
+            infoArea.SetAnchor(AnchorType.TopRight);
+            infoArea.SetOffset(-40f, -20f);
+            infoArea.SetContentLayout(LayoutType.Horizontal);
+            infoArea.SetElementAlignment(TextAnchor.UpperRight);
+            infoArea.SetElementSpacing(20f);
+
+            ScrollView infoScroll = new ScrollView();
+            infoScroll.SetSize(500f, 800f);
+            infoScroll.background.color = infoScroll.theme.accent;
+            infoScroll.Hide();
+            infoArea.Add(infoScroll);
+
+            UIButton infoButton = new UIButton("i", 30);
+            infoButton.SetSize(40f, 40f);
+            infoButton.onClick.AddListener(infoScroll.ToggleVisibility);
+            infoArea.Add(infoButton);
+
+            Area area = new Area();
+            area.SetAnchor(AnchorType.TopMiddle);
+            area.SetContentLayout(LayoutType.Vertical);
+            area.SetContentPadding(20, 20, 20, 20);
+            area.SetElementAlignment(TextAnchor.UpperCenter);
+            area.SetElementSpacing(10);
+            infoScroll.Add(area);
+
+            // Add the mod info
+            Label title = new Label(modInfo.name, 35);
+            title.SetSize(340f, 40f);
+            area.Add(title);
+
+            if (modInfo.thumbnail != null
+                || modInfo.thumbnailUrl != null
+            ) {
+                thumbnail = new Image();
+                thumbnail.SetSize(300f, 300f);
+                thumbnail.Hide();
+                area.Add(thumbnail);
+            }
+
+            if (modInfo.thumbnail != null) {
+                thumbnail.SetTexture(modInfo.thumbnail);
+            }
+            else if (modInfo.thumbnailUrl != null) {
+                DownloadThumbnail(modInfo.thumbnailUrl);
+            }
+
+            Area detailSpace = new Area();
+            detailSpace.SetSize(0f, 10f);
+            area.Add(detailSpace);
+
+            area.Add(BuildInfoEntry("Version", modInfo.version.ToString()));
+
+            if (modInfo.license != null) {
+                area.Add(BuildInfoEntry("License", modInfo.license));
+            }
+
+            if (modInfo.description != null) {
+                Area descSpace = new Area();
+                descSpace.SetSize(0f, 10f);
+                area.Add(descSpace);
+
+                Label description = new Label(modInfo.description, 20);
+                description.SetSize(450f, 0f);
+                description.SetFill(FillType.Vertical);
+                description.SetColor(description.theme.selectAltNormal);
+                area.Add(description);
+            }
+        }
+
+        /**
+         * <summary>
+         * Completes building the UI.
+         * </summary>
+         * <param name="ui">The UI to build onto</param>
+         */
+        internal void Build(UI ui) {
             root = new Area();
             root.gameObject.name = $"{modInfo.name} Root";
             root.SetAnchor(AnchorType.TopMiddle);
@@ -389,9 +541,44 @@ namespace ModMenu {
             if (footer != null) {
                 root.Add(footer);
             }
+
+            BuildInfo();
+
+            // The attaching below is done manually to
+            // prevent unnecessary recursion when setting themes
+
+            // Attach the root to the scroll view
+            root.gameObject.transform.SetParent(
+                ui.scrollView.scrollContent.gameObject.transform, false
+            );
+
+            // Attach the info to the scroll view directly
+            infoArea.gameObject.transform.SetParent(
+                ui.scrollView.gameObject.transform, false
+            );
         }
 
 #endregion
+
+        /**
+         * <summary>
+         * Shows the built UI.
+         * </summary>
+         */
+        internal void Show() {
+            root.Show();
+            infoArea.Show();
+        }
+
+        /**
+         * <summary>
+         * Hides the built UI.
+         * </summary>
+         */
+        internal void Hide() {
+            root.Hide();
+            infoArea.Hide();
+        }
 
     }
 }
