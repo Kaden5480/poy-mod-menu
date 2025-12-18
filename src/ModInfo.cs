@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using BepInEx;
+using UnityEngine;
 
 using ModMenu.Config;
 using ModMenu.Parsing;
@@ -54,10 +55,23 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * A brief description of this mod.
+         * A URL to download the mod's thumbnail from.
+         *
+         * If <see cref="thumbnail"/> is set, it will be used
+         * instead of this.
          * </summary>
          */
-        public string description = null;
+        public string thumbnailUrl = null;
+
+        /**
+         * <summary>
+         * A texture to apply for the mod's thumbnail.
+         *
+         * If <see cref="thumbnailUrl"/> is set, the texture
+         * set here will still be used anyway. The URL will be ignored.
+         * </summary>
+         */
+        public Texture2D thumbnail = null;
 
         /**
          * <summary>
@@ -72,6 +86,13 @@ namespace ModMenu {
          * </summary>
          */
         public string license = null;
+
+        /**
+         * <summary>
+         * A brief description of this mod.
+         * </summary>
+         */
+        public string description = null;
 
         /**
          * <summary>
@@ -137,8 +158,9 @@ namespace ModMenu {
          * <summary>
          * Build the UI for this mod.
          * </summary>
+         * <param name="ui">The UI to build onto</param>
          */
-        internal void Build() {
+        internal void Build(UI ui) {
             if (config == null) {
                 Generate();
             }
@@ -153,7 +175,7 @@ namespace ModMenu {
             onBuild.Invoke(builder);
 
             // Fully build the UI
-            builder.Build();
+            builder.Build(ui);
         }
     }
 }
