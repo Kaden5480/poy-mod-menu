@@ -4,6 +4,7 @@ using UILib;
 using UILib.Components;
 using UILib.Notifications;
 using UIButton = UILib.Components.Button;
+using UnityEngine;
 
 namespace ModMenuExamples {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu-examples", "Mod Menu Examples", "0.1.0")]
@@ -20,7 +21,24 @@ namespace ModMenuExamples {
 
             UIRoot.onInit.AddListener(BuildUI);
 
+            Font arial = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
+
+            Theme customTheme = new Theme() {
+                //font               = arial,
+                //fontAlt            = arial,
+                //fontLineSpacing    = 1f,
+                background         = Colors.HSL(120, 10, 10),
+                foreground         = Colors.HSL(120, 100, 90),
+                accent             = Colors.HSL(120, 10, 15),
+                accentAlt          = Colors.HSL(120, 10, 20),
+                selectNormal       = Colors.HSL(120, 20, 20),
+                selectHighlight    = Colors.HSL(120, 20, 30),
+                selectAltNormal    = Colors.HSL(120, 30, 20),
+                selectAltHighlight = Colors.HSL(120, 30, 30),
+            };
+
             ModInfo info = ModManager.Register(this);
+            info.theme = customTheme;
             info.thumbnailUrl = "https://avatars.githubusercontent.com/u/67208843";
             info.license = "GPLv3.0";
             info.description = "A mod for testing Mod Menu."

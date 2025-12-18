@@ -21,13 +21,13 @@ namespace ModMenu {
      */
     public class ConfigBuilder {
         private Logger logger = new Logger(typeof(ConfigBuilder));
-        private ModInfo modInfo;
+        internal ModInfo modInfo { get; private set; }
 
         // The root of the generated UI
-        internal Area root;
+        internal Area root { get; private set; }
 
         // The info area
-        internal Area infoArea;
+        internal Area infoArea { get; private set; }
 
         // Categorised UI components which will be
         // placed under their `string` categories in the UI
@@ -419,8 +419,10 @@ namespace ModMenu {
 
             Label valueLabel = new Label(value, 20);
             valueLabel.SetSize(100f, 30f);
-            valueLabel.SetColor(valueLabel.theme.selectAltNormal);
             area.Add(valueLabel);
+
+            area.SetTheme(modInfo.theme);
+            valueLabel.SetColor(valueLabel.theme.selectAltNormal);
 
             return area;
         }
@@ -437,17 +439,18 @@ namespace ModMenu {
             infoArea.SetContentLayout(LayoutType.Horizontal);
             infoArea.SetElementAlignment(TextAnchor.UpperRight);
             infoArea.SetElementSpacing(20f);
+            infoArea.SetTheme(modInfo.theme);
 
             ScrollView infoScroll = new ScrollView();
             infoScroll.SetSize(500f, 800f);
-            infoScroll.background.color = infoScroll.theme.accent;
             infoScroll.Hide();
-            infoArea.Add(infoScroll);
+            infoArea.Add(infoScroll, true);
+            infoScroll.background.color = infoScroll.theme.accent;
 
             UIButton infoButton = new UIButton("i", 30);
             infoButton.SetSize(40f, 40f);
             infoButton.onClick.AddListener(infoScroll.ToggleVisibility);
-            infoArea.Add(infoButton);
+            infoArea.Add(infoButton, true);
 
             Area area = new Area();
             area.SetAnchor(AnchorType.TopMiddle);
@@ -455,12 +458,12 @@ namespace ModMenu {
             area.SetContentPadding(20, 20, 20, 20);
             area.SetElementAlignment(TextAnchor.UpperCenter);
             area.SetElementSpacing(10);
-            infoScroll.Add(area);
+            infoScroll.Add(area, true);
 
             // Add the mod info
             Label title = new Label(modInfo.name, 35);
             title.SetSize(340f, 40f);
-            area.Add(title);
+            area.Add(title, true);
 
             if (modInfo.thumbnail != null
                 || modInfo.thumbnailUrl != null
@@ -468,7 +471,7 @@ namespace ModMenu {
                 thumbnail = new Image();
                 thumbnail.SetSize(300f, 300f);
                 thumbnail.Hide();
-                area.Add(thumbnail);
+                area.Add(thumbnail, true);
             }
 
             if (modInfo.thumbnail != null) {
@@ -480,7 +483,7 @@ namespace ModMenu {
 
             Area detailSpace = new Area();
             detailSpace.SetSize(0f, 10f);
-            area.Add(detailSpace);
+            area.Add(detailSpace, true);
 
             area.Add(BuildInfoEntry("Version", modInfo.version.ToString()));
 
@@ -491,13 +494,14 @@ namespace ModMenu {
             if (modInfo.description != null) {
                 Area descSpace = new Area();
                 descSpace.SetSize(0f, 10f);
-                area.Add(descSpace);
+                area.Add(descSpace, true);
 
                 Label description = new Label(modInfo.description, 20);
                 description.SetSize(450f, 0f);
                 description.SetFill(FillType.Vertical);
+                area.Add(description, true);
+
                 description.SetColor(description.theme.selectAltNormal);
-                area.Add(description);
             }
         }
 
@@ -514,10 +518,18 @@ namespace ModMenu {
             root.SetContentLayout(LayoutType.Vertical);
             root.SetContentPadding(top: 40, bottom: 40);
             root.SetElementSpacing(40);
+            root.SetTheme(modInfo.theme);
 
             if (header != null) {
                 root.Add(header);
             }
+
+            Label titleLabel = new Label(
+                $"{modInfo.name} ({modInfo.version.ToString()})", 30
+            );
+            titleLabel.SetSize(0f, 40f);
+            titleLabel.SetFill(FillType.Horizontal);
+            root.Add(titleLabel, true);
 
             // TODO: Alphabetical order
             // Build all the categories
@@ -526,16 +538,15 @@ namespace ModMenu {
                 area.SetContentLayout(LayoutType.Vertical);
                 area.SetElementSpacing(10);
                 area.SetFill(FillType.All);
+                root.Add(area, true);
 
                 Label title = new Label(entry.Key, 30);
                 title.SetSize(600f, 50f);
-                area.Add(title);
+                area.Add(title, true);
 
                 foreach (UIComponent component in entry.Value) {
-                    area.Add(component);
+                    area.Add(component, true);
                 }
-
-                root.Add(area);
             }
 
             if (footer != null) {

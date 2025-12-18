@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using BepInEx;
+using UILib;
 using UnityEngine;
 
 using ModMenu.Config;
@@ -52,6 +53,13 @@ namespace ModMenu {
          * </summary>
          */
         public Version version { get => metadata.Version; }
+
+        /**
+         * <summary>
+         * This mod's theme.
+         * </summary>
+         */
+        public Theme theme = null;
 
         /**
          * <summary>

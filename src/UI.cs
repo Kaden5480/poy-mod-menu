@@ -20,6 +20,9 @@ namespace ModMenu {
         internal Overlay overlay;
         internal ScrollView scrollView;
 
+        private Image background;
+        private Image topBar;
+
         private ConfigBuilder currentView;
 
         /**
@@ -30,18 +33,16 @@ namespace ModMenu {
         internal UI() {
             instance = this;
 
-            Theme theme = new Theme();
-
             overlay = new Overlay(0f, 0f);
             overlay.SetFill(FillType.All);
             overlay.SetSortable(false);
 
-            Image background = new Image(theme.background);
+            background = new Image();
             background.SetFill(FillType.All);
             overlay.Add(background);
 
             // Top bar
-            Image topBar = new Image(theme.accent);
+            topBar = new Image();
             topBar.SetAnchor(AnchorType.TopMiddle);
             topBar.SetFill(FillType.Horizontal);
             topBar.SetSize(0f, 100f);
@@ -65,7 +66,11 @@ namespace ModMenu {
             modList.SetContentLayout(LayoutType.Vertical);
             modList.SetContentPadding(20, 20, 60, 60);
             modList.SetElementSpacing(20);
-            scrollView.Add(modList);
+
+            // Add manually to prevent theme recursion
+            modList.gameObject.transform.SetParent(
+                scrollView.scrollContent.gameObject.transform, false
+            );
 
             Label modTitle = new Label("Installed Mods", 45);
             modTitle.SetSize(400f, 40f);
@@ -74,6 +79,8 @@ namespace ModMenu {
             Area space = new Area();
             space.SetSize(0f, 20f);
             modList.Add(space);
+
+            SetTheme(overlay.theme);
         }
 
         /**
@@ -93,6 +100,23 @@ namespace ModMenu {
 
         /**
          * <summary>
+         * Sets the theme.
+         * </summary>
+         * <param name="theme">The theme to use</param>
+         */
+        private void SetTheme(Theme theme) {
+            if (theme == null) {
+                return;
+            }
+
+            overlay.SetTheme(theme);
+
+            background.SetColor(theme.background);
+            topBar.SetColor(theme.accent);
+        }
+
+        /**
+         * <summary>
          * Switches to another view.
          * </summary>
          * <param name="view">The mod to switch to</param>
@@ -105,6 +129,7 @@ namespace ModMenu {
             }
 
             currentView = view;
+            SetTheme(currentView.modInfo.theme);
             currentView.Show();
         }
 
