@@ -37,6 +37,16 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
+         * Initializes a field attribute of a given type.
+         * </summary>
+         * <param name="fieldType">The field type to use</param>
+         */
+        public FieldAttribute(FieldType fieldType) {
+            this.fieldType = fieldType;
+        }
+
+        /**
+         * <summary>
          * Initializes a field attribute with a given name
          * and field type.
          * </summary>
