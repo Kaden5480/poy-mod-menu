@@ -22,6 +22,7 @@ namespace ModMenu {
 
         private Image background;
         private Image topBar;
+        private Image controls;
 
         private ConfigBuilder currentView;
 
@@ -48,6 +49,17 @@ namespace ModMenu {
             topBar.SetSize(0f, 100f);
             overlay.Add(topBar);
 
+            // Bottom controls
+            controls = new Image();
+            controls.SetAnchor(AnchorType.BottomMiddle);
+            controls.SetFill(FillType.Horizontal);
+            controls.SetSize(0f, 100f);
+            overlay.Add(controls);
+
+            UIButton backButton = new UIButton("Done", 30);
+            backButton.SetSize(150f, 40f);
+            controls.Add(backButton);
+
             Label topBarTitle = new Label("Mod Menu", 55);
             topBarTitle.SetFill(FillType.Vertical);
             topBarTitle.SetSize(300f, 0f);
@@ -57,8 +69,7 @@ namespace ModMenu {
             scrollView = new ScrollView();
             scrollView.SetFill(FillType.All);
             // Leave room for topbar
-            scrollView.SetSize(0f, -100f);
-            scrollView.SetOffset(0, -50f);
+            scrollView.SetSize(0f, -200f);
             overlay.Add(scrollView);
 
             modList = new Area();
@@ -71,6 +82,7 @@ namespace ModMenu {
             modList.gameObject.transform.SetParent(
                 scrollView.scrollContent.gameObject.transform, false
             );
+            scrollView.SetContent(modList);
 
             Label modTitle = new Label("Installed Mods", 45);
             modTitle.SetSize(400f, 40f);
@@ -81,6 +93,24 @@ namespace ModMenu {
             modList.Add(space);
 
             SetTheme(overlay.theme);
+
+            // Handle going back
+            backButton.onClick.AddListener(() => {
+                // If there is no view, already on mod list
+                // so just quit
+                if (currentView == null) {
+                    overlay.Hide();
+                    return;
+                }
+
+                // Otherwise, switch back to the mod list view
+                currentView.Hide();
+                currentView = null;
+
+                SetTheme(modList.theme);
+                scrollView.SetContent(modList);
+                modList.Show();
+            });
         }
 
         /**
@@ -113,6 +143,7 @@ namespace ModMenu {
 
             background.SetColor(theme.background);
             topBar.SetColor(theme.accent);
+            controls.SetColor(theme.accent);
         }
 
         /**
