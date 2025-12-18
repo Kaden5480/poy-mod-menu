@@ -443,7 +443,6 @@ namespace ModMenu {
 
             ScrollView infoScroll = new ScrollView();
             infoScroll.SetSize(500f, 800f);
-            infoScroll.Hide();
             infoArea.Add(infoScroll, true);
             infoScroll.background.color = infoScroll.theme.accent;
 

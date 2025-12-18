@@ -74,7 +74,6 @@ namespace ModMenu.Parsing {
          */
         internal void SetValue(object value) {
             this.value = value;
-            Update();
         }
 
         /**
@@ -85,6 +84,7 @@ namespace ModMenu.Parsing {
          */
         internal void Restore() {
             SetValue(defaultValue);
+            Update();
         }
 
         /**
