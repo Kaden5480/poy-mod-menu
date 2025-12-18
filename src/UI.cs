@@ -20,6 +20,8 @@ namespace ModMenu {
         private ScrollView scrollView;
         private Area modList;
 
+        private UIComponent currentView;
+
         /**
          * <summary>
          * Initializes mod menu's UI.
@@ -72,6 +74,8 @@ namespace ModMenu {
             Area space = new Area();
             space.SetSize(0f, 20f);
             modList.Add(space);
+
+            currentView = modList;
         }
 
         /**
@@ -87,6 +91,18 @@ namespace ModMenu {
 
             overlay.Show();
             scrollView.ScrollToTop();
+        }
+
+        /**
+         * <summary>
+         * Switches to another view.
+         * </summary>
+         * <param name="view">The view to switch to</param>
+         */
+        private void SwitchView(UIComponent view) {
+            currentView.Hide();
+            currentView = view;
+            currentView.Show();
         }
 
         /**
@@ -113,7 +129,17 @@ namespace ModMenu {
                 UIButton editButton = new UIButton("Edit", 25);
                 editButton.SetSize(150f, 40f);
                 editButton.onClick.AddListener(() => {
-                    modInfo.Build();
+                    if (modInfo.builder == null) {
+                        modInfo.Build();
+
+                        // Do manually to prevent unnecessary
+                        // recursion with themes
+                        modInfo.builder.root.gameObject.transform.SetParent(
+                            scrollView.scrollContent.gameObject.transform, false
+                        );
+                    }
+
+                    SwitchView(modInfo.builder.root);
                 });
                 buttonArea.Add(editButton);
 

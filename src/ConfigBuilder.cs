@@ -270,7 +270,7 @@ namespace ModMenu {
         internal void Build() {
             root = new Area();
             root.gameObject.name = $"{modInfo.name} Root";
-            GameObject.DontDestroyOnLoad(root.gameObject);
+            root.SetAnchor(AnchorType.TopMiddle);
             root.SetContentLayout(LayoutType.Vertical);
 
             // TODO: Alphabetical order
@@ -278,7 +278,7 @@ namespace ModMenu {
             foreach (KeyValuePair<string, List<UIComponent>> entry in categories) {
                 Area area = new Area();
                 area.SetContentLayout(LayoutType.Vertical);
-                area.SetSize(600f, 0f);
+                area.SetFill(FillType.All);
 
                 Label title = new Label(entry.Key, 50);
                 title.SetSize(600f, 50f);
