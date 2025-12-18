@@ -48,6 +48,9 @@
     <Reference Include="ModMenu.dll">
       <HintPath>$(PluginOutputPath)/ModMenu.dll</HintPath>
     </Reference>
+    <Reference Include="UILib.dll">
+      <HintPath>$(PluginOutputPath)/UILib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="CopyPackageAssembliesToSubFolder" AfterTargets="ResolveReferences">
