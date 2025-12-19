@@ -56,6 +56,8 @@ namespace ModMenu {
         /**
          * <summary>
          * The name of this mod. (read only)
+         *
+         * This is the name set in the `BepInPlugin` attribute of your mod.
          * </summary>
          */
         public string name { get => metadata.Name; }
@@ -63,6 +65,8 @@ namespace ModMenu {
         /**
          * <summary>
          * This mod's version. (read only)
+         *
+         * This is the version set in the `BepInPlugin` attribute of your mod.
          * </summary>
          */
         public Version version { get => metadata.Version; }
@@ -111,6 +115,10 @@ namespace ModMenu {
         /**
          * <summary>
          * A description for this mod.
+         *
+         * By default this will be the description set in the
+         * <see cref="System.Reflection.AssemblyDescriptionAttribute"/>
+         * of the <see cref="System.Reflection.Assembly"/> of your mod.
          * </summary>
          */
         public string description = null;
@@ -123,6 +131,14 @@ namespace ModMenu {
          */
         internal ModInfo(BaseUnityPlugin mod) {
             this.mod = mod;
+
+            // Try getting description
+            AssemblyDescriptionAttribute attr = mod.GetType().Assembly
+                .GetCustomAttribute<AssemblyDescriptionAttribute>();
+
+            if (attr != null) {
+                description = attr.Description;
+            }
         }
 
         /**
@@ -191,15 +207,6 @@ namespace ModMenu {
             config = new TypeParser(
                 configTypes, configObjects, configFiles
             ).Parse();
-
-            // If the description is unset, try getting
-            // it from the assembly instead
-            AssemblyDescriptionAttribute attr = mod.GetType().Assembly
-                .GetCustomAttribute<AssemblyDescriptionAttribute>();
-
-            if (attr != null) {
-                description = attr.Description;
-            }
         }
 
         /**
