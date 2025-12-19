@@ -44,6 +44,9 @@ namespace ModMenu {
         // The mod's thumbnail
         private Image thumbnail;
 
+        // The info scroll view
+        private AccentScroll infoScroll;
+
         private const float compWidth = 200f;
         private const float compHeight = 40f;
         private const int compFontSize = 20;
@@ -121,6 +124,10 @@ namespace ModMenu {
          * <param name="url">The URL to download from</param>
          */
         private void DownloadThumbnail(string url) {
+            if (Plugin.config.enableThumbnailDownloads.Value == false) {
+                return;
+            }
+
             Plugin.instance.StartCoroutine(
                 DownloadThumbnailRoutine(url)
             );
@@ -454,8 +461,9 @@ namespace ModMenu {
             infoArea.SetElementAlignment(TextAnchor.UpperRight);
             infoArea.SetElementSpacing(20f);
 
-            AccentScroll infoScroll = new AccentScroll();
+            infoScroll = new AccentScroll();
             infoScroll.SetSize(500f, 800f);
+            infoScroll.Hide();
             infoArea.Add(infoScroll);
 
             UIButton infoButton = new UIButton("i", 30);
@@ -592,6 +600,10 @@ namespace ModMenu {
         internal void Show() {
             root.Show();
             infoArea.Show();
+
+            if (Plugin.config.autoShowModInfo.Value == true) {
+                infoScroll.Show();
+            }
         }
 
         /**
