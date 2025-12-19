@@ -434,12 +434,9 @@ namespace ModMenu {
             titleLabel.SetSize(100f, 30f);
             area.Add(titleLabel);
 
-            Label valueLabel = new Label(value, 25);
+            SmallLabel valueLabel = new SmallLabel(value, 25);
             valueLabel.SetSize(100f, 30f);
             area.Add(valueLabel);
-
-            area.SetTheme(modInfo.theme);
-            valueLabel.SetColor(valueLabel.theme.selectAltNormal);
 
             return area;
         }
@@ -456,17 +453,15 @@ namespace ModMenu {
             infoArea.SetContentLayout(LayoutType.Horizontal);
             infoArea.SetElementAlignment(TextAnchor.UpperRight);
             infoArea.SetElementSpacing(20f);
-            infoArea.SetTheme(modInfo.theme);
 
-            ScrollView infoScroll = new ScrollView();
+            AccentScroll infoScroll = new AccentScroll();
             infoScroll.SetSize(500f, 800f);
-            infoArea.Add(infoScroll, true);
-            infoScroll.background.color = infoScroll.theme.accent;
+            infoArea.Add(infoScroll);
 
             UIButton infoButton = new UIButton("i", 30);
             infoButton.SetSize(40f, 40f);
             infoButton.onClick.AddListener(infoScroll.ToggleVisibility);
-            infoArea.Add(infoButton, true);
+            infoArea.Add(infoButton);
 
             Area area = new Area();
             area.SetAnchor(AnchorType.TopMiddle);
@@ -474,12 +469,12 @@ namespace ModMenu {
             area.SetContentPadding(20, 20, 20, 20);
             area.SetElementAlignment(TextAnchor.UpperCenter);
             area.SetElementSpacing(10);
-            infoScroll.Add(area, true);
+            infoScroll.Add(area);
 
             // Add the mod info
             Label title = new Label(modInfo.name, 35);
             title.SetSize(340f, 40f);
-            area.Add(title, true);
+            area.Add(title);
 
             if (modInfo.thumbnail != null
                 || modInfo.thumbnailUrl != null
@@ -487,7 +482,7 @@ namespace ModMenu {
                 thumbnail = new Image();
                 thumbnail.SetSize(300f, 300f);
                 thumbnail.Hide();
-                area.Add(thumbnail, true);
+                area.Add(thumbnail);
             }
 
             if (modInfo.thumbnail != null) {
@@ -499,7 +494,7 @@ namespace ModMenu {
 
             Area detailSpace = new Area();
             detailSpace.SetSize(0f, 10f);
-            area.Add(detailSpace, true);
+            area.Add(detailSpace);
 
             area.Add(BuildInfoEntry("Version", modInfo.version.ToString()));
 
@@ -510,15 +505,15 @@ namespace ModMenu {
             if (modInfo.description != null) {
                 Area descSpace = new Area();
                 descSpace.SetSize(0f, 10f);
-                area.Add(descSpace, true);
+                area.Add(descSpace);
 
-                Label description = new Label(modInfo.description, 25);
+                SmallLabel description = new SmallLabel(modInfo.description, 25);
                 description.SetSize(450f, 0f);
                 description.SetFill(FillType.Vertical);
-                area.Add(description, true);
-
-                description.SetColor(description.theme.selectAltNormal);
+                area.Add(description);
             }
+
+            infoArea.SetTheme(modInfo.theme);
         }
 
         /**
@@ -534,7 +529,6 @@ namespace ModMenu {
             root.SetContentLayout(LayoutType.Vertical);
             root.SetContentPadding(top: 40, bottom: 40);
             root.SetElementSpacing(40);
-            root.SetTheme(modInfo.theme);
 
             if (header != null) {
                 root.Add(header);
@@ -545,7 +539,7 @@ namespace ModMenu {
             );
             titleLabel.SetSize(0f, 40f);
             titleLabel.SetFill(FillType.Horizontal);
-            root.Add(titleLabel, true);
+            root.Add(titleLabel);
 
             // TODO: Alphabetical order
             // Build all the categories
@@ -554,21 +548,23 @@ namespace ModMenu {
                 area.SetContentLayout(LayoutType.Vertical);
                 area.SetElementSpacing(10);
                 area.SetFill(FillType.All);
-                root.Add(area, true);
+                root.Add(area);
 
                 Label title = new Label(entry.Key, 30);
                 title.SetFill(FillType.Horizontal);
                 title.SetSize(0f, 50f);
-                area.Add(title, true);
+                area.Add(title);
 
                 foreach (UIComponent component in entry.Value) {
-                    area.Add(component, true);
+                    area.Add(component);
                 }
             }
 
             if (footer != null) {
                 root.Add(footer);
             }
+
+            root.SetTheme(modInfo.theme);
 
             BuildInfo();
 
