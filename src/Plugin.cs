@@ -11,7 +11,8 @@ namespace ModMenu {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]
     internal class Plugin : BaseUnityPlugin {
         internal static Plugin instance { get; private set; }
-        internal static UI ui { get; private set; }
+        internal static Cfg config      { get; private set; }
+        internal static UI ui           { get; private set; }
 
         /**
          * <summary>
@@ -21,6 +22,7 @@ namespace ModMenu {
         private void Awake() {
             instance = this;
 
+            config = new Cfg(this.Config);
             Harmony.CreateAndPatchAll(typeof(Patches.ControlMenu));
 
             UIRoot.onInit.AddListener(() => {
@@ -30,6 +32,11 @@ namespace ModMenu {
             SceneLoads.onLoad.AddListener(
                 Patches.MenuButtons.Inject
             );
+
+            // Register with self
+            ModInfo info = ModManager.Register(this);
+            info.Add(config);
+            info.license = "GPLv3.0";
         }
 
         /**
