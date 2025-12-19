@@ -141,10 +141,14 @@ namespace ModMenu {
             if (builtModList == false) {
                 BuildModList();
                 builtModList = true;
+
+                overlay.Show();
+                scrollView.ScrollToTop();
+            }
+            else {
+                overlay.Show();
             }
 
-            overlay.Show();
-            scrollView.ScrollToTop();
         }
 
         /**
