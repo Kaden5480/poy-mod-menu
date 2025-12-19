@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using BepInEx;
 
@@ -33,6 +34,16 @@ namespace ModMenu {
             mods[mod] = info;
 
             return info;
+        }
+
+        /**
+         * <summary>
+         * Sorts the mod list.
+         * </summary>
+         */
+        internal static void Sort() {
+            mods = mods.OrderBy(entry => entry.Value.name)
+                .ToDictionary(entry => entry.Key, entry => entry.Value);
         }
     }
 }

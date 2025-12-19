@@ -73,9 +73,10 @@ namespace ModMenu {
             overlay.Add(scrollView);
 
             modList = new Area();
+            modList.SetFill(FillType.All);
             modList.SetAnchor(AnchorType.TopMiddle);
             modList.SetContentLayout(LayoutType.Vertical);
-            modList.SetContentPadding(20, 20, 60, 60);
+            modList.SetContentPadding(20, 20, 50, 50);
             modList.SetElementSpacing(20);
 
             // Add manually to prevent theme recursion
@@ -85,11 +86,12 @@ namespace ModMenu {
             scrollView.SetContent(modList);
 
             Label modTitle = new Label("Installed Mods", 45);
-            modTitle.SetSize(400f, 40f);
+            modTitle.SetSize(0f, 40f);
+            modTitle.SetFill(FillType.Horizontal);
             modList.Add(modTitle);
 
             Area space = new Area();
-            space.SetSize(0f, 20f);
+            space.SetSize(0f, 10f);
             modList.Add(space);
 
             SetTheme(overlay.theme);
@@ -171,14 +173,18 @@ namespace ModMenu {
          * </summary>
          */
         internal void BuildModList() {
+            ModManager.Sort();
+
             foreach (KeyValuePair<BaseUnityPlugin, ModInfo> entry in ModManager.mods) {
                 ModInfo modInfo = entry.Value;
 
                 Area listing = new Area();
                 listing.SetContentLayout(LayoutType.Horizontal);
-                listing.SetSize(800f, 40f);
+                listing.SetElementSpacing(70);
+                listing.SetFill(FillType.All);
 
-                Label modName = new Label(modInfo.name, 25);
+                Label modName = new Label($"{modInfo.name} ({modInfo.version})", 25);
+                modName.SetAlignment(TextAnchor.MiddleRight);
                 modName.SetSize(350f, 40f);
                 listing.Add(modName);
 
@@ -187,6 +193,7 @@ namespace ModMenu {
                 listing.Add(buttonArea);
 
                 UIButton editButton = new UIButton("Edit", 25);
+                editButton.SetAnchor(AnchorType.MiddleLeft);
                 editButton.SetSize(150f, 40f);
                 editButton.onClick.AddListener(() => {
                     modInfo.Build(this);
