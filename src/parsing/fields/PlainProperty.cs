@@ -18,6 +18,27 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
+         * Guesses the most likely field type for
+         * the underlying type.
+         * </summary>
+         * <param name="quiet">Whether to prevent logging</param>
+         * <returns>Whether guessing the type was successful</returns>
+         */
+        internal override bool GuessFieldType(bool quiet = false) {
+            if (fieldType != FieldType.None) {
+                return true;
+            }
+
+            if (info.SetMethod == null) {
+                fieldType = FieldType.ReadOnly;
+                return true;
+            }
+
+            return base.GuessFieldType(quiet);
+        }
+
+        /**
+         * <summary>
          * Performs extra validation specific to properties.
          * </summary>
          * <returns>Whether this property is valid</returns>

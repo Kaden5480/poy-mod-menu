@@ -9,7 +9,8 @@ namespace ModMenu.Config {
      */
     [AttributeUsage(
         AttributeTargets.Class
-        | AttributeTargets.Field,
+        | AttributeTargets.Field
+        | AttributeTargets.Property,
         AllowMultiple=false
     )]
     public class CategoryAttribute : Attribute {

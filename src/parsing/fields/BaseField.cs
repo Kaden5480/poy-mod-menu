@@ -96,7 +96,7 @@ namespace ModMenu.Parsing {
          * <param name="quiet">Whether to prevent logging</param>
          * <returns>Whether guessing the type was successful</returns>
          */
-        internal bool GuessFieldType(bool quiet = false) {
+        internal virtual bool GuessFieldType(bool quiet = false) {
             if (fieldType != FieldType.None) {
                 return true;
             }
