@@ -202,7 +202,6 @@ namespace ModMenu {
          */
         private Area BuildSlider(BaseField field) {
             Area area = new Area();
-            area.SetAnchor(AnchorType.MiddleLeft);
             area.SetContentLayout(LayoutType.Horizontal);
             area.SetElementSpacing(0.1f*compWidth);
             area.SetSize(0f, compHeight);
@@ -353,7 +352,7 @@ namespace ModMenu {
                 label.SetAlignment(TextAnchor.MiddleRight);
                 area.Add(label);
 
-                component.SetAnchor(AnchorType.MiddleLeft);
+                component.SetOffset(-50f, 0f);
                 Area controlArea = new Area();
                 controlArea.SetSize(300f, 60f);
                 controlArea.Add(component);
