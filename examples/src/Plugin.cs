@@ -1,4 +1,8 @@
+using System.Linq;
+using System.Reflection;
+
 using BepInEx;
+using HarmonyLib;
 using ModMenu;
 using UILib;
 using UILib.Components;
@@ -9,6 +13,7 @@ using UnityEngine;
 namespace ModMenuExamples {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu-examples", "Mod Menu Examples", "0.1.0")]
     internal class Plugin : BaseUnityPlugin {
+        private Config config;
         private Window window;
 
         /**
@@ -17,10 +22,32 @@ namespace ModMenuExamples {
          * </summary>
          */
         private void Awake() {
-            Config config = new Config(this.Config);
-
+            config = new Config(this.Config);
             UIRoot.onInit.AddListener(BuildUI);
 
+            if (AccessTools.AllAssemblies().FirstOrDefault(
+                    a => a.GetName().Name == "ModMenu"
+                ) != null
+            ) {
+                Logger.LogInfo("Registering");
+                Register();
+            }
+            else {
+                Logger.LogInfo("Not registering");
+            }
+
+            // Or this, but it logs a warning
+            // if (AccessTools.TypeByName("ModMenu.ModManager") != null) {
+            //     // Register
+            // }
+        }
+
+        /**
+         * <summary>
+         * Sets up mod menu integration.
+         * </summary>
+         */
+        private void Register() {
             Font arial = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
 
             Theme customTheme = new Theme() {
