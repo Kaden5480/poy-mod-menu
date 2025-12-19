@@ -40,6 +40,10 @@ namespace ModMenu {
         // The mod's thumbnail
         private Image thumbnail;
 
+        private const float compWidth = 200f;
+        private const float compHeight = 40f;
+        private const int compFontSize = 20;
+
         /**
          * <summary>
          * Initializes a config builder.
@@ -129,7 +133,7 @@ namespace ModMenu {
          */
         private Toggle BuildToggle(BaseField field) {
             Toggle toggle = new Toggle((bool) field.value);
-            toggle.SetSize(40f, 40f);
+            toggle.SetSize(compHeight, compHeight);
             toggle.onValueChanged.AddListener((bool value) => {
                 field.SetValue(value);
             });
@@ -150,7 +154,7 @@ namespace ModMenu {
          */
         private ColorField BuildColor(BaseField field) {
             ColorField colorField = new ColorField((Color) field.value);
-            colorField.SetSize(40f, 40f);
+            colorField.SetSize(compHeight, compHeight);
             colorField.onValueChanged.AddListener((Color color) => {
                 field.SetValue(color);
             });
@@ -171,9 +175,9 @@ namespace ModMenu {
          */
         private KeyCodeField BuildKeyCode(BaseField field) {
             KeyCodeField keyCodeField = new KeyCodeField(
-                (KeyCode) field.value, 20
+                (KeyCode) field.value, compFontSize
             );
-            keyCodeField.SetSize(200f, 40f);
+            keyCodeField.SetSize(compWidth, compHeight);
             keyCodeField.onValueChanged.AddListener((KeyCode keyCode) => {
                 field.SetValue(keyCode);
             });
@@ -194,15 +198,16 @@ namespace ModMenu {
          */
         private Area BuildSlider(BaseField field) {
             Area area = new Area();
+            area.SetAnchor(AnchorType.MiddleLeft);
             area.SetContentLayout(LayoutType.Horizontal);
-            area.SetElementSpacing(10);
-            area.SetSize(200f, 30f);
+            area.SetElementSpacing(0.1f*compWidth);
+            area.SetSize(0f, compHeight);
 
             TextField textField = BuildText(field);
-            textField.SetSize(200f*0.3f, 30f);
+            textField.SetSize(0.3f*compWidth, compHeight);
 
             Slider slider = new Slider((float) field.min, (float) field.max);
-            slider.SetSize(200f*0.6f, 10f);
+            slider.SetSize(0.6f*compWidth, 10f);
             slider.onValueChanged.AddListener((float value) => {
                 field.SetValue(value);
                 textField.SetValue(field.ToString());
@@ -229,8 +234,8 @@ namespace ModMenu {
          * <returns>The component</returns>
          */
         private Label BuildReadOnly(BaseField field) {
-            Label label = new Label(field.ToString(), 20);
-            label.SetSize(200f, 40f);
+            Label label = new Label(field.ToString(), compFontSize);
+            label.SetSize(compWidth, compHeight);
 
             field.onValueChanged.AddListener((object value) => {
                 label.SetText(field.ToString());
@@ -248,16 +253,16 @@ namespace ModMenu {
          */
         private TextField BuildText(BaseField field) {
             TextField textField = new TextField(
-                TypeChecks.TypeToString(field.type), 20
+                TypeChecks.TypeToString(field.type), compFontSize
             );
             textField.SetValue(field.ToString());
-            textField.SetSize(200f, 40f);
+            textField.SetSize(compWidth, compHeight);
             textField.SetPredicate((string value) => {
                 // Try parsing the value
                 if (TypeChecks.TryParse(
                     field.type, value, out object result
                 ) == false) {
-                    Notifier.Notify("Mod Menu", ShowInputError(field));
+                    Notifier.Notify(modInfo.name, ShowInputError(field), theme: modInfo.theme);
                     return false;
                 }
 
@@ -269,7 +274,7 @@ namespace ModMenu {
 
                 // Otherwise validate min and max
                 if (TypeChecks.InLimits(result, field.min, field.max) == false) {
-                    Notifier.Notify("Mod Menu", ShowInputError(field));
+                    Notifier.Notify(modInfo.name, ShowInputError(field), theme: modInfo.theme);
                     return false;
                 }
 
@@ -334,13 +339,17 @@ namespace ModMenu {
                 }
 
                 Area area = new Area();
+                area.SetSize(-1f, 60f);
+                area.SetFill(FillType.Horizontal);
                 area.SetContentLayout(LayoutType.Horizontal);
-                area.SetSize(600f, 60f);
+                area.SetElementSpacing(70);
 
-                Label label = new Label(field.name, 20);
+                Label label = new Label(field.name, 25);
                 label.SetSize(300f, 60f);
+                label.SetAlignment(TextAnchor.MiddleRight);
                 area.Add(label);
 
+                component.SetAnchor(AnchorType.MiddleLeft);
                 Area controlArea = new Area();
                 controlArea.SetSize(300f, 60f);
                 controlArea.Add(component);
@@ -418,11 +427,11 @@ namespace ModMenu {
             area.SetElementSpacing(10);
             area.SetFill(FillType.All);
 
-            Label titleLabel = new Label(title, 20);
+            Label titleLabel = new Label(title, 25);
             titleLabel.SetSize(100f, 30f);
             area.Add(titleLabel);
 
-            Label valueLabel = new Label(value, 20);
+            Label valueLabel = new Label(value, 25);
             valueLabel.SetSize(100f, 30f);
             area.Add(valueLabel);
 
@@ -500,7 +509,7 @@ namespace ModMenu {
                 descSpace.SetSize(0f, 10f);
                 area.Add(descSpace, true);
 
-                Label description = new Label(modInfo.description, 20);
+                Label description = new Label(modInfo.description, 25);
                 description.SetSize(450f, 0f);
                 description.SetFill(FillType.Vertical);
                 area.Add(description, true);
@@ -529,7 +538,7 @@ namespace ModMenu {
             }
 
             Label titleLabel = new Label(
-                $"{modInfo.name} ({modInfo.version.ToString()})", 30
+                $"{modInfo.name} ({modInfo.version.ToString()})", 35
             );
             titleLabel.SetSize(0f, 40f);
             titleLabel.SetFill(FillType.Horizontal);
@@ -545,7 +554,8 @@ namespace ModMenu {
                 root.Add(area, true);
 
                 Label title = new Label(entry.Key, 30);
-                title.SetSize(600f, 50f);
+                title.SetFill(FillType.Horizontal);
+                title.SetSize(0f, 50f);
                 area.Add(title, true);
 
                 foreach (UIComponent component in entry.Value) {

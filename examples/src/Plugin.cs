@@ -24,9 +24,11 @@ namespace ModMenuExamples {
             Font arial = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
 
             Theme customTheme = new Theme() {
-                //font               = arial,
-                //fontAlt            = arial,
-                //fontLineSpacing    = 1f,
+                font               = arial,
+                fontAlt            = arial,
+                fontLineSpacing    = 1f,
+                fontScaler         = 0.98f,
+                fontScalerAlt      = 1f,
                 background         = Colors.HSL(240, 10, 10),
                 foreground         = Colors.HSL(240, 100, 90),
                 accent             = Colors.HSL(240, 10, 15),
