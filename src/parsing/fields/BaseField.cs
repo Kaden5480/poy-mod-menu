@@ -128,7 +128,7 @@ namespace ModMenu.Parsing {
          * </summary>
          * <returns>Whether this configuration is valid</returns>
          */
-        internal bool Validate() {
+        internal virtual bool Validate() {
             bool valid = true;
 
             // Can't have a `None` type

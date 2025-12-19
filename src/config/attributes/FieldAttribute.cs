@@ -15,7 +15,10 @@ namespace ModMenu.Config {
      * A "plain" type is something like an `int`, `float`, `double`, etc.
      * </summary>
      */
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage(
+        AttributeTargets.Field
+        | AttributeTargets.Property
+    )]
     public class FieldAttribute : Attribute {
         private string _name = null;
         private string _description = null;

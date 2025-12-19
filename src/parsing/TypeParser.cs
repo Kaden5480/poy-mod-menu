@@ -52,7 +52,7 @@ namespace ModMenu.Parsing {
          * </summary>
          * <param name="info">The field info to get attributes for</param>
          */
-        private static T GetAttr<T>(FieldInfo info) where T : Attribute {
+        private static T GetAttr<T>(MemberInfo info) where T : Attribute {
             return (T) Attribute.GetCustomAttribute(info, typeof(T));
         }
 
@@ -62,7 +62,7 @@ namespace ModMenu.Parsing {
          * </summary>
          * <param name="info">The field info to get attributes for</param>
          */
-        private static T[] GetAttrs<T>(FieldInfo info) where T : Attribute {
+        private static T[] GetAttrs<T>(MemberInfo info) where T : Attribute {
             return (T[]) Attribute.GetCustomAttributes(info, typeof(T));
         }
 
@@ -73,7 +73,7 @@ namespace ModMenu.Parsing {
          * <param name="field">The field to add metadata to</param>
          * <param name="info">The field info to parse attributes for</param>
          */
-        private void ParseMetadata(BaseField field, FieldInfo info) {
+        private void ParseMetadata(BaseField field, MemberInfo info) {
             // FieldAttributes can override the default data in
             // fields, so iterate over them and see what gets changed
             foreach (FieldAttribute attr in GetAttrs<FieldAttribute>(info)) {
@@ -114,26 +114,10 @@ namespace ModMenu.Parsing {
          * Parses a field.
          * </summary>
          * <param name="category">The category this field is in</param>
-         * <param name="info">This field's info</param>
-         * <param name="instance">The parent instance</param>
+         * <param name="field">The field to parse</param>
+         * <param name="info">The member info</param>
          */
-        private void ParseField(string category, FieldInfo info, object instance) {
-            BaseField field;
-
-            // Determine the kind of field wrapper to use
-            if (info.FieldType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
-                ConfigEntryBase entry = (ConfigEntryBase) info.GetValue(instance);
-                category = entry.Definition.Section;
-
-                field = new BepInField(entry);
-            }
-            else {
-                field = new PlainField(info, instance);
-            }
-
-            // Parse attributes
-            ParseMetadata(field, info);
-
+        private void ParseField(string category, BaseField field, MemberInfo info) {
             // Check if the field is valid
             if (field.Validate() == false) {
                 return;
@@ -155,12 +139,83 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
-         * Generates config info for a given type and instance.
+         * Parses a member, generating a BaseField.
          * </summary>
-         * <param name="type">The type to generate config info for</param>
-         * <param name="obj">The instance to generate config info for</param>
+         * <param name="category">The category the member is in</param>
+         * <param name="member">The member to parse</param>
+         * <param name="instance">The parent instance</param>
+         * <returns>The generated field, if valid</returns>
          */
-        private void Parse(Type type, object obj) {
+        private void ParseMember<T>(string category, MemberInfo info, object instance) {
+            BaseField field;
+
+            // Properties
+            if (typeof(T) == typeof(PropertyInfo)) {
+                PropertyInfo propInfo = (PropertyInfo) info;
+
+                if (propInfo.PropertyType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
+                    ConfigEntryBase entry = (ConfigEntryBase) propInfo.GetValue(instance);
+                    category = entry.Definition.Section;
+                    field = new BepInField(entry);
+                }
+                else {
+                    field = new PlainProperty(propInfo, instance);
+                }
+            }
+            // Fields
+            else if (typeof(T) == typeof(FieldInfo)) {
+                FieldInfo fieldInfo = (FieldInfo) info;
+
+                if (fieldInfo.FieldType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
+                    ConfigEntryBase entry = (ConfigEntryBase) fieldInfo.GetValue(instance);
+                    category = entry.Definition.Section;
+                    field = new BepInField(entry);
+                }
+                else {
+                    field = new PlainField(fieldInfo, instance);
+                }
+            }
+            else {
+                return;
+            }
+
+            // Parse attributes
+            ParseMetadata(field, info);
+
+            // Parse the field into the categories
+            ParseField(category, field, info);
+        }
+
+        /**
+         * <summary>
+         * Checks if a given MemberInfo is static.
+         * </summary>
+         * <param name="member">The member info to check</param>
+         * <returns>Whether the info is static</returns>
+         */
+        private bool IsStatic<T>(MemberInfo info) {
+            if (typeof(T) == typeof(FieldInfo)) {
+                return ((FieldInfo) info).IsStatic;
+            }
+
+            if (typeof(T) == typeof(PropertyInfo)) {
+                PropertyInfo propInfo = (PropertyInfo) info;
+                return propInfo.GetMethod != null
+                    && propInfo.GetMethod.IsStatic;
+            }
+
+            return false;
+        }
+
+        /**
+         * <summary>
+         * Parses members of a type.
+         * </summary>
+         * <param name="type">The type being parsed</param>
+         * <param name="obj">An instance of the type, if any</param>
+         * <param name="members">The members to parse</param>
+         */
+        private void ParseMembers<T>(Type type, object obj, IList<T> members) where T : MemberInfo {
             // If a CategoryAttribute doesn't exist, just default to the name of the type
             string category = type.Name;
 
@@ -171,8 +226,7 @@ namespace ModMenu.Parsing {
 
             IncludeAllAttribute includeAll = GetAttr<IncludeAllAttribute>(type);
 
-            // Iterate over all fields declared under this type and parse them
-            foreach (FieldInfo info in AccessTools.GetDeclaredFields(type)) {
+            foreach (MemberInfo info in members) {
                 // Check if this even has a field attribute
                 if (includeAll == null
                     && GetAttr<FieldAttribute>(info) == null
@@ -185,11 +239,24 @@ namespace ModMenu.Parsing {
                     continue;
                 }
 
-                ParseField(
+                ParseMember<T>(
                     category, info,
-                    (info.IsStatic == true) ? null : obj
+                    (IsStatic<T>(info) == true) ? null : obj
                 );
             }
+        }
+
+        /**
+         * <summary>
+         * Generates config info for a given type and instance.
+         * </summary>
+         * <param name="type">The type to generate config info for</param>
+         * <param name="obj">The instance to generate config info for</param>
+         */
+        private void Parse(Type type, object obj) {
+            // Parse fields and properties
+            ParseMembers<FieldInfo>(type, obj, AccessTools.GetDeclaredFields(type));
+            ParseMembers<PropertyInfo>(type, obj, AccessTools.GetDeclaredProperties(type));
         }
 
         /**
