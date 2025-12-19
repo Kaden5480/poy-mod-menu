@@ -17,6 +17,10 @@ namespace ModMenu {
     /**
      * <summary>
      * A class which handles building the UIs for each mod.
+     *
+     * You will never construct a `ConfigBuilder`, but you can be passed
+     * one by <see cref="ModInfo.onBuild"/> when your mod's config page
+     * is being created.
      * </summary>
      */
     public class ConfigBuilder {
@@ -378,7 +382,7 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Places a custom UIComponent under a given category.
+         * Places a custom `UIComponent` under a given category.
          * </summary>
          * <param name="category">The category to place the component under</param>
          * <param name="component">The component to place</param>

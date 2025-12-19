@@ -17,7 +17,7 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
-         * Initializes a category attribute.
+         * Initializes a category attribute with a given name.
          * </summary>
          * <param name="name">The name of the category</param>
          */

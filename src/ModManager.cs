@@ -6,8 +6,7 @@ using BepInEx;
 namespace ModMenu {
     /**
      * <summary>
-     * The class which generates <see cref="ModInfo"/> objects
-     * and allows mods to start registering their configs.
+     * The class which is used for registering mods to Mod Menu.
      * </summary>
      */
     public static class ModManager {
@@ -19,7 +18,8 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Registers your mod with Mod Menu.
+         * Registers your mod with Mod Menu, returning a <see cref="ModInfo"/>
+         * which you can use to customise your mod's config page.
          * </summary>
          * <param name="mod">The mod to register</param>
          * <returns>A `ModInfo` for your mod</returns>

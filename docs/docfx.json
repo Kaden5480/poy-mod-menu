@@ -9,7 +9,7 @@
             "**/*.csproj"
           ],
           "exclude": [
-            "example/**"
+            "examples/**"
           ]
         }
       ],

@@ -4,7 +4,7 @@ namespace ModMenu.Config {
     /**
      * <summary>
      * An attribute which tells mod menu to
-     * exclude a given type.
+     * exclude a field.
      * </summary>
      */
     [AttributeUsage(

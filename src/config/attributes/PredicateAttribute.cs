@@ -17,7 +17,7 @@ namespace ModMenu.Config {
          * has the same type as the field this attribute is applied to.
          *
          * NOTE:
-         * If you use a `ConfigEntry<T>`, ModMenu will unwrap this type
+         * If you use a `ConfigEntry&lt;T&gt;`, ModMenu will unwrap this type
          * and use the inner `T` instead.
          *
          * </summary>

@@ -3,10 +3,16 @@ using System;
 namespace ModMenu.Config {
     /**
      * <summary>
-     * An attribute which indicates a field to mod menu.
+     * An attribute which allows you to customise how
+     * a field will be displayed.
      *
-     * This also provides extra information which can be used
-     * to determine how mod menu handles this field.
+     * This also provides extra information which can be
+     * used for data validation.
+     *
+     * `FieldAttributes` can be applied to either "plain" types
+     * or BepInEx `ConfigEntry` types.
+     *
+     * A "plain" type is something like an `int`, `float`, `double`, etc.
      * </summary>
      */
     [AttributeUsage(AttributeTargets.Field)]
@@ -27,7 +33,7 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
-         * Initializes a field attribute with a given name.
+         * Initializes a field attribute with a specified name.
          * </summary>
          * <param name="name">The display name to use</param>
          */
@@ -37,7 +43,7 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
-         * Initializes a field attribute of a given type.
+         * Initializes a field attribute with a specified field type.
          * </summary>
          * <param name="fieldType">The field type to use</param>
          */
@@ -47,7 +53,7 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
-         * Initializes a field attribute with a given name
+         * Initializes a field attribute with a specified name
          * and field type.
          * </summary>
          * <param name="name">The display name to use</param>
@@ -61,6 +67,10 @@ namespace ModMenu.Config {
         /**
          * <summary>
          * The display name of this field.
+         *
+         * Unspecified (null) names behave like so:
+         * - `ConfigEntry`: The name configured in the `ConfigEntry` will be used
+         * - Plain: The name of the field will be used
          * </summary>
          */
         public virtual string name {
@@ -71,6 +81,11 @@ namespace ModMenu.Config {
         /**
          * <summary>
          * A brief description of this field.
+         *
+         * Unspecified (null) descriptions behave like so:
+         * - `ConfigEntry`: The description configured in the `ConfigEntry` will be used
+         * - Plain: The description will be left blank
+         *
          * </summary>
          */
         public virtual string description {
@@ -118,6 +133,10 @@ namespace ModMenu.Config {
         /**
          * <summary>
          * The default value.
+         *
+         * Unspecified (null) defaults behave like so:
+         * - `ConfigEntry`: The default value configured in the `ConfigEntry` will be used
+         * - Plain: There will be no default value
          * </summary>
          */
         public virtual object defaultValue {

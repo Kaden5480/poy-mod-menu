@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 using ModMenu.Config;
+using ModMenu.Events;
 
 namespace ModMenu.Parsing {
     /**

@@ -1,6 +1,6 @@
 using UnityEngine.Events;
 
-namespace ModMenu {
+namespace ModMenu.Events {
     /**
      * <summary>
      * An event which passes a <see cref="ConfigBuilder"/>

@@ -4,8 +4,8 @@ namespace ModMenu.Config {
     /**
      * <summary>
      * An attribute which tells mod menu to include
-     * all fields in a given type, saving you having
-     * to define each one.
+     * all fields in a class (apart from
+     * <see cref="ExcludeAttribute">excluded ones</see>).
      * </summary>
      */
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]

@@ -7,13 +7,20 @@ using UILib;
 using UnityEngine;
 
 using ModMenu.Config;
+using ModMenu.Events;
 using ModMenu.Parsing;
 
 namespace ModMenu {
     /**
      * <summary>
-     * A class containing information about a mod, along
-     * with its registered configs.
+     * A class containing information about a mod,
+     * along with its registered configs.
+     *
+     * `ModInfo` instances are returned by <see cref="ModManager.Register"/>.
+     *
+     * When you `Add` a config to a `ModInfo` instance, it will be parsed
+     * and displayed within your mod's config page once
+     * <see cref="ConfigBuilder"/> has built it.
      * </summary>
      */
     public class ModInfo {
@@ -37,28 +44,31 @@ namespace ModMenu {
         /**
          * <summary>
          * Invokes listeners with a <see cref="ConfigBuilder"/>
-         * when this mod's config UI is being built.
+         * when this mod's config page is being built.
+         *
+         * This allows you to apply some extra customisations
+         * before the page is fully created.
          * </summary>
          */
         public BuildEvent onBuild { get; } = new BuildEvent();
 
         /**
          * <summary>
-         * The name of this mod.
+         * The name of this mod. (read only)
          * </summary>
          */
         public string name { get => metadata.Name; }
 
         /**
          * <summary>
-         * This mod's current version.
+         * This mod's version. (read only)
          * </summary>
          */
         public Version version { get => metadata.Version; }
 
         /**
          * <summary>
-         * This mod's theme.
+         * The `Theme` to apply to this mod's config page.
          * </summary>
          */
         public Theme theme = null;
@@ -99,7 +109,7 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * A brief description of this mod.
+         * A description for this mod.
          * </summary>
          */
         public string description = null;
@@ -116,7 +126,7 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Adds a given type as a config to display in mod menu.
+         * Adds a given `Type` as a config.
          *
          * This should be used for static configs.
          * </summary>
@@ -133,7 +143,7 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Adds a given object as a config to display in mod menu.
+         * Adds a given `object` as a config.
          *
          * This should be used for configs which have an instance (non static).
          * </summary>
@@ -150,7 +160,10 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Adds a ConfigFile to display in mod menu.
+         * Adds a `ConfigFile` as a config.
+         *
+         * This allows you to add an entire BepInEx `ConfigFile` at once.
+         * Note: you miss out on customisation, but this could help for simplicity.
          * </summary>
          * <param name="configFile">The ConfigFile to add</param>
          */
