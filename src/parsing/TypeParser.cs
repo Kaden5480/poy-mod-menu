@@ -212,7 +212,9 @@ namespace ModMenu.Parsing {
                 BepInField field = new BepInField(entry.Value);
                 string category = entry.Value.Definition.Section;
 
-                field.GuessFieldType();
+                if (field.GuessFieldType(true) == false) {
+                    continue;
+                }
 
                 if (field.Validate() == false) {
                     continue;

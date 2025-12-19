@@ -93,10 +93,12 @@ namespace ModMenu.Parsing {
          * Guesses the most likely field type for
          * the underlying type.
          * </summary>
+         * <param name="quiet">Whether to prevent logging</param>
+         * <returns>Whether guessing the type was successful</returns>
          */
-        internal void GuessFieldType() {
+        internal bool GuessFieldType(bool quiet = false) {
             if (fieldType != FieldType.None) {
-                return;
+                return true;
             }
 
             if (TypeChecks.IsNumeric(type) == true) {
@@ -107,12 +109,17 @@ namespace ModMenu.Parsing {
             }
 
             if (fieldType == FieldType.None) {
-                Plugin.LogError(
-                    $"{type}({name}): Unable to guess best FieldType."
-                    + " You may want to explicitly define/exclude this field,"
-                    + " you may even be trying to use a type that ModMenu can't use."
-                );
+                if (quiet == false) {
+                    Plugin.LogError(
+                        $"{type}({name}): Unable to guess best FieldType."
+                        + " You may want to explicitly define/exclude this field,"
+                        + " you may even be trying to use a type that ModMenu can't use."
+                    );
+                }
+                return false;
             }
+
+            return true;
         }
 
         /**
@@ -123,6 +130,12 @@ namespace ModMenu.Parsing {
          */
         internal bool Validate() {
             bool valid = true;
+
+            // Can't have a `None` type
+            if (fieldType == FieldType.None) {
+                Plugin.LogError($"{name}: Can't use a `None` field type");
+                valid = false;
+            }
 
             // Sliders must be numeric
             if (fieldType == FieldType.Slider && TypeChecks.IsNumeric(type) == false) {
