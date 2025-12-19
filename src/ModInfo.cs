@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using BepInEx;
 using BepInEx.Configuration;
@@ -181,7 +182,7 @@ namespace ModMenu {
          * Generate a config from types and instances.
          * </summary>
          */
-        internal void Generate() {
+        private void Generate() {
             if (config != null) {
                 logger.LogError("Config has already been generated");
                 return;
@@ -190,6 +191,15 @@ namespace ModMenu {
             config = new TypeParser(
                 configTypes, configObjects, configFiles
             ).Parse();
+
+            // If the description is unset, try getting
+            // it from the assembly instead
+            AssemblyDescriptionAttribute attr = mod.GetType().Assembly
+                .GetCustomAttribute<AssemblyDescriptionAttribute>();
+
+            if (attr != null) {
+                description = attr.Description;
+            }
         }
 
         /**

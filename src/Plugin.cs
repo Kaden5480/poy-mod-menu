@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 
 using BepInEx;
 using HarmonyLib;
@@ -55,14 +54,6 @@ namespace ModMenu {
 
                 // Add the config entries
                 info.Add(mod.Config);
-
-                // Try finding description
-                AssemblyDescriptionAttribute attr = mod.GetType().Assembly
-                    .GetCustomAttribute<AssemblyDescriptionAttribute>();
-
-                if (attr != null) {
-                    info.description = attr.Description;
-                }
             }
         }
 
