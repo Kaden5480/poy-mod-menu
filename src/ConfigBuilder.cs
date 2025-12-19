@@ -200,7 +200,6 @@ namespace ModMenu {
 
             TextField textField = BuildText(field);
             textField.SetSize(200f*0.3f, 30f);
-            area.Add(textField);
 
             Slider slider = new Slider((float) field.min, (float) field.max);
             slider.SetSize(200f*0.6f, 10f);
@@ -217,6 +216,7 @@ namespace ModMenu {
             textField.onValidSubmit.AddListener(delegate {
                 slider.SetValue((float) field.value);
             });
+            area.Add(textField);
 
             return area;
         }
