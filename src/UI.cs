@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using BepInEx;
 using UILib;
+using UILib.Behaviours;
 using UILib.Components;
 using UILib.Layouts;
 using UnityEngine;
@@ -17,8 +18,8 @@ namespace ModMenu {
         private bool builtModList = false;
         private Area modList;
 
-        internal Overlay overlay;
-        internal ScrollView scrollView;
+        internal Overlay overlay { get; private set; }
+        internal ScrollView scrollView { get; private set; }
 
         private Image background;
         private Image topBar;
@@ -97,22 +98,38 @@ namespace ModMenu {
             SetTheme(overlay.theme);
 
             // Handle going back
-            backButton.onClick.AddListener(() => {
-                // If there is no view, already on mod list
-                // so just quit
-                if (currentView == null) {
-                    overlay.Hide();
-                    return;
-                }
+            backButton.onClick.AddListener(GoBack);
 
-                // Otherwise, switch back to the mod list view
-                currentView.Hide();
-                currentView = null;
+            // Register global keybind for going back
+            Shortcut shortcut = UIRoot.AddShortcut(new[] { KeyCode.Escape });
+            shortcut.onTrigger.AddListener(GoBack);
+        }
 
-                SetTheme(modList.theme);
-                scrollView.SetContent(modList);
-                modList.Show();
-            });
+        /**
+         * <summary>
+         * Logic for back button/keybind.
+         * </summary>
+         */
+        internal void GoBack() {
+            // Do nothing if not visible
+            if (overlay.isVisible == false) {
+                return;
+            }
+
+            // If there is no view, already on mod list
+            // so just quit
+            if (currentView == null) {
+                overlay.Hide();
+                return;
+            }
+
+            // Otherwise, switch back to the mod list view
+            currentView.Hide();
+            currentView = null;
+
+            SetTheme(modList.theme);
+            scrollView.SetContent(modList);
+            modList.Show();
         }
 
         /**

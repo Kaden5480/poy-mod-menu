@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 using BepInEx;
+using HarmonyLib;
 using UILib;
 using UILib.Patches;
 using UnityEngine;
-
-using ModMenu.Config;
-using ModMenu.Parsing;
 
 namespace ModMenu {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]
@@ -23,6 +20,8 @@ namespace ModMenu {
          */
         private void Awake() {
             instance = this;
+
+            Harmony.CreateAndPatchAll(typeof(Patches.ControlMenu));
 
             UIRoot.onInit.AddListener(() => {
                 ui = new UI();
