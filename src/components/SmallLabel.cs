@@ -21,7 +21,7 @@ namespace ModMenu {
          */
         protected override void SetThisTheme(Theme theme) {
             base.SetThisTheme(theme);
-            SetColor(theme.selectAltNormal);
+            SetColor(theme.selectAltHighlight);
         }
     }
 }

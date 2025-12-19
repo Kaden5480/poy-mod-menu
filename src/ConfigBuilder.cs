@@ -347,7 +347,7 @@ namespace ModMenu {
                 area.SetContentLayout(LayoutType.Horizontal);
                 area.SetElementSpacing(70);
 
-                Label label = new Label(field.name, 25);
+                SmallLabel label = new SmallLabel(field.name, 25);
                 label.SetSize(300f, 60f);
                 label.SetAlignment(TextAnchor.MiddleRight);
                 area.Add(label);
