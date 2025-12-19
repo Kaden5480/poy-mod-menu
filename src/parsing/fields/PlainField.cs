@@ -1,5 +1,7 @@
 using System.Reflection;
 
+using ModMenu.Config;
+
 namespace ModMenu.Parsing {
     /**
      * <summary>
@@ -12,6 +14,48 @@ namespace ModMenu.Parsing {
         internal override object value {
             get => info.GetValue(parentInstance);
             set => info.SetValue(parentInstance, value);
+        }
+
+        /**
+         * <summary>
+         * Guesses the most likely field type for
+         * the underlying type.
+         * </summary>
+         * <param name="quiet">Whether to prevent logging</param>
+         * <returns>Whether guessing the type was successful</returns>
+         */
+        internal override bool GuessFieldType(bool quiet = false) {
+            if (fieldType != FieldType.None) {
+                return true;
+            }
+
+            if (info.IsInitOnly == true) {
+                fieldType = FieldType.ReadOnly;
+                return true;
+            }
+
+            return base.GuessFieldType(quiet);
+        }
+
+        /**
+         * <summary>
+         * Validates whether the current configuration of this field is compatible.
+         * </summary>
+         * <returns>Whether this configuration is valid</returns>
+         */
+        internal override bool Validate() {
+            bool valid = true;
+
+            if (base.Validate() == false) {
+                valid = false;
+            }
+
+            if (info.IsInitOnly == true && fieldType != FieldType.ReadOnly) {
+                Plugin.LogError($"{name}: Read-only fields must be a `ReadOnly` type");
+                return false;
+            }
+
+            return valid;
         }
 
         /**
