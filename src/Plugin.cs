@@ -30,7 +30,7 @@ namespace ModMenu {
                     new[] { config.toggleKeybind.Value }
                 );
                 config.toggleShortcut.onTrigger.AddListener(() => {
-                    ui.overlay.ToggleVisibility();
+                    ui.ToggleVisibility();
                 });
             });
 

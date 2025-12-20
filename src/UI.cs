@@ -152,6 +152,20 @@ namespace ModMenu {
 
         /**
          * <summary>
+         * Toggles the visibility of the overlay properly.
+         * </summary>
+         */
+        internal void ToggleVisibility() {
+            if (overlay.isVisible == false) {
+                Show();
+            }
+            else {
+                overlay.Hide();
+            }
+        }
+
+        /**
+         * <summary>
          * Sets the theme.
          * </summary>
          * <param name="theme">The theme to use</param>
