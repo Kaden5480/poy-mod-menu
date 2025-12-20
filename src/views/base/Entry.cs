@@ -51,7 +51,12 @@ namespace ModMenu.Views {
          */
         internal void Search(string query) {
             if (metaData == null) {
-                component.Show();
+                if (string.IsNullOrEmpty(query) == false) {
+                    component.Hide();
+                }
+                else {
+                    component.Show();
+                }
                 return;
             }
 

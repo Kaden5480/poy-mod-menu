@@ -38,7 +38,7 @@ namespace ModMenu.Views {
          * <param name="modInfo">The mod info to generate metadata for</param>
          */
         internal MetaData(ModInfo modInfo) {
-            metadata = $"{modInfo.name}{modInfo.version}{modInfo.description}";
+            metadata = $"{modInfo.name}{modInfo.version}{modInfo.description}".ToLower();
         }
 
         /**

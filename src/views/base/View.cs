@@ -125,13 +125,13 @@ namespace ModMenu.Views {
         protected void BuildInfoGroup() {
             infoGroup = new Area();
             infoGroup.SetAnchor(AnchorType.TopRight);
-            infoGroup.SetOffset(-40f, -20f);
+            infoGroup.SetOffset(-40f, -80f);
             infoGroup.SetContentLayout(LayoutType.Horizontal);
             infoGroup.SetElementAlignment(TextAnchor.UpperRight);
             infoGroup.SetElementSpacing(20f);
 
             infoScroll = new AccentScroll();
-            infoScroll.SetSize(500f, 800f);
+            infoScroll.SetSize(500f, 720f);
             infoScroll.Hide();
             infoGroup.Add(infoScroll);
 

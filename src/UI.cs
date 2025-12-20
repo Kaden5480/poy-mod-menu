@@ -7,6 +7,7 @@ using UILib.Components;
 using UILib.Layouts;
 using UIButton = UILib.Components.Button;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 using ModMenu.Views;
 
@@ -20,6 +21,8 @@ namespace ModMenu {
         private Image background;
         private Image topBar;
         private Image controls;
+
+        private TextField searchBox;
 
         // The mod list view (main view)
         private ModListView modListView;
@@ -77,8 +80,14 @@ namespace ModMenu {
             backButton.onClick.AddListener(GoBack);
 
             // Register global keybind for going back
-            Shortcut shortcut = UIRoot.AddShortcut(new[] { KeyCode.Escape });
-            shortcut.onTrigger.AddListener(GoBack);
+            Shortcut backShortcut = overlay.AddShortcut(new[] { KeyCode.Escape });
+            backShortcut.onTrigger.AddListener(GoBack);
+
+            // Register local shortcut for searching
+            Shortcut searchShortcut = overlay.AddShortcut(new[] { KeyCode.LeftControl, KeyCode.F });
+            searchShortcut.onTrigger.AddListener(() => {
+                EventSystem.current.SetSelectedGameObject(searchBox.gameObject);
+            });
 
             // Register global keybind for toggling
             Plugin.config.toggleShortcut = UIRoot.AddShortcut(
@@ -88,6 +97,75 @@ namespace ModMenu {
                 ToggleVisibility();
             });
         }
+
+        /**
+         * <summary>
+         * Builds the search bar.
+         * </summary>
+         */
+        private void BuildSearch() {
+            Area searchArea = new Area();
+            searchArea.SetAnchor(AnchorType.TopRight);
+            searchArea.SetOffset(-40f, -20f);
+            searchArea.SetSize(300f, 40f);
+            searchArea.SetContentLayout(LayoutType.Horizontal);
+            searchArea.SetElementSpacing(20f);
+
+            searchBox = new TextField("Search", 20);
+            searchBox.SetSize(200f, 40f);
+            searchBox.SetClearMode(TextField.ClearMode.Escape);
+            searchBox.SetSubmitMode(TextField.SubmitMode.Click);
+            searchBox.onInputChanged.AddListener((string query) => {
+                if (Plugin.config.autoSearch.Value == false) {
+                    return;
+                }
+
+                if (currentView != null) {
+                    currentView.Search(query.ToLower());
+                }
+
+            });
+            searchBox.onValidSubmit.AddListener((string query) => {
+                if (currentView != null) {
+                    currentView.Search(query.ToLower());
+                }
+            });
+            searchBox.onCancel.AddListener(() => {
+                if (currentView != null) {
+                    currentView.Search("");
+                }
+            });
+            searchArea.Add(searchBox);
+
+            UIButton searchButton = new UIButton("S", 30);
+            searchButton.SetSize(40f, 40f);
+            searchButton.onClick.AddListener(() => {});
+            searchArea.Add(searchButton);
+
+            scrollView.AddDirect(searchArea);
+        }
+
+        /**
+         * <summary>
+         * Builds the mod list view.
+         * </summary>
+         */
+        internal void BuildModList() {
+            // Also build the search
+            BuildSearch();
+
+            modListView = new ModListView();
+            modListView.BuildAll();
+
+            // Add manually to prevent theme recursion
+            modListView.root.gameObject.transform.SetParent(
+                scrollView.scrollContent.gameObject.transform, false
+            );
+
+            SwitchView(modListView);
+        }
+
+#region Navigation
 
         /**
          * <summary>
@@ -103,24 +181,8 @@ namespace ModMenu {
             currentView = view;
             scrollView.SetContent(currentView.root);
             SetTheme(currentView.theme);
+            currentView.Search(searchBox.userInput);
             currentView.Show();
-        }
-
-        /**
-         * <summary>
-         * Builds the mod list view.
-         * </summary>
-         */
-        internal void BuildModList() {
-            modListView = new ModListView();
-            modListView.BuildAll();
-
-            // Add manually to prevent theme recursion
-            modListView.root.gameObject.transform.SetParent(
-                scrollView.scrollContent.gameObject.transform, false
-            );
-
-            SwitchView(modListView);
         }
 
         /**
@@ -178,6 +240,8 @@ namespace ModMenu {
                 overlay.Hide();
             }
         }
+
+#endregion
 
         /**
          * <summary>

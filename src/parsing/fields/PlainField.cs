@@ -29,7 +29,7 @@ namespace ModMenu.Parsing {
                 return true;
             }
 
-            if (info.IsInitOnly == true) {
+            if (info.IsLiteral == true || info.IsInitOnly == true) {
                 fieldType = FieldType.ReadOnly;
                 return true;
             }
