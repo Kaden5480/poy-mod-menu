@@ -97,6 +97,9 @@ namespace ModMenu {
          * </summary>
          */
         private void BuildModInfo() {
+            // Make sure the info group exists
+            BuildInfoGroup();
+
             // Add the mod's name as a title
             Label title = new Label(modInfo.name, 35);
             title.SetSize(340f, 40f);

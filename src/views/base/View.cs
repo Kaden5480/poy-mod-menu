@@ -77,7 +77,7 @@ namespace ModMenu.Views {
          * Builds the info group.
          * </summary>
          */
-        private void BuildInfoGroup() {
+        protected void BuildInfoGroup() {
             infoGroup = new Area();
             infoGroup.SetAnchor(AnchorType.TopRight);
             infoGroup.SetOffset(-40f, -20f);
@@ -106,6 +106,11 @@ namespace ModMenu.Views {
             info.SetElementAlignment(TextAnchor.UpperCenter);
             info.SetElementSpacing(10);
             infoScroll.Add(info);
+
+            // Attach the info group to the main UI scroll view directly
+            infoGroup.gameObject.transform.SetParent(
+                Plugin.ui.scrollView.gameObject.transform, false
+            );
         }
 
         /**
@@ -135,20 +140,9 @@ namespace ModMenu.Views {
             root.SetContentPadding(top: 40, bottom: 40);
             root.SetElementSpacing(40);
 
-            // Build the info scroll view and button
-            BuildInfoGroup();
-
-            // The attaching below is done manually to
-            // prevent unnecessary recursion when setting themes
-
-            // Attach the root to the scroll view
+            // Attach the root to the main UI scroll view
             root.gameObject.transform.SetParent(
                 Plugin.ui.scrollView.scrollContent.gameObject.transform, false
-            );
-
-            // Attach the info group to the scroll view directly
-            infoGroup.gameObject.transform.SetParent(
-                Plugin.ui.scrollView.gameObject.transform, false
             );
         }
 
@@ -169,6 +163,11 @@ namespace ModMenu.Views {
          */
         internal void Show() {
             root.Show();
+
+            if (infoGroup == null) {
+                return;
+            }
+
             infoGroup.Show();
 
             // Check if auto-show is enabled
@@ -184,7 +183,10 @@ namespace ModMenu.Views {
          */
         internal void Hide() {
             root.Hide();
-            infoGroup.Hide();
+
+            if (infoGroup != null) {
+                infoGroup.Hide();
+            }
         }
     }
 }
