@@ -187,6 +187,7 @@ namespace ModMenu.Views {
             textField.SetSize(0.3f*compWidth, compHeight);
 
             Slider slider = new Slider((float) field.min, (float) field.max);
+            slider.SetValue((float) field.value);
             slider.SetSize(0.6f*compWidth, 10f);
             slider.onValueChanged.AddListener((float value) => {
                 if (SetFieldValue(field, value) == true) {
