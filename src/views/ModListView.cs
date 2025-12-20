@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UILib.Components;
 using UILib.Layouts;
 using UIButton = UILib.Components.Button;
-using UnityEngine;
 
 using ModMenu.Views;
 
@@ -62,7 +61,7 @@ namespace ModMenu {
 
                 // The name of the mod
                 Label name = new Label($"{modInfo.name} ({modInfo.version})", 25);
-                name.SetAlignment(TextAnchor.MiddleRight);
+                name.SetAlignment(AnchorType.MiddleRight);
                 name.SetSize(350f, 40f);
                 listing.Add(name);
 

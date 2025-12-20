@@ -338,7 +338,7 @@ namespace ModMenu.Views {
 
             SmallLabel label = new SmallLabel(field.name, 25);
             label.SetSize(300f, 60f);
-            label.SetAlignment(TextAnchor.MiddleRight);
+            label.SetAlignment(AnchorType.MiddleRight);
             area.Add(label);
 
             Area controlArea = new Area();

@@ -4,7 +4,6 @@ using UILib;
 using UILib.Components;
 using UILib.Layouts;
 using UIButton = UILib.Components.Button;
-using UnityEngine;
 
 namespace ModMenu.Views {
     /**
@@ -127,7 +126,7 @@ namespace ModMenu.Views {
             infoGroup.SetAnchor(AnchorType.TopRight);
             infoGroup.SetOffset(-40f, -80f);
             infoGroup.SetContentLayout(LayoutType.Horizontal);
-            infoGroup.SetElementAlignment(TextAnchor.UpperRight);
+            infoGroup.SetElementAlignment(AnchorType.TopRight);
             infoGroup.SetElementSpacing(20f);
 
             infoScroll = new AccentScroll();
@@ -148,7 +147,7 @@ namespace ModMenu.Views {
             info.SetAnchor(AnchorType.TopMiddle);
             info.SetContentLayout(LayoutType.Vertical);
             info.SetContentPadding(20, 20, 20, 20);
-            info.SetElementAlignment(TextAnchor.UpperCenter);
+            info.SetElementAlignment(AnchorType.TopMiddle);
             info.SetElementSpacing(10);
             infoScroll.Add(info);
 
