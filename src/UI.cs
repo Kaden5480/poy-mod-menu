@@ -12,12 +12,7 @@ using ModMenu.Views;
 
 namespace ModMenu {
     internal class UI {
-        private static UI instance;
-
         private Logger logger = new Logger(typeof(UI));
-
-        private bool builtModList = false;
-        private Area modList;
 
         internal Overlay overlay { get; private set; }
         internal ScrollView scrollView { get; private set; }
@@ -26,6 +21,10 @@ namespace ModMenu {
         private Image topBar;
         private Image controls;
 
+        // The mod list view (main view)
+        private ModListView modListView;
+
+        // The current view
         private View currentView;
 
         /**
@@ -34,8 +33,6 @@ namespace ModMenu {
          * </summary>
          */
         internal UI() {
-            instance = this;
-
             overlay = new Overlay(0f, 0f);
             overlay.SetFill(FillType.All);
             overlay.SetSortable(false);
@@ -67,35 +64,13 @@ namespace ModMenu {
             topBarTitle.SetSize(300f, 0f);
             topBar.Add(topBarTitle);
 
-            // Mod list
+            // Build the scroll view which will display views
             scrollView = new ScrollView();
             scrollView.SetFill(FillType.All);
-            // Leave room for topbar
             scrollView.SetSize(0f, -200f);
             overlay.Add(scrollView);
 
-            modList = new Area();
-            modList.SetFill(FillType.All);
-            modList.SetAnchor(AnchorType.TopMiddle);
-            modList.SetContentLayout(LayoutType.Vertical);
-            modList.SetContentPadding(20, 20, 50, 50);
-            modList.SetElementSpacing(20);
-
-            // Add manually to prevent theme recursion
-            modList.gameObject.transform.SetParent(
-                scrollView.scrollContent.gameObject.transform, false
-            );
-            scrollView.SetContent(modList);
-
-            Label modTitle = new Label("Installed Mods", 45);
-            modTitle.SetSize(0f, 40f);
-            modTitle.SetFill(FillType.Horizontal);
-            modList.Add(modTitle);
-
-            Area space = new Area();
-            space.SetSize(0f, 10f);
-            modList.Add(space);
-
+            // Set the theme
             SetTheme(overlay.theme);
 
             // Handle going back
@@ -104,6 +79,51 @@ namespace ModMenu {
             // Register global keybind for going back
             Shortcut shortcut = UIRoot.AddShortcut(new[] { KeyCode.Escape });
             shortcut.onTrigger.AddListener(GoBack);
+
+            // Register global keybind for toggling
+            Plugin.config.toggleShortcut = UIRoot.AddShortcut(
+                new[] { Plugin.config.toggleKeybind.Value }
+            );
+            Plugin.config.toggleShortcut.onTrigger.AddListener(() => {
+                ToggleVisibility();
+            });
+        }
+
+        /**
+         * <summary>
+         * Switches to another view.
+         * </summary>
+         * <param name="view">The mod to switch to</param>
+         */
+        internal void SwitchView(View view) {
+            if (currentView != null) {
+                currentView.Hide();
+            }
+
+            currentView = view;
+            scrollView.SetContent(currentView.root);
+            SetTheme(currentView.theme);
+            currentView.Show();
+        }
+
+        /**
+         * <summary>
+         * Builds the mod list view.
+         * </summary>
+         */
+        internal void BuildModList() {
+            // Sort mods first
+            ModManager.Sort();
+
+            modListView = new ModListView();
+            modListView.BuildAll();
+
+            // Add manually to prevent theme recursion
+            modListView.root.gameObject.transform.SetParent(
+                scrollView.scrollContent.gameObject.transform, false
+            );
+
+            SwitchView(modListView);
         }
 
         /**
@@ -111,26 +131,20 @@ namespace ModMenu {
          * Logic for back button/keybind.
          * </summary>
          */
-        internal void GoBack() {
+        private void GoBack() {
             // Do nothing if not visible
             if (overlay.isVisible == false) {
                 return;
             }
 
-            // If there is no view, already on mod list
-            // so just quit
-            if (currentView == null) {
+            // If on mod list view, close
+            if (currentView == modListView) {
                 overlay.Hide();
                 return;
             }
 
             // Otherwise, switch back to the mod list view
-            currentView.Hide();
-            currentView = null;
-
-            SetTheme(modList.theme);
-            scrollView.SetContent(modList);
-            modList.Show();
+            SwitchView(modListView);
         }
 
         /**
@@ -139,10 +153,9 @@ namespace ModMenu {
          * </summary>
          */
         internal void Show() {
-            if (builtModList == false) {
+            // Only scroll to top on first open
+            if (modListView == null ) {
                 BuildModList();
-                builtModList = true;
-
                 overlay.Show();
                 scrollView.ScrollToTop();
             }
@@ -156,7 +169,7 @@ namespace ModMenu {
          * Toggles the visibility of the overlay properly.
          * </summary>
          */
-        internal void ToggleVisibility() {
+        private void ToggleVisibility() {
             if (overlay.isVisible == false) {
                 Show();
             }
@@ -181,63 +194,6 @@ namespace ModMenu {
             background.SetColor(theme.background);
             topBar.SetColor(theme.accent);
             controls.SetColor(theme.accent);
-        }
-
-        /**
-         * <summary>
-         * Switches to another view.
-         * </summary>
-         * <param name="view">The mod to switch to</param>
-         */
-        private void SwitchView(View view) {
-            modList.Hide();
-
-            if (currentView != null) {
-                currentView.Hide();
-            }
-
-            currentView = view;
-            scrollView.SetContent(currentView.root);
-            //SetTheme(currentView.modInfo.theme);
-            currentView.Show();
-        }
-
-        /**
-         * <summary>
-         * Builds the mod list view.
-         * </summary>
-         */
-        internal void BuildModList() {
-            ModManager.Sort();
-
-            foreach (KeyValuePair<BaseUnityPlugin, ModInfo> entry in ModManager.mods) {
-                ModInfo modInfo = entry.Value;
-
-                Area listing = new Area();
-                listing.SetContentLayout(LayoutType.Horizontal);
-                listing.SetElementSpacing(70);
-                listing.SetFill(FillType.All);
-
-                Label modName = new Label($"{modInfo.name} ({modInfo.version})", 25);
-                modName.SetAlignment(TextAnchor.MiddleRight);
-                modName.SetSize(350f, 40f);
-                listing.Add(modName);
-
-                Area buttonArea = new Area();
-                buttonArea.SetSize(350f, 40f);
-                listing.Add(buttonArea);
-
-                UIButton editButton = new UIButton("Edit", 25);
-                editButton.SetAnchor(AnchorType.MiddleLeft);
-                editButton.SetSize(150f, 40f);
-                editButton.onClick.AddListener(() => {
-                    //modInfo.Build(this);
-                    //SwitchView(modInfo.builder);
-                });
-                buttonArea.Add(editButton);
-
-                modList.Add(listing);
-            }
         }
     }
 }

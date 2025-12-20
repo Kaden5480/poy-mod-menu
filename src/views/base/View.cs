@@ -7,14 +7,24 @@ using UIButton = UILib.Components.Button;
 using UnityEngine;
 
 namespace ModMenu.Views {
+    /**
+     * <summary>
+     * The base class for a view in Mod Menu's UI.
+     * </summary>
+     */
     public class View {
-        internal Logger logger;
+        private static Theme defaultTheme = new Theme();
+
+        internal Logger logger { get; private set; }
+
+        // The theme for this view
+        internal Theme theme;
 
         // The root of the view
         internal Area root { get; private set; }
 
         // The info group (including the button)
-        private Area infoGroup;
+        internal Area infoGroup { get; private set; }
 
         // The info scroll view
         private AccentScroll infoScroll;
@@ -32,6 +42,7 @@ namespace ModMenu.Views {
          */
         internal View() {
             logger = new Logger(GetType());
+            theme = defaultTheme;
             sections = new Dictionary<string, Section>();
         }
 
@@ -79,6 +90,7 @@ namespace ModMenu.Views {
             infoScroll.Hide();
             infoGroup.Add(infoScroll);
 
+            // The button for toggling the info scroll on/off
             UIButton infoButton = new UIButton("i", 30);
             infoButton.SetSize(40f, 40f);
             infoButton.onClick.AddListener(
@@ -86,6 +98,7 @@ namespace ModMenu.Views {
             );
             infoGroup.Add(infoButton);
 
+            // This is the area where the info will go
             info = new Area();
             info.SetAnchor(AnchorType.TopMiddle);
             info.SetContentLayout(LayoutType.Vertical);
@@ -111,7 +124,7 @@ namespace ModMenu.Views {
          * Builds the view's basic UI layout.
          * </summary>
          */
-        internal void BuildBase() {
+        protected void BuildBase() {
             if (root != null) {
                 return;
             }
@@ -122,20 +135,21 @@ namespace ModMenu.Views {
             root.SetContentPadding(top: 40, bottom: 40);
             root.SetElementSpacing(40);
 
+            // Build the info scroll view and button
             BuildInfoGroup();
 
             // The attaching below is done manually to
             // prevent unnecessary recursion when setting themes
 
             // Attach the root to the scroll view
-            //root.gameObject.transform.SetParent(
-            //    ui.scrollView.scrollContent.gameObject.transform, false
-            //);
+            root.gameObject.transform.SetParent(
+                Plugin.ui.scrollView.scrollContent.gameObject.transform, false
+            );
 
-            //// Attach the info to the scroll view directly
-            //infoArea.gameObject.transform.SetParent(
-            //    ui.scrollView.gameObject.transform, false
-            //);
+            // Attach the info group to the scroll view directly
+            infoGroup.gameObject.transform.SetParent(
+                Plugin.ui.scrollView.gameObject.transform, false
+            );
         }
 
         /**
@@ -157,6 +171,7 @@ namespace ModMenu.Views {
             root.Show();
             infoGroup.Show();
 
+            // Check if auto-show is enabled
             if (Plugin.config.autoShowInfo.Value == true) {
                 infoScroll.Show();
             }

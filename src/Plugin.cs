@@ -25,13 +25,6 @@ namespace ModMenu {
 
             UIRoot.onInit.AddListener(() => {
                 ui = new UI();
-
-                config.toggleShortcut = UIRoot.AddShortcut(
-                    new[] { config.toggleKeybind.Value }
-                );
-                config.toggleShortcut.onTrigger.AddListener(() => {
-                    ui.ToggleVisibility();
-                });
             });
 
             SceneLoads.onLoad.AddListener(

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 
 using UILib;
 using UILib.Components;
@@ -7,6 +8,7 @@ using UILib.Notifications;
 using UnityEngine;
 using UnityEngine.Networking;
 
+using ModMenu.Parsing;
 using ModMenu.Views;
 
 namespace ModMenu {
@@ -29,6 +31,15 @@ namespace ModMenu {
          */
         internal ModView(ModInfo modInfo) {
             this.modInfo = modInfo;
+            theme = modInfo.theme;
+
+            foreach (KeyValuePair<string, List<BaseField>> entry in modInfo.config) {
+                string category = entry.Key;
+
+                foreach (BaseField field in entry.Value) {
+                    Add(category, new Entry(field));
+                }
+            }
         }
 
         /**
@@ -67,10 +78,12 @@ namespace ModMenu {
             area.SetElementSpacing(10);
             area.SetFill(FillType.All);
 
+            // Add a title
             Label titleLabel = new Label(title, 25);
             titleLabel.SetSize(100f, 30f);
             area.Add(titleLabel);
 
+            // and the corresponding value
             SmallLabel valueLabel = new SmallLabel(value, 25);
             valueLabel.SetSize(100f, 30f);
             area.Add(valueLabel);
@@ -84,10 +97,13 @@ namespace ModMenu {
          * </summary>
          */
         private void BuildModInfo() {
+            // Add the mod's name as a title
             Label title = new Label(modInfo.name, 35);
             title.SetSize(340f, 40f);
             info.Add(title);
 
+            // If a thumbnail has been configured, get
+            // an area ready to store it
             if (modInfo.thumbnail != null
                 || modInfo.thumbnailUrl != null
             ) {
@@ -97,9 +113,12 @@ namespace ModMenu {
                 info.Add(thumbnail);
             }
 
+            // If a thumbnail has been configured, try using it
+            // instead of downloading one
             if (modInfo.thumbnail != null) {
                 thumbnail.SetTexture(modInfo.thumbnail);
             }
+            // Otherwise, download it
             else if (modInfo.thumbnailUrl != null) {
                 DownloadThumbnail(modInfo.thumbnailUrl);
             }
@@ -108,12 +127,15 @@ namespace ModMenu {
             detailSpacing.SetSize(0f, 10f);
             info.Add(detailSpacing);
 
+            // Add the license and version number
             info.Add(BuildInfoEntry("Version", modInfo.version.ToString()));
 
             if (modInfo.license != null) {
                 info.Add(BuildInfoEntry("License", modInfo.license));
             }
 
+            // Add some spacing and a description if one
+            // was configured
             if (modInfo.description != null) {
                 Area descSpacing = new Area();
                 descSpacing.SetSize(0f, 10f);
@@ -132,14 +154,17 @@ namespace ModMenu {
          * </summary>
          */
         internal override void BuildAll() {
+            // Build the base layout to add components to
             BuildBase();
 
             root.gameObject.name = $"{modInfo.name} Root";
 
+            // Custom header
             if (header != null) {
                 root.Add(header);
             }
 
+            // This mod's title
             Label titleLabel = new Label(
                 $"{modInfo.name} ({modInfo.version.ToString()})", 35
             );
@@ -147,15 +172,22 @@ namespace ModMenu {
             titleLabel.SetFill(FillType.Horizontal);
             root.Add(titleLabel);
 
+            // Sections containing the fields for editing
+            // along with any custom ones
             BuildSections();
 
+            // Custom footer
             if (footer != null) {
                 root.Add(footer);
             }
 
-            root.SetTheme(modInfo.theme);
-
+            // Also build the mod's info into
+            // the scroll view on the side
             BuildModInfo();
+
+            // Apply the mod's theme
+            root.SetTheme(modInfo.theme);
+            infoGroup.SetTheme(modInfo.theme);
         }
 
         /**
@@ -168,17 +200,20 @@ namespace ModMenu {
             UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
             yield return request.SendWebRequest();
 
+            // Check for errors
             if (request.isNetworkError == true
                 || request.isHttpError == true
             ) {
-                Notifier.Notify("Mod Menu", "Failed downloading mod's thumbnail");
+                Notifier.Notify($"{modInfo.name}", "Failed downloading thumbnail");
                 yield break;
             }
 
+            // If the thumbnail component doesn't exist, fail
             if (thumbnail == null) {
                 yield break;
             }
 
+            // Otherwise, update the texture and display it
             thumbnail.SetTexture((
                 (DownloadHandlerTexture) request.downloadHandler
             ).texture);
@@ -193,6 +228,7 @@ namespace ModMenu {
          * <param name="url">The URL to download from</param>
          */
         private void DownloadThumbnail(string url) {
+            // If thumbnail downloads were disabled, don't get anything
             if (Plugin.config.enableThumbnailDownloads.Value == false) {
                 return;
             }
