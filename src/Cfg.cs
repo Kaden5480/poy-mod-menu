@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using UILib.Behaviours;
 using UnityEngine;
 
 using ModMenu.Config;
@@ -10,14 +11,28 @@ namespace ModMenu {
      * </summary>
      */
     internal class Cfg {
+        [Listener(typeof(Cfg), nameof(UpdateKeybind))]
         [Field("Toggle Keybind")]
         internal ConfigEntry<KeyCode> toggleKeybind         { get; private set; }
+
+        // The shortcut holding the keybind
+        internal Shortcut toggleShortcut;
 
         [Field("Auto-show Mod Info")]
         internal ConfigEntry<bool> autoShowModInfo          { get; private set; }
 
         [Field("Enable Thumbnail Downloads")]
         internal ConfigEntry<bool> enableThumbnailDownloads { get; private set; }
+
+        /**
+         * <summary>
+         * Immediately updates Mod Menu's toggle keybind.
+         * </summary>
+         * <param name="keyCode">The new KeyCode to use</param>
+         */
+        internal static void UpdateKeybind(KeyCode keyCode) {
+            Plugin.config.toggleShortcut.SetShortcut(new[] { keyCode });
+        }
 
         /**
          * <summary>

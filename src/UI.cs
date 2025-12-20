@@ -148,7 +148,6 @@ namespace ModMenu {
             else {
                 overlay.Show();
             }
-
         }
 
         /**
