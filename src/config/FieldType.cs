@@ -50,13 +50,6 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
-         * Displays a `Dropdown`.
-         * </summary>
-         */
-        Dropdown,
-
-        /**
-         * <summary>
          * Displays the field's value as a `Label`.
          * </summary>
          */

@@ -49,7 +49,6 @@ namespace ModMenu.Parsing {
             = new Dictionary<Type, FieldType>() {
             { typeof(Color),   FieldType.Color    },
             { typeof(KeyCode), FieldType.KeyCode  },
-            { typeof(Enum),    FieldType.Dropdown },
             { typeof(bool),    FieldType.Toggle   },
             { typeof(string),  FieldType.Text     },
         };

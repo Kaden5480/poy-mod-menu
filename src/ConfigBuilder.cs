@@ -327,8 +327,6 @@ namespace ModMenu {
          * <returns>The component</returns>
          */
         private UIComponent BuildComponent(BaseField field) {
-            // TODO: Dropdowns can have custom display names
-
             switch (field.fieldType) {
                 case FieldType.Toggle:
                     return BuildToggle(field);
@@ -340,8 +338,6 @@ namespace ModMenu {
                     return BuildSlider(field);
                 case FieldType.Text:
                     return BuildText(field);
-                //case FieldType.Dropdown:
-                //    return BuildDropdown(field);
                 case FieldType.ReadOnly:
                     return BuildReadOnly(field);
                 default:
