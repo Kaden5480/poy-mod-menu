@@ -22,7 +22,6 @@ namespace ModMenu {
             instance = this;
 
             config = new Cfg(this.Config);
-            Harmony.CreateAndPatchAll(typeof(Patches.ControlMenu));
 
             UIRoot.onInit.AddListener(() => {
                 ui = new UI();
