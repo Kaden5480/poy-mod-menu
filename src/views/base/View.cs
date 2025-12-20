@@ -35,6 +35,11 @@ namespace ModMenu.Views {
         // The sections under this view
         private Dictionary<string, Section> sections;
 
+        // Extra custom entries under this view
+        // These must be built manually, they're just here
+        // for searching purposes
+        private List<Entry> customEntries;
+
         /**
          * <summary>
          * Initializes a view.
@@ -44,6 +49,45 @@ namespace ModMenu.Views {
             logger = new Logger(GetType());
             theme = defaultTheme;
             sections = new Dictionary<string, Section>();
+            customEntries = new List<Entry>();
+        }
+
+        /**
+         * <summary>
+         * Applies a search to this view, enabling/disabling
+         * content.
+         * </summary>
+         * <param name="query">The search query</param>
+         */
+        internal void Search(string query) {
+            foreach (Section section in sections.Values) {
+                section.Search(query);
+            }
+
+            foreach (Entry entry in customEntries) {
+                entry.Search(query);
+            }
+        }
+
+        /**
+         * <summary>
+         * Adds a custom entry.
+         * </summary>
+         * <param name="entry">The entry to add</param>
+         */
+        internal void AddCustom(Entry entry) {
+            customEntries.Add(entry);
+        }
+
+        /**
+         * <summary>
+         * Adds a UIComponent as a custom entry.
+         * </summary>
+         * <param name="entry">The entry to add</param>
+         * <param name="metaData">Optional metdata to provide (for searching)</param>
+         */
+        internal void AddCustom(UIComponent component, MetaData metaData = null) {
+            AddCustom(new Entry(component, metaData));
         }
 
         /**
@@ -67,9 +111,10 @@ namespace ModMenu.Views {
          * </summary>
          * <param name="string">The name of the category to add under</param>
          * <param name="component">The component to add</param>
+         * <param name="metaData">Optional metadata to provide (for searching)</param>
          */
-        public void Add(string category, UIComponent component) {
-            Add(category, new Entry(component));
+        public void Add(string category, UIComponent component, MetaData metaData = null) {
+            Add(category, new Entry(component, metaData));
         }
 
         /**

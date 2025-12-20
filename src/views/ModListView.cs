@@ -80,7 +80,7 @@ namespace ModMenu {
                 });
                 buttonArea.Add(edit);
 
-                root.Add(listing);
+                AddCustom(listing, new MetaData(modInfo));
             }
         }
     }

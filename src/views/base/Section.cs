@@ -31,6 +31,34 @@ namespace ModMenu.Views {
 
         /**
          * <summary>
+         * Searches this section using a given query.
+         * </summary>
+         * <param name="query">The search query</param>
+         */
+        internal void Search(string query) {
+            bool shouldShow = false;
+
+            foreach (Entry entry in entries) {
+                if (entry.component == null) {
+                    continue;
+                }
+
+                entry.Search(query);
+                if (entry.component.isVisible == true) {
+                    shouldShow = true;
+                }
+            }
+
+            if (shouldShow == false) {
+                root.Hide();
+            }
+            else {
+                root.Show();
+            }
+        }
+
+        /**
+         * <summary>
          * Adds an entry to this section.
          * </summary>
          * <param name="entry">The entry to add</param>

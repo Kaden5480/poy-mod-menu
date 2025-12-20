@@ -17,7 +17,7 @@ namespace ModMenu.Views {
     internal class Entry {
         internal BaseField field { get; private set; }
         internal UIComponent component { get; private set; }
-        //private MetaData metaData;
+        internal MetaData metaData { get; private set; }
 
         /**
          * <summary>
@@ -28,6 +28,7 @@ namespace ModMenu.Views {
         internal Entry(BaseField field) {
             this.field = field;
             component = BuildComponent(field);
+            metaData = new MetaData(field);
         }
 
         /**
@@ -35,9 +36,31 @@ namespace ModMenu.Views {
          * Creates an entry using the provided component.
          * </summary>
          * <param name="component">The component to use</param>
+         * <param name="metaData">The search metadata</param>
          */
-        internal Entry(UIComponent component) {
+        internal Entry(UIComponent component, MetaData metaData) {
             this.component = component;
+            this.metaData = metaData;
+        }
+
+        /**
+         * <summary>
+         * Applies a search query to this entry.
+         * </summary>
+         * <param name="query">The search query</param>
+         */
+        internal void Search(string query) {
+            if (metaData == null) {
+                component.Show();
+                return;
+            }
+
+            if (metaData.Matches(query) == false) {
+                component.Hide();
+            }
+            else {
+                component.Show();
+            }
         }
 
 #region BaseField Components
