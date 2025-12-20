@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using UnityEngine;
 using UnityEngine.Events;
@@ -25,6 +26,9 @@ namespace ModMenu.Parsing {
         // Which type of UI component should
         // be displayed for this field
         internal FieldType fieldType = FieldType.None;
+
+        // The predicates to run
+        internal List<MethodInfo> predicates = new List<MethodInfo>();
 
         internal string name         = null;
         internal string description  = null;
@@ -68,8 +72,7 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
-         * Sets the value of this field, also
-         * invoking `onValueChanged`.
+         * Sets the value of this field.
          * </summary>
          * <param name="value">The value to set this field to</param>
          */
@@ -86,6 +89,50 @@ namespace ModMenu.Parsing {
         internal void Restore() {
             SetValue(defaultValue);
             Update();
+        }
+
+        /**
+         * <summary>
+         * Adds a predicate to this field.
+         * </summary>
+         * <param name="predicate">The predicate to add</param>
+         */
+        internal void AddPredicate(MethodInfo predicate) {
+            if (predicates.Contains(predicate) == true) {
+                Plugin.LogError($"{name}: The predicate `{predicate}` has already been specified");
+                return;
+            }
+
+            if (predicate.ReturnType != typeof(string)) {
+                Plugin.LogError($"{name}: The predicate `{predicate}` must return a string");
+                return;
+            }
+
+            if (predicate.IsStatic == false) {
+                Plugin.LogError($"{name}: Can't use non-static predicate `{predicate}`");
+                return;
+            }
+
+            predicates.Add(predicate);
+        }
+
+        /**
+         * <summary>
+         * Checks a value against all predicates.
+         * </summary>
+         * <param name="value">The value to check</param>
+         * <returns>An error message, or null</returns>
+         */
+        internal string CheckPredicates(object value) {
+            foreach (MethodInfo predicate in predicates) {
+                string error = (string) predicate.Invoke(null, new[] { value });
+
+                if (error != null) {
+                    return error;
+                }
+            }
+
+            return null;
         }
 
         /**

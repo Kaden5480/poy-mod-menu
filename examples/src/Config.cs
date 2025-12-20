@@ -9,12 +9,24 @@ namespace ModMenuExamples {
         [Field("My Option", FieldType.Toggle)]
         internal ConfigEntry<bool> myOpt;
 
-        internal ConfigEntry<float> myFl;
-
         internal ConfigEntry<int> myHiddenInt;
 
         [Exclude]
         internal ConfigFile avoid = null;
+
+        // Testing predicates
+        [Predicate(typeof(Config), nameof(TestPredicate))]
+        [Field(FieldType.Slider, min=0f, max=100f)]
+        internal ConfigEntry<float> myFl;
+
+        private static string TestPredicate(float num) {
+            if (num == 60f) {
+                return "The value cannot be 60";
+            }
+
+            return null;
+        }
+
 
         internal Config(ConfigFile configFile) {
             myOpt = configFile.Bind(

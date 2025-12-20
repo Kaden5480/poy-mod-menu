@@ -60,8 +60,27 @@ namespace ModMenu {
         internal ConfigBuilder(ModInfo modInfo) {
             this.modInfo = modInfo;
             categories = new Dictionary<string, List<UIComponent>>();
-
             Start();
+        }
+
+        /**
+         * <summary>
+         * Try setting a value for a field, notifying on errors.
+         * </summary>
+         * <param name="field">The field to try setting for</param>
+         * <param name="value">The value to try setting</param>
+         * <returns>Whether setting was successful</returns>
+         */
+        private bool SetFieldValue(BaseField field, object value) {
+            string error = field.CheckPredicates(value);
+
+            if (error != null) {
+                Notifier.Notify(modInfo.name, error, theme: modInfo.theme);
+                return false;
+            }
+
+            field.SetValue(value);
+            return true;
         }
 
         /**
@@ -146,7 +165,7 @@ namespace ModMenu {
             Toggle toggle = new Toggle((bool) field.value);
             toggle.SetSize(compHeight, compHeight);
             toggle.onValueChanged.AddListener((bool value) => {
-                field.SetValue(value);
+                SetFieldValue(field, value);
             });
 
             field.onValueChanged.AddListener((object value) => {
@@ -167,7 +186,7 @@ namespace ModMenu {
             ColorField colorField = new ColorField((Color) field.value);
             colorField.SetSize(compHeight, compHeight);
             colorField.onValueChanged.AddListener((Color color) => {
-                field.SetValue(color);
+                SetFieldValue(field, color);
             });
 
             field.onValueChanged.AddListener((object color) => {
@@ -190,7 +209,7 @@ namespace ModMenu {
             );
             keyCodeField.SetSize(compWidth, compHeight);
             keyCodeField.onValueChanged.AddListener((KeyCode keyCode) => {
-                field.SetValue(keyCode);
+                SetFieldValue(field, keyCode);
             });
 
             field.onValueChanged.AddListener((object keyCode) => {
@@ -219,8 +238,9 @@ namespace ModMenu {
             Slider slider = new Slider((float) field.min, (float) field.max);
             slider.SetSize(0.6f*compWidth, 10f);
             slider.onValueChanged.AddListener((float value) => {
-                field.SetValue(value);
-                textField.SetValue(field.ToString());
+                if (SetFieldValue(field, value) == true) {
+                    textField.SetValue(field.ToString());
+                }
             });
 
             field.onValueChanged.AddListener((object value) => {
@@ -276,20 +296,16 @@ namespace ModMenu {
                     return false;
                 }
 
-                // If no min/max defined, no more validation is needed
-                if (field.min == null && field.max == null) {
-                    field.SetValue(result);
-                    return true;
+                // Validate min/max if defined
+                if (field.min != null || field.max != null) {
+                    if (TypeChecks.InLimits(result, field.min, field.max) == false) {
+                        Notifier.Notify(modInfo.name, ShowInputError(field), theme: modInfo.theme);
+                        return false;
+                    }
                 }
 
-                // Otherwise validate min and max
-                if (TypeChecks.InLimits(result, field.min, field.max) == false) {
-                    Notifier.Notify(modInfo.name, ShowInputError(field), theme: modInfo.theme);
-                    return false;
-                }
-
-                field.SetValue(result);
-                return true;
+                // Try setting the value
+                return SetFieldValue(field, result);
             });
 
             field.onValueChanged.AddListener((object value) => {

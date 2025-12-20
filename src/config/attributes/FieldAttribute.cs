@@ -17,7 +17,8 @@ namespace ModMenu.Config {
      */
     [AttributeUsage(
         AttributeTargets.Field
-        | AttributeTargets.Property
+        | AttributeTargets.Property,
+        AllowMultiple=true
     )]
     public class FieldAttribute : Attribute {
         private string _name = null;

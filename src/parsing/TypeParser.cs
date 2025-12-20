@@ -107,6 +107,22 @@ namespace ModMenu.Parsing {
             if (field.fieldType == FieldType.None) {
                 field.GuessFieldType();
             }
+
+            // Extract predicates
+            foreach (PredicateAttribute attr in GetAttrs<PredicateAttribute>(info)) {
+                MethodInfo method = AccessTools.Method(
+                    attr.type, attr.name, new Type[] { field.type }, attr.generics
+                );
+
+                string predicateName = $"{attr.type}.{attr.name}({field.type})";
+
+                if (method == null) {
+                    Plugin.LogError($"{field.name}: Unable to find predicate `{predicateName}`");
+                    continue;
+                }
+
+                field.AddPredicate(method);
+            }
         }
 
         /**
