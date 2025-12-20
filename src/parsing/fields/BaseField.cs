@@ -209,6 +209,11 @@ namespace ModMenu.Parsing {
         internal virtual bool Validate() {
             bool valid = true;
 
+            // Read-only is fine for anything
+            if (fieldType == FieldType.ReadOnly) {
+                return true;
+            }
+
             // Can't have a `None` type
             if (fieldType == FieldType.None) {
                 Plugin.LogError($"{name}: Can't use a `None` field type");
