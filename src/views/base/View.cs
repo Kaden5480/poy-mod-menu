@@ -203,10 +203,19 @@ namespace ModMenu.Views {
 
         /**
          * <summary>
+         * Runs some extra code just before this view is shown.
+         * </summary>
+         */
+        internal virtual void Update() {}
+
+        /**
+         * <summary>
          * Shows the built UI.
          * </summary>
          */
         internal void Show() {
+            Update();
+
             root.Show();
 
             if (infoGroup == null) {

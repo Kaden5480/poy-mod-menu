@@ -241,5 +241,17 @@ namespace ModMenu {
             );
         }
 
+        /**
+         * <summary>
+         * Updates all fields being displayed in the mod page.
+         * </summary>
+         */
+        internal override void Update() {
+            foreach (List<BaseField> fields in modInfo.config.Values) {
+                foreach (BaseField field in fields) {
+                    field.Update();
+                }
+            }
+        }
     }
 }

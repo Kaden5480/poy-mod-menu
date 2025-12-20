@@ -80,6 +80,9 @@ namespace ModMenu {
                 });
                 buttonArea.Add(edit);
 
+                root.Add(listing);
+
+                // Add the listing for searching
                 AddCustom(listing, new MetaData(modInfo));
             }
         }

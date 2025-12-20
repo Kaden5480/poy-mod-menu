@@ -112,9 +112,6 @@ namespace ModMenu {
          * </summary>
          */
         internal void BuildModList() {
-            // Sort mods first
-            ModManager.Sort();
-
             modListView = new ModListView();
             modListView.BuildAll();
 
@@ -153,6 +150,10 @@ namespace ModMenu {
          * </summary>
          */
         internal void Show() {
+            if (currentView != null) {
+                currentView.Update();
+            }
+
             // Only scroll to top on first open
             if (modListView == null ) {
                 BuildModList();

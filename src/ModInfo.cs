@@ -37,10 +37,10 @@ namespace ModMenu {
         private List<ConfigFile> configFiles = new List<ConfigFile>();
 
         // Generated config
-        internal Dictionary<string, List<BaseField>> config;
+        internal Dictionary<string, List<BaseField>> config { get; private set; }
 
         // Generated UI
-        internal ModView view;
+        internal ModView view { get; private set; }
 
         /**
          * <summary>
