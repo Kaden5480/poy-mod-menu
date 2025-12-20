@@ -1,5 +1,6 @@
 using BepInEx.Configuration;
 using ModMenu.Config;
+using UILib.Notifications;
 
 namespace ModMenuExamples {
     [Category("Custom Category")]
@@ -16,6 +17,7 @@ namespace ModMenuExamples {
 
         // Testing predicates
         [Predicate(typeof(Config), nameof(TestPredicate))]
+        [Listener(typeof(Config), nameof(TestListener))]
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> myFl;
 
@@ -27,6 +29,9 @@ namespace ModMenuExamples {
             return null;
         }
 
+        private static void TestListener(float value) {
+            Notifier.Notify("Mod Menu Examples", $"Got value from listener: {value}");
+        }
 
         internal Config(ConfigFile configFile) {
             myOpt = configFile.Bind(

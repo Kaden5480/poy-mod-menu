@@ -114,14 +114,27 @@ namespace ModMenu.Parsing {
                     attr.type, attr.name, new Type[] { field.type }, attr.generics
                 );
 
-                string predicateName = $"{attr.type}.{attr.name}({field.type})";
-
                 if (method == null) {
+                    string predicateName = $"{attr.type}.{attr.name}({field.type})";
                     Plugin.LogError($"{field.name}: Unable to find predicate `{predicateName}`");
                     continue;
                 }
 
                 field.AddPredicate(method);
+            }
+
+            // Extract listeners
+            foreach (ListenerAttribute attr in GetAttrs<ListenerAttribute>(info)) {
+                MethodInfo method = AccessTools.Method(
+                    attr.type, attr.name, new Type[] { field.type }, attr.generics
+                );
+
+                if (method == null) {
+                    string listenerName = $"{attr.type}.{attr.name}.({field.type})";
+                    Plugin.LogError($"{field.name}: Unable to find listener `{listenerName}`");
+                }
+
+                field.AddListener(method);
             }
         }
 

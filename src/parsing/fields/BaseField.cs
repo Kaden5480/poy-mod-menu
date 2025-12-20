@@ -30,6 +30,9 @@ namespace ModMenu.Parsing {
         // The predicates to run
         internal List<MethodInfo> predicates = new List<MethodInfo>();
 
+        // Listeners to invoke
+        internal List<MethodInfo> listeners = new List<MethodInfo>();
+
         internal string name         = null;
         internal string description  = null;
         internal object defaultValue = null;
@@ -78,6 +81,10 @@ namespace ModMenu.Parsing {
          */
         internal void SetValue(object value) {
             this.value = value;
+
+            foreach (MethodInfo listener in listeners) {
+                listener.Invoke(null, new object[] { value });
+            }
         }
 
         /**
@@ -137,6 +144,26 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
+         * Adds a listener to this field.
+         * </summary>
+         * <param name="listener">The listener to add</param>
+         */
+        internal void AddListener(MethodInfo listener) {
+            if (listeners.Contains(listener) == true) {
+                Plugin.LogError($"{name}: The listener `{listener}` has already been specified");
+                return;
+            }
+
+            if (listener.IsStatic == false) {
+                Plugin.LogError($"{name}: Can't use non-static listener `{listener}`");
+                return;
+            }
+
+            listeners.Add(listener);
+        }
+
+        /**
+         * <summary>
          * Guesses the most likely field type for
          * the underlying type.
          * </summary>
@@ -160,7 +187,7 @@ namespace ModMenu.Parsing {
                     Plugin.LogError(
                         $"{type}({name}): Unable to guess best FieldType."
                         + " You may want to explicitly define/exclude this field,"
-                        + " you may even be trying to use a type that ModMenu can't use."
+                        + " you may even be trying to use a type that Mod Menu can't use."
                     );
                 }
                 return false;
