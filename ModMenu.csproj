@@ -62,6 +62,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="res/modmenu.bundle"/>
+  </ItemGroup>
+
   <Target Name="CopyPackageAssembliesToSubFolder" AfterTargets="ResolveReferences">
     <ItemGroup>
       <ReferenceCopyLocalPaths

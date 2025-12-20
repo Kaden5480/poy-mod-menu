@@ -137,7 +137,8 @@ namespace ModMenu {
             });
             searchArea.Add(searchBox);
 
-            UIButton searchButton = new UIButton("S", 30);
+            UIButton searchButton = new UIButton(Resources.searchGlass);
+            searchButton.image.SetSize(-15f, -15f);
             searchButton.SetSize(40f, 40f);
             searchButton.onClick.AddListener(() => {});
             searchArea.Add(searchButton);
@@ -181,7 +182,10 @@ namespace ModMenu {
             currentView = view;
             scrollView.SetContent(currentView.root);
             SetTheme(currentView.theme);
-            currentView.Search(searchBox.userInput);
+
+            searchBox.SetValue("");
+            currentView.Search("");
+
             currentView.Show();
         }
 

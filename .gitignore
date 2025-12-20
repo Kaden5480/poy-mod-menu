@@ -6,3 +6,4 @@ build/*.zip
 docs/.config
 docs/_site
 docs/api
+res/
