@@ -44,7 +44,7 @@ namespace ModMenuExamples {
 
         /**
          * <summary>
-         * Sets up mod menu integration.
+         * Sets up Mod Menu integration.
          * </summary>
          */
         private void Register() {

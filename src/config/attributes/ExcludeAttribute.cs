@@ -3,7 +3,7 @@ using System;
 namespace ModMenu.Config {
     /**
      * <summary>
-     * An attribute which tells mod menu to
+     * An attribute which tells Mod Menu to
      * exclude a field.
      * </summary>
      */

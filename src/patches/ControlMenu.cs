@@ -4,7 +4,7 @@ namespace ModMenu.Patches {
     /**
      * <summary>
      * Prevents interacting with the InGameMenu while
-     * mod menu is open.
+     * Mod Menu is open.
      * </summary>
      */
     [HarmonyPatch(typeof(InGameMenu), "Update")]

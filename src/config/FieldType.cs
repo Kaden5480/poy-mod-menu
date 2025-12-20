@@ -1,13 +1,13 @@
 namespace ModMenu.Config {
     /**
      * <summary>
-     * The types of fields which mod menu can display.
+     * The types of fields which Mod Menu can display.
      * </summary>
      */
     public enum FieldType {
         /**
          * <summary>
-         * The default field type, lets mod menu
+         * The default field type, lets Mod Menu
          * infer the most likely type.
          * </summary>
          */

@@ -29,7 +29,7 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * Initializes mod menu's UI.
+         * Initializes Mod Menu's UI.
          * </summary>
          */
         internal UI() {

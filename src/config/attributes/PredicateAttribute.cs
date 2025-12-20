@@ -4,7 +4,7 @@ namespace ModMenu.Config {
     /**
      * <summary>
      * An attribute which allows you to check a user input
-     * before mod menu updates a field's value.
+     * before Mod Menu updates a field's value.
      *
      * Predicates *must* be static methods.
      *
@@ -26,7 +26,7 @@ namespace ModMenu.Config {
      * will be the one which displays its error.
      *
      * NOTE:
-     * If you use a `ConfigEntry&lt;T&gt;`, ModMenu will unwrap this type
+     * If you use a `ConfigEntry&lt;T&gt;`, Mod Menu will unwrap this type
      * and use the inner `T` instead.
      * </summary>
      */

@@ -28,7 +28,7 @@ namespace ModMenu {
         internal Cfg(ConfigFile configFile) {
             toggleKeybind = configFile.Bind(
                 "General", "toggleKeybind", KeyCode.Home,
-                "The keybind to quickly toggle mod menu"
+                "The keybind to quickly toggle Mod Menu"
             );
             autoShowModInfo = configFile.Bind(
                 "General", "autoShowModInfo", true,
