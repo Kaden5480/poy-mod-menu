@@ -62,10 +62,13 @@ namespace ModMenu.Parsing {
          * <summary>
          * Initializes a plain field.
          * </summary>
+         * <param name="modInfo">The mod this field is for</param>
          * <param name="info">The field info to wrap around</param>
          * <param name="instance">The instance to access this field with</param>
          */
-        internal PlainField(FieldInfo info, object instance) : base(info.FieldType) {
+        internal PlainField(ModInfo modInfo, FieldInfo info, object instance)
+            : base(modInfo, info.FieldType)
+        {
             this.info = info;
             parentInstance = instance;
             name = info.Name;

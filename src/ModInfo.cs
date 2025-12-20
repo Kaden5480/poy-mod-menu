@@ -21,7 +21,7 @@ namespace ModMenu {
      *
      * When you `Add` a config to a `ModInfo` instance, it will be parsed
      * and displayed within your mod's config page once
-     * <see cref="ConfigBuilder"/> has built it.
+     * <see cref="ModView"/> has built it.
      * </summary>
      */
     public class ModInfo {
@@ -40,11 +40,11 @@ namespace ModMenu {
         internal Dictionary<string, List<BaseField>> config;
 
         // Generated UI
-        internal ConfigBuilder builder;
+        internal ModView view;
 
         /**
          * <summary>
-         * Invokes listeners with a <see cref="ConfigBuilder"/>
+         * Invokes listeners with a <see cref="ModView"/>
          * when this mod's config page is being built.
          *
          * This allows you to apply some extra customisations
@@ -205,7 +205,7 @@ namespace ModMenu {
             }
 
             config = new TypeParser(
-                configTypes, configObjects, configFiles
+                this, configTypes, configObjects, configFiles
             ).Parse();
         }
 
@@ -220,17 +220,17 @@ namespace ModMenu {
                 Generate();
             }
 
-            if (builder != null) {
+            if (view != null) {
                 return;
             }
 
-            builder = new ConfigBuilder(this);
+            view = new ModView(this);
 
             // Allow any extra customisations
-            onBuild.Invoke(builder);
+            onBuild.Invoke(view);
 
             // Fully build the UI
-            builder.Build(ui);
+            view.BuildAll();
         }
     }
 }

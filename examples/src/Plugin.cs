@@ -78,14 +78,14 @@ namespace ModMenuExamples {
 
             info.Add(config);
             info.Add(typeof(StaticConfig));
-            info.onBuild.AddListener((ConfigBuilder builder) => {
+            info.onBuild.AddListener((ModView view) => {
                 UIButton button = new UIButton("Open Window", 20);
                 button.SetSize(200f, 30f);
                 button.onClick.AddListener(() => {
                     window.ToggleVisibility();
                 });
 
-                builder.Add("Custom Injected Category", button);
+                view.Add("Custom Injected Category", button);
             });
         }
 

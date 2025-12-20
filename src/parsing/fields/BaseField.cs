@@ -16,6 +16,9 @@ namespace ModMenu.Parsing {
      * </summary>
      */
     internal abstract class BaseField {
+        // The mod this field is for
+        internal ModInfo modInfo { get; private set; }
+
         // Information about the parent class this
         // is stored in
         protected object parentInstance = null;
@@ -57,9 +60,11 @@ namespace ModMenu.Parsing {
          * <summary>
          * Initializes a base field.
          * </summary>
+         * <param name="modInfo">The mod this field is for</param>
          * <param name="type">The underlying type this field wraps around</param>
          */
-        internal BaseField(Type type) {
+        internal BaseField(ModInfo modInfo, Type type) {
+            this.modInfo = modInfo;
             this.type = type;
         }
 

@@ -9,6 +9,8 @@ using ModMenu.Config;
 
 namespace ModMenu.Parsing {
     internal class TypeParser {
+        private ModInfo modInfo;
+
         // Things to parse
         private List<Type> types;
         private List<object> objects;
@@ -21,14 +23,18 @@ namespace ModMenu.Parsing {
          * <summary>
          * Initializes a type parser.
          * </summary>
+         * <parma name="modInfo">The mod being parsed</param>
          * <param name="types">The types to parse</param>
          * <param name="objects">The objects to parse</param>
+         * <param name="configFiles">Config files to parse</param>
          */
         internal TypeParser(
+            ModInfo modInfo,
             List<Type> types,
             List<object> objects,
             List<ConfigFile> configFiles
         ) {
+            this.modInfo = modInfo;
             this.types = types;
             this.objects = objects;
             this.configFiles = configFiles;
@@ -185,10 +191,10 @@ namespace ModMenu.Parsing {
                 if (propInfo.PropertyType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
                     ConfigEntryBase entry = (ConfigEntryBase) propInfo.GetValue(instance);
                     category = entry.Definition.Section;
-                    field = new BepInField(entry);
+                    field = new BepInField(modInfo, entry);
                 }
                 else {
-                    field = new PlainProperty(propInfo, instance);
+                    field = new PlainProperty(modInfo, propInfo, instance);
                 }
             }
             // Fields
@@ -198,10 +204,10 @@ namespace ModMenu.Parsing {
                 if (fieldInfo.FieldType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
                     ConfigEntryBase entry = (ConfigEntryBase) fieldInfo.GetValue(instance);
                     category = entry.Definition.Section;
-                    field = new BepInField(entry);
+                    field = new BepInField(modInfo, entry);
                 }
                 else {
-                    field = new PlainField(fieldInfo, instance);
+                    field = new PlainField(modInfo, fieldInfo, instance);
                 }
             }
             else {
@@ -305,7 +311,7 @@ namespace ModMenu.Parsing {
                 entriesInfo.Invoke(configFile, new object[] {});
 
             foreach (KeyValuePair<ConfigDefinition, ConfigEntryBase> entry in entries) {
-                BepInField field = new BepInField(entry.Value);
+                BepInField field = new BepInField(modInfo, entry.Value);
                 string category = entry.Value.Definition.Section;
 
                 if (field.GuessFieldType(true) == false) {

@@ -67,10 +67,13 @@ namespace ModMenu.Parsing {
          * <summary>
          * Initializes a plain property.
          * </summary>
+         * <param name="modInfo">The mod this property is for</param>
          * <param name="info">The property info to wrap around</param>
          * <param name="instance">The instance to access this property with</param>
          */
-        internal PlainProperty(PropertyInfo info, object instance) : base(info.PropertyType) {
+        internal PlainProperty(ModInfo modInfo, PropertyInfo info, object instance)
+            : base(modInfo, info.PropertyType)
+        {
             this.info = info;
             parentInstance = instance;
             name = info.Name;

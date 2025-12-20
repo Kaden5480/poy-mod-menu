@@ -13,13 +13,13 @@ namespace ModMenu {
     internal class Cfg {
         [Listener(typeof(Cfg), nameof(UpdateKeybind))]
         [Field("Toggle Keybind")]
-        internal ConfigEntry<KeyCode> toggleKeybind         { get; private set; }
+        internal ConfigEntry<KeyCode> toggleKeybind { get; private set; }
 
         // The shortcut holding the keybind
         internal Shortcut toggleShortcut;
 
-        [Field("Auto-show Mod Info")]
-        internal ConfigEntry<bool> autoShowModInfo          { get; private set; }
+        [Field("Auto-show Info")]
+        internal ConfigEntry<bool> autoShowInfo { get; private set; }
 
         [Field("Enable Thumbnail Downloads")]
         internal ConfigEntry<bool> enableThumbnailDownloads { get; private set; }
@@ -45,9 +45,9 @@ namespace ModMenu {
                 "General", "toggleKeybind", KeyCode.Home,
                 "The keybind to quickly toggle Mod Menu"
             );
-            autoShowModInfo = configFile.Bind(
-                "General", "autoShowModInfo", true,
-                "Whether mod info should automatically display when opening a mod page"
+            autoShowInfo = configFile.Bind(
+                "General", "autoShowInfo", true,
+                "Whether info should automatically display when opening a view"
             );
             enableThumbnailDownloads = configFile.Bind(
                 "Privacy", "enableThumbnailDownloads", true,

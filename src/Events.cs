@@ -3,11 +3,11 @@ using UnityEngine.Events;
 namespace ModMenu.Events {
     /**
      * <summary>
-     * An event which passes a <see cref="ConfigBuilder"/>
+     * An event which passes a <see cref="ModView"/>
      * to listeners when a config UI is being built.
      * </summary>
      */
-    public class BuildEvent : UnityEvent<ConfigBuilder> {}
+    public class BuildEvent : UnityEvent<ModView> {}
 
     /**
      * <summary>

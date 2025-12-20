@@ -5,9 +5,10 @@ using UILib;
 using UILib.Behaviours;
 using UILib.Components;
 using UILib.Layouts;
+using UIButton = UILib.Components.Button;
 using UnityEngine;
 
-using UIButton = UILib.Components.Button;
+using ModMenu.Views;
 
 namespace ModMenu {
     internal class UI {
@@ -25,7 +26,7 @@ namespace ModMenu {
         private Image topBar;
         private Image controls;
 
-        private ConfigBuilder currentView;
+        private View currentView;
 
         /**
          * <summary>
@@ -188,7 +189,7 @@ namespace ModMenu {
          * </summary>
          * <param name="view">The mod to switch to</param>
          */
-        private void SwitchView(ConfigBuilder view) {
+        private void SwitchView(View view) {
             modList.Hide();
 
             if (currentView != null) {
@@ -197,7 +198,7 @@ namespace ModMenu {
 
             currentView = view;
             scrollView.SetContent(currentView.root);
-            SetTheme(currentView.modInfo.theme);
+            //SetTheme(currentView.modInfo.theme);
             currentView.Show();
         }
 
@@ -230,8 +231,8 @@ namespace ModMenu {
                 editButton.SetAnchor(AnchorType.MiddleLeft);
                 editButton.SetSize(150f, 40f);
                 editButton.onClick.AddListener(() => {
-                    modInfo.Build(this);
-                    SwitchView(modInfo.builder);
+                    //modInfo.Build(this);
+                    //SwitchView(modInfo.builder);
                 });
                 buttonArea.Add(editButton);
 

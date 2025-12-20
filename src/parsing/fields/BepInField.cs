@@ -18,9 +18,12 @@ namespace ModMenu.Parsing {
          * <summary>
          * Initializes a BepIn field.
          * </summary>
+         * <param name="modInfo>The mod this field is for</param>
          * <param name="entry">The entry to wrap around</param>
          */
-        internal BepInField(ConfigEntryBase entry) : base(entry.SettingType) {
+        internal BepInField(ModInfo modInfo, ConfigEntryBase entry)
+            : base(modInfo, entry.SettingType)
+        {
             this.entry = entry;
             name = entry.Definition.Key;
             description = entry.Description.Description;
