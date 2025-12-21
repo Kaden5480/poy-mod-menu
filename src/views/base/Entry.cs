@@ -225,7 +225,7 @@ namespace ModMenu.Views {
             area.SetSize(0f, compHeight);
 
             TextField textField = BuildText(field);
-            textField.SetSize(0.3f*compWidth, compHeight);
+            textField.SetSize(0.3f*compWidth, 0.8f*compHeight);
 
             Slider slider = new Slider((float) field.min, (float) field.max);
             slider.SetValue((float) field.value);
@@ -345,7 +345,7 @@ namespace ModMenu.Views {
          * <returns>The component</returns>
          */
         private Area BuildInputArea(string name, UIComponent component) {
-            component.SetOffset(-50f, 0f);
+            component.SetOffset(-150f, 0f);
 
             Area area = new Area();
             area.SetSize(-1f, 60f);
