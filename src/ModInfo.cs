@@ -25,7 +25,7 @@ namespace ModMenu {
      * </summary>
      */
     public class ModInfo {
-        private Logger logger = new Logger(typeof(ModInfo));
+        internal Logger logger { get; private set; } = new Logger(typeof(ModInfo));
 
         // Underlying mod and its metadata
         private BaseUnityPlugin mod = null;

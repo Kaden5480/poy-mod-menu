@@ -70,6 +70,15 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
+         * Logs an error message under this field's mod.
+         * </summary>
+         */
+        internal void LogError(string message) {
+            modInfo.logger.LogError($"{modInfo.name}.{name}: {message}");
+        }
+
+        /**
+         * <summary>
          * Invokes `onValueChanged` with the current value.
          * </summary>
          */
@@ -110,17 +119,17 @@ namespace ModMenu.Parsing {
          */
         internal void AddPredicate(MethodInfo predicate) {
             if (predicates.Contains(predicate) == true) {
-                Plugin.LogError($"{name}: The predicate `{predicate}` has already been specified");
+                LogError($"The predicate `{predicate}` has already been specified");
                 return;
             }
 
             if (predicate.ReturnType != typeof(string)) {
-                Plugin.LogError($"{name}: The predicate `{predicate}` must return a string");
+                LogError($"The predicate `{predicate}` must return a string");
                 return;
             }
 
             if (predicate.IsStatic == false) {
-                Plugin.LogError($"{name}: Can't use non-static predicate `{predicate}`");
+                LogError($"Can't use non-static predicate `{predicate}`");
                 return;
             }
 
@@ -154,12 +163,12 @@ namespace ModMenu.Parsing {
          */
         internal void AddListener(MethodInfo listener) {
             if (listeners.Contains(listener) == true) {
-                Plugin.LogError($"{name}: The listener `{listener}` has already been specified");
+                LogError($"The listener `{listener}` has already been specified");
                 return;
             }
 
             if (listener.IsStatic == false) {
-                Plugin.LogError($"{name}: Can't use non-static listener `{listener}`");
+                LogError($"Can't use non-static listener `{listener}`");
                 return;
             }
 
@@ -188,7 +197,7 @@ namespace ModMenu.Parsing {
 
             if (fieldType == FieldType.None) {
                 if (quiet == false) {
-                    Plugin.LogError(
+                    LogError(
                         $"{type}({name}): Unable to guess best FieldType."
                         + " You may want to explicitly define/exclude this field,"
                         + " you may even be trying to use a type that Mod Menu can't use."
@@ -216,19 +225,19 @@ namespace ModMenu.Parsing {
 
             // Can't have a `None` type
             if (fieldType == FieldType.None) {
-                Plugin.LogError($"{name}: Can't use a `None` field type");
+                LogError($"Can't use a `None` field type");
                 valid = false;
             }
 
             // Sliders must be numeric
             if (fieldType == FieldType.Slider && TypeChecks.IsNumeric(type) == false) {
-                Plugin.LogError($"{name}: A `Slider` field must be numeric");
+                LogError($"A `Slider` field must be numeric");
                 valid = false;
             }
 
             // Sliders require both limits
             if (fieldType == FieldType.Slider && (min == null || max == null)) {
-                Plugin.LogError($"{name}: A `Slider` field requires both `min` and `max` to be defined");
+                LogError($"A `Slider` field requires both `min` and `max` to be defined");
                 valid = false;
             }
 
@@ -239,7 +248,7 @@ namespace ModMenu.Parsing {
                     case FieldType.Text:
                         break;
                     default:
-                        Plugin.LogError($"{name}: min/max can't be applied to `{fieldType}`");
+                        LogError($"min/max can't be applied to `{fieldType}`");
                         valid = false;
                         break;
                 }
@@ -247,17 +256,17 @@ namespace ModMenu.Parsing {
 
             // Min or max requires numerics
             if ((min != null || max != null) && TypeChecks.IsNumeric(type) == false) {
-                Plugin.LogError($"{name}: Fields with `min`/`max` must be numeric");
+                LogError($"Fields with `min`/`max` must be numeric");
                 valid = false;
             }
 
             // Min and max must be same as type
             if (min != null && (min.GetType() != type)) {
-                Plugin.LogError($"{name}: `min` must be the same type as the field");
+                LogError($"`min` must be the same type as the field");
                 valid = false;
             }
             if (max != null && (max.GetType() != type)) {
-                Plugin.LogError($"{name}: `max` must be the same type as the field");
+                LogError($"`max` must be the same type as the field");
                 valid = false;
             }
 
@@ -265,7 +274,7 @@ namespace ModMenu.Parsing {
             if (defaultTypes.TryGetValue(type, out FieldType compare) == true
                 && fieldType != compare
             ) {
-                Plugin.LogError($"{name}: A `{type}` field can't be a `{fieldType}`");
+                LogError($"A `{type}` field can't be a `{fieldType}`");
                 valid = false;
             }
 

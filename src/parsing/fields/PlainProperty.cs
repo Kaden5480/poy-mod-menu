@@ -51,12 +51,12 @@ namespace ModMenu.Parsing {
             }
 
             if (info.GetMethod == null) {
-                Plugin.LogError($"{name}: Properties must have a getter");
+                LogError($"Properties must have a getter");
                 valid = false;
             }
 
             if (info.SetMethod == null && fieldType != FieldType.ReadOnly) {
-                Plugin.LogError($"{name}: Properties must have a setter if they aren't a `ReadOnly` field type");
+                LogError($"Properties must have a setter if they aren't a `ReadOnly` field type");
                 valid = false;
             }
 

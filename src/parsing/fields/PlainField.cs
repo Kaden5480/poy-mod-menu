@@ -51,7 +51,7 @@ namespace ModMenu.Parsing {
             }
 
             if (info.IsInitOnly == true && fieldType != FieldType.ReadOnly) {
-                Plugin.LogError($"{name}: Read-only fields must be a `ReadOnly` type");
+                LogError($"Read-only fields must be a `ReadOnly` type");
                 return false;
             }
 

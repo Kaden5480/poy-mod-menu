@@ -329,7 +329,7 @@ namespace ModMenu.Views {
                 case FieldType.ReadOnly:
                     return BuildReadOnly(field);
                 default:
-                    Plugin.LogError($"{field.name}: Unexpected field type `{field.fieldType}`");
+                    field.LogError($"Unexpected field type `{field.fieldType}`");
                     return null;
             }
         }
