@@ -12,8 +12,6 @@ namespace ModMenu.Views {
      * </summary>
      */
     public class View {
-        private static Theme defaultTheme = new Theme();
-
         internal Logger logger { get; private set; }
 
         // The theme for this view
@@ -46,7 +44,7 @@ namespace ModMenu.Views {
          */
         internal View() {
             logger = new Logger(GetType());
-            theme = defaultTheme;
+            theme = Theme.GetTheme();
             sections = new Dictionary<string, Section>();
             customEntries = new List<Entry>();
         }

@@ -50,21 +50,20 @@ namespace ModMenuExamples {
         private void Register() {
             Font arial = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
 
-            Theme customTheme = new Theme() {
-                font               = arial,
-                fontAlt            = arial,
-                fontLineSpacing    = 1f,
-                fontScaler         = 0.98f,
-                fontScalerAlt      = 1f,
-                background         = Colors.HSL(240, 10, 10),
-                foreground         = Colors.HSL(240, 100, 90),
-                accent             = Colors.HSL(240, 10, 15),
-                accentAlt          = Colors.HSL(240, 10, 20),
-                selectNormal       = Colors.HSL(240, 20, 40),
-                selectHighlight    = Colors.HSL(240, 20, 50),
-                selectAltNormal    = Colors.HSL(240, 30, 60),
-                selectAltHighlight = Colors.HSL(240, 30, 70),
-            };
+            Theme customTheme = Theme.GetTheme();
+            customTheme.font               = arial;
+            customTheme.fontAlt            = arial;
+            customTheme.fontLineSpacing    = 1f;
+            customTheme.fontScaler         = 0.98f;
+            customTheme.fontScalerAlt      = 1f;
+            customTheme.background         = Colors.HSL(240, 10, 10);
+            customTheme.foreground         = Colors.HSL(240, 100, 90);
+            customTheme.accent             = Colors.HSL(240, 10, 15);
+            customTheme.accentAlt          = Colors.HSL(240, 10, 20);
+            customTheme.selectNormal       = Colors.HSL(240, 20, 40);
+            customTheme.selectHighlight    = Colors.HSL(240, 20, 50);
+            customTheme.selectAltNormal    = Colors.HSL(240, 30, 60);
+            customTheme.selectAltHighlight = Colors.HSL(240, 30, 70);
 
             ModInfo info = ModManager.Register(this);
             info.theme = customTheme;
