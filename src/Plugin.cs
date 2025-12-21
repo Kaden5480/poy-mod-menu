@@ -34,7 +34,7 @@ namespace ModMenu {
             // Register with self
             ModInfo info = ModManager.Register(this);
             info.Add(config);
-            info.license = "GPLv3.0";
+            info.license = "GPL-3.0";
         }
 
         /**
