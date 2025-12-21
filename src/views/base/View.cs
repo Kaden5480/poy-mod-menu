@@ -129,6 +129,12 @@ namespace ModMenu.Views {
          * <param name="metaData">Optional metadata to provide (for searching)</param>
          */
         public void Add(string category, string name, UIComponent component, MetaData metaData = null) {
+            if (metaData == null) {
+                metaData = new MetaData();
+            }
+
+            metaData.Add(name);
+
             Add(category, new Entry(name, component, metaData));
         }
 

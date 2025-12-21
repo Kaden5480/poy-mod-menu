@@ -9,7 +9,14 @@ namespace ModMenu.Views {
      * </summary>
      */
     public class MetaData {
-        private string metadata;
+        private string metadata = "";
+
+        /**
+         * <summary>
+         * Initializes a blank metadata.
+         * </summary>
+         */
+        public MetaData() {}
 
         /**
          * <summary>
@@ -18,7 +25,7 @@ namespace ModMenu.Views {
          * <param name="tags">The tags to use</param>
          */
         public MetaData(IList<string> tags) {
-            metadata = string.Join("", tags).ToLower();
+            Add(tags);
         }
 
         /**
@@ -28,7 +35,7 @@ namespace ModMenu.Views {
          * <param name="field">The field to generate metadata for</param>
          */
         internal MetaData(BaseField field) {
-            metadata = $"{field.name}{field.description}{field.value}".ToLower();
+            Add($"{field.name}{field.description}{field.value}");
         }
 
         /**
@@ -38,7 +45,27 @@ namespace ModMenu.Views {
          * <param name="modInfo">The mod info to generate metadata for</param>
          */
         internal MetaData(ModInfo modInfo) {
-            metadata = $"{modInfo.name}{modInfo.version}{modInfo.description}".ToLower();
+            Add($"{modInfo.name}{modInfo.version}{modInfo.description}");
+        }
+
+        /**
+         * <summary>
+         * Adds another tag to the metadata.
+         * </summary>
+         * <param name="tag">The tag to add</param>
+         */
+        public void Add(string tag) {
+            metadata += tag.ToLower();
+        }
+
+        /**
+         * <summary>
+         * Adds more tags to the metadata.
+         * </summary>
+         * <param name="tags">The tags to add</params>
+         */
+        public void Add(IList<string> tags) {
+            metadata += string.Join("", tags).ToLower();
         }
 
         /**
