@@ -39,6 +39,9 @@ namespace ModMenu {
             overlay.SetFill(FillType.All);
             overlay.SetSortable(false);
 
+            // Lock vanilla inputs
+            overlay.SetInputLock(true);
+
             background = new Image();
             background.SetFill(FillType.All);
             overlay.Add(background);
