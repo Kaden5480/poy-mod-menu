@@ -35,7 +35,7 @@ namespace ModMenu {
 
         [Category("Keybinds")]
         [Field("Search")]
-        private const string search = "Ctrl+F";
+        private const string search = "Ctrl + F";
 
         /**
          * <summary>

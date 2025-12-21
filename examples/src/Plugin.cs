@@ -50,7 +50,7 @@ namespace ModMenuExamples {
         private void Register() {
             Font arial = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
 
-            Theme customTheme = Theme.GetTheme();
+            Theme customTheme = Theme.MakeNew("Mod Menu Example Theme");
             customTheme.font               = arial;
             customTheme.fontAlt            = arial;
             customTheme.fontLineSpacing    = 1f;
