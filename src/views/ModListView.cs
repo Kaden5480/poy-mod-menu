@@ -28,7 +28,7 @@ namespace ModMenu {
         internal override void BuildAll() {
             BuildBase();
 
-            root.SetContentPadding(20, 20, 50, 50);
+            root.SetContentPadding(20, 50);
             root.SetElementSpacing(20);
 
             Label title = new Label("Installed Mods", 45);

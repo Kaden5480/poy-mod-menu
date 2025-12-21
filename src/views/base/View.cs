@@ -146,7 +146,7 @@ namespace ModMenu.Views {
             info = new Area();
             info.SetAnchor(AnchorType.TopMiddle);
             info.SetContentLayout(LayoutType.Vertical);
-            info.SetContentPadding(20, 20, 20, 20);
+            info.SetContentPadding(20);
             info.SetElementAlignment(AnchorType.TopMiddle);
             info.SetElementSpacing(10);
             infoScroll.Add(info);
