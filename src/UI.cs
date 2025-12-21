@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 using BepInEx;
 using UILib;
-using UILib.Behaviours;
 using UILib.Components;
 using UILib.Layouts;
 using UIButton = UILib.Components.Button;

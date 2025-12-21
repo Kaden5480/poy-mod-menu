@@ -1,5 +1,5 @@
 using BepInEx.Configuration;
-using UILib.Behaviours;
+using UILib;
 using UnityEngine;
 
 using ModMenu.Config;
