@@ -27,8 +27,21 @@ namespace ModMenu.Views {
          */
         internal Entry(BaseField field) {
             this.field = field;
-            component = BuildComponent(field);
+            component = BuildInputArea(field.name, BuildField(field));
             metaData = new MetaData(field);
+        }
+
+        /**
+         * <summary>
+         * Creates an entry using the provided component.
+         * </summary>
+         * <param name="name">The name of the component</param>
+         * <param name="component">The component to use</param>
+         * <param name="metaData">The search metadata</param>
+         */
+        internal Entry(string name, UIComponent component, MetaData metaData) {
+            this.component = BuildInputArea(name, component);
+            this.metaData = metaData;
         }
 
         /**
@@ -301,34 +314,38 @@ namespace ModMenu.Views {
          * </summary>
          * <returns>The component</returns>
          */
-        private UIComponent BuildComponent(BaseField field) {
-            UIComponent input;
-
+        private UIComponent BuildField(BaseField field) {
             switch (field.fieldType) {
                 case FieldType.Toggle:
-                    input = BuildToggle(field);
-                    break;
+                    return BuildToggle(field);
                 case FieldType.Color:
-                    input = BuildColor(field);
-                    break;
+                    return BuildColor(field);
                 case FieldType.KeyCode:
-                    input = BuildKeyCode(field);
-                    break;
+                    return BuildKeyCode(field);
                 case FieldType.Slider:
-                    input = BuildSlider(field);
-                    break;
+                    return BuildSlider(field);
                 case FieldType.Text:
-                    input = BuildText(field);
-                    break;
+                    return BuildText(field);
                 case FieldType.ReadOnly:
-                    input = BuildReadOnly(field);
-                    break;
+                    return BuildReadOnly(field);
                 default:
                     Plugin.LogError($"{field.name}: Unexpected field type `{field.fieldType}`");
                     return null;
             }
+        }
 
-            input.SetOffset(-50f, 0f);
+#endregion
+
+        /**
+         * <summary>
+         * Build an area with a label and a given component.
+         * </summary>
+         * <param name="name">The name to label this component with</param>
+         * <param name="component">The component to build an area for</param>
+         * <returns>The component</returns>
+         */
+        private Area BuildInputArea(string name, UIComponent component) {
+            component.SetOffset(-50f, 0f);
 
             Area area = new Area();
             area.SetSize(-1f, 60f);
@@ -336,20 +353,17 @@ namespace ModMenu.Views {
             area.SetContentLayout(LayoutType.Horizontal);
             area.SetElementSpacing(70);
 
-            SmallLabel label = new SmallLabel(field.name, 25);
-            label.SetSize(300f, 60f);
+            SmallLabel label = new SmallLabel(name, 25);
+            label.SetSize(500f, 60f);
             label.SetAlignment(AnchorType.MiddleRight);
             area.Add(label);
 
             Area controlArea = new Area();
-            controlArea.SetSize(300f, 60f);
-            controlArea.Add(input);
+            controlArea.SetSize(500f, 60f);
+            controlArea.Add(component);
             area.Add(controlArea);
 
             return area;
         }
     }
-
-#endregion
-
 }

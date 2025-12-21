@@ -108,12 +108,28 @@ namespace ModMenu.Views {
          * <summary>
          * Adds a UIComponent under a given category.
          * </summary>
-         * <param name="string">The name of the category to add under</param>
+         * <param name="category">The name of the category to add under</param>
          * <param name="component">The component to add</param>
          * <param name="metaData">Optional metadata to provide (for searching)</param>
          */
         public void Add(string category, UIComponent component, MetaData metaData = null) {
             Add(category, new Entry(component, metaData));
+        }
+
+        /**
+         * <summary>
+         * Adds a UIComponent under a given category with a specified name.
+         *
+         * This will display the provided UIComponent with a label, like other inputs
+         * which Mod Menu generates.
+         * </summary>
+         * <param name="category">The name of the category to add under</param>
+         * <param name="name">The name to display in the label</param>
+         * <param name="component">The component to add</param>
+         * <param name="metaData">Optional metadata to provide (for searching)</param>
+         */
+        public void Add(string category, string name, UIComponent component, MetaData metaData = null) {
+            Add(category, new Entry(name, component, metaData));
         }
 
         /**
