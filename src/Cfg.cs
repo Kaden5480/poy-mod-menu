@@ -26,11 +26,11 @@ namespace ModMenu {
 
         // Extra custom read-only fields
         [Category("Keybinds")]
-        [Field("Go Back", "The keybind to go back")]
+        [Field("Go Back", "The keybind to go back.")]
         private const string goBack = "Escape";
 
         [Category("Keybinds")]
-        [Field("Search", "The keybind to start searching")]
+        [Field("Search", "The keybind to start searching.")]
         private const string search = "Ctrl + F";
 
         /**
@@ -42,21 +42,21 @@ namespace ModMenu {
         internal Cfg(ConfigFile configFile) {
             autoShowInfo = configFile.Bind(
                 "General", "autoShowInfo", true,
-                "Whether info should automatically display when opening a view"
+                "Whether info should automatically display when opening a view."
             );
             autoSearch = configFile.Bind(
                 "General", "autoSearch", true,
-                "Whether to automatically search while typing the search query"
+                "Whether to automatically search while typing the search query."
             );
 
             toggleKeybind = configFile.Bind(
                 "Keybinds", "toggleKeybind", KeyCode.Home,
-                "The keybind to quickly toggle Mod Menu"
+                "The keybind to quickly toggle Mod Menu."
             );
 
             enableThumbnailDownloads = configFile.Bind(
                 "Privacy", "enableThumbnailDownloads", true,
-                "Whether mod thumbnails can be downloaded"
+                "Whether mod thumbnails can be downloaded."
             );
         }
     }

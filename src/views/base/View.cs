@@ -111,6 +111,9 @@ namespace ModMenu.Views {
          * <param name="metaData">Optional metadata to provide (for searching)</param>
          */
         public void Add(string category, UIComponent component, MetaData metaData = null) {
+            if (metaData != null) {
+                component.SetTooltip(metaData.description);
+            }
             Add(category, new Entry(component, metaData));
         }
 

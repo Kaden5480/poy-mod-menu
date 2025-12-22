@@ -3,7 +3,7 @@
     <TargetFramework>net472</TargetFramework>
     <Platform>Any CPU</Platform>
     <AssemblyName>ModMenu</AssemblyName>
-    <Description>A Peaks of Yore mod menu</Description>
+    <Description>A Peaks of Yore mod menu.</Description>
     <Version>0.1.0</Version>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <Configurations>Debug;Release</Configurations>

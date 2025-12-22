@@ -43,15 +43,15 @@ namespace ModMenuExamples {
         internal Config(ConfigFile configFile) {
             myOpt = configFile.Bind(
                 "General", "myOption", true,
-                "An option which might be true"
+                "An option which might be true."
             );
             myFl = configFile.Bind(
                 "Cool Category", "myFloat", 0f,
-                "A random float"
+                "A random float."
             );
             myHiddenInt = configFile.Bind(
                 "General", "hidden", 123,
-                "A hidden int"
+                "A hidden int."
             );
         }
     }
