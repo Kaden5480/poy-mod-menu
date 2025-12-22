@@ -82,22 +82,25 @@ namespace ModMenu {
             backButton.onClick.AddListener(GoBack);
 
             // Register global keybind for going back
-            Shortcut backShortcut = overlay.AddShortcut(new[] { KeyCode.Escape });
+            Shortcut backShortcut = new Shortcut(new[] { KeyCode.Escape });
             backShortcut.onTrigger.AddListener(GoBack);
+            overlay.AddShortcut(backShortcut);
 
             // Register local shortcut for searching
-            Shortcut searchShortcut = overlay.AddShortcut(new[] { KeyCode.LeftControl, KeyCode.F });
+            Shortcut searchShortcut = new Shortcut(new[] { KeyCode.LeftControl, KeyCode.F });
             searchShortcut.onTrigger.AddListener(() => {
                 EventSystem.current.SetSelectedGameObject(searchBox.gameObject);
             });
+            overlay.AddShortcut(searchShortcut);
 
             // Register global keybind for toggling
-            Plugin.config.toggleShortcut = UIRoot.AddShortcut(
-                new[] { Plugin.config.toggleKeybind.Value }
+            Shortcut toggleShortcut = new Shortcut(
+                new[] { Plugin.config.toggleKeybind }
             );
-            Plugin.config.toggleShortcut.onTrigger.AddListener(() => {
+            toggleShortcut.onTrigger.AddListener(() => {
                 ToggleVisibility();
             });
+            UIRoot.AddShortcut(toggleShortcut);
         }
 
         /**

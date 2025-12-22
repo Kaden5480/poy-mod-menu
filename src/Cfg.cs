@@ -21,12 +21,8 @@ namespace ModMenu {
         internal ConfigEntry<bool> enableThumbnailDownloads { get; private set; }
 
         // Toggle shortcut
-        [Listener(typeof(Cfg), nameof(UpdateKeybind))]
         [Field("Toggle Keybind")]
         internal ConfigEntry<KeyCode> toggleKeybind { get; private set; }
-
-        // The shortcut holding the keybind
-        internal Shortcut toggleShortcut;
 
         // Extra custom read-only fields
         [Category("Keybinds")]
@@ -36,16 +32,6 @@ namespace ModMenu {
         [Category("Keybinds")]
         [Field("Search")]
         private const string search = "Ctrl + F";
-
-        /**
-         * <summary>
-         * Immediately updates Mod Menu's toggle keybind.
-         * </summary>
-         * <param name="keyCode">The new KeyCode to use</param>
-         */
-        internal static void UpdateKeybind(KeyCode keyCode) {
-            Plugin.config.toggleShortcut.SetShortcut(new[] { keyCode });
-        }
 
         /**
          * <summary>
