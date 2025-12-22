@@ -42,6 +42,9 @@ namespace ModMenu {
         // Generated UI
         internal ModView view { get; private set; }
 
+        // Whether this mod info was auto-generated
+        internal bool generated = false;
+
         /**
          * <summary>
          * Invokes listeners with a <see cref="ModView"/>

@@ -51,6 +51,9 @@ namespace ModMenu {
 
                 ModInfo info = ModManager.Register(mod);
 
+                // Mark as auto-generated
+                info.generated = true;
+
                 // Add the config entries
                 info.Add(mod.Config);
             }

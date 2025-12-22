@@ -168,12 +168,27 @@ namespace ModMenu {
             }
 
             // This mod's title
+            Area titleArea = new Area();
+            titleArea.SetFill(FillType.All);
+            titleArea.SetContentLayout(LayoutType.Vertical);
+            titleArea.SetElementSpacing(5f);
+
             Label titleLabel = new Label(
                 $"{modInfo.name} ({modInfo.version.ToString()})", 35
             );
             titleLabel.SetSize(0f, 40f);
             titleLabel.SetFill(FillType.Horizontal);
-            root.Add(titleLabel);
+            titleArea.Add(titleLabel);
+
+            // Auto-generated label
+            if (modInfo.generated == true) {
+                SmallLabel generatedLabel = new SmallLabel("(auto-generated)", 16);
+                generatedLabel.SetSize(0f, 20f);
+                generatedLabel.SetFill(FillType.Horizontal);
+                titleArea.Add(generatedLabel);
+            }
+
+            root.Add(titleArea);
 
             // Sections containing the fields for editing
             // along with any custom ones
