@@ -79,10 +79,10 @@ namespace ModMenu.Parsing {
          * <param name="field">The field to add metadata to</param>
          * <param name="info">The field info to parse attributes for</param>
          */
-        private void ParseMetadata(BaseField field, MemberInfo info) {
+        private void ParseMetadata(BaseField field) {
             // FieldAttributes can override the default data in
             // fields, so iterate over them and see what gets changed
-            foreach (FieldAttribute attr in GetAttrs<FieldAttribute>(info)) {
+            foreach (FieldAttribute attr in GetAttrs<FieldAttribute>(field.memberInfo)) {
                 if (attr.name != null) {
                     field.name = attr.name;
                 }
@@ -115,7 +115,7 @@ namespace ModMenu.Parsing {
             }
 
             // Extract predicates
-            foreach (PredicateAttribute attr in GetAttrs<PredicateAttribute>(info)) {
+            foreach (PredicateAttribute attr in GetAttrs<PredicateAttribute>(field.memberInfo)) {
                 MethodInfo method = AccessTools.Method(
                     attr.type, attr.name, new Type[] { field.type }, attr.generics
                 );
@@ -130,7 +130,7 @@ namespace ModMenu.Parsing {
             }
 
             // Extract listeners
-            foreach (ListenerAttribute attr in GetAttrs<ListenerAttribute>(info)) {
+            foreach (ListenerAttribute attr in GetAttrs<ListenerAttribute>(field.memberInfo)) {
                 MethodInfo method = AccessTools.Method(
                     attr.type, attr.name, new Type[] { field.type }, attr.generics
                 );
@@ -150,16 +150,16 @@ namespace ModMenu.Parsing {
          * </summary>
          * <param name="category">The category this field is in</param>
          * <param name="field">The field to parse</param>
-         * <param name="info">The member info</param>
+         * <returns>True if successful</returns>
          */
-        private void ParseField(string category, BaseField field, MemberInfo info) {
+        private bool ParseField(string category, BaseField field) {
             // Check if the field is valid
             if (field.Validate() == false) {
-                return;
+                return false;
             }
 
             // Override category if defined
-            CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(info);
+            CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(field.memberInfo);
             if (categoryAttr != null) {
                 category = categoryAttr.name;
             }
@@ -170,6 +170,7 @@ namespace ModMenu.Parsing {
             }
 
             config[category].Add(field);
+            return true;
         }
 
         /**
@@ -179,8 +180,9 @@ namespace ModMenu.Parsing {
          * <param name="category">The category the member is in</param>
          * <param name="member">The member to parse</param>
          * <param name="instance">The parent instance</param>
+         * <returns>The field which was created if successful, null otherwise</returns>
          */
-        private void ParseMember<T>(string category, MemberInfo info, object instance) {
+        private BaseField ParseMember<T>(string category, MemberInfo info, object instance) {
             BaseField field;
 
             // Properties
@@ -190,7 +192,7 @@ namespace ModMenu.Parsing {
                 if (propInfo.PropertyType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
                     ConfigEntryBase entry = (ConfigEntryBase) propInfo.GetValue(instance);
                     category = entry.Definition.Section;
-                    field = new BepInField(modInfo, entry);
+                    field = new BepInField(modInfo, info, entry);
                 }
                 else {
                     field = new PlainProperty(modInfo, propInfo, instance);
@@ -203,21 +205,25 @@ namespace ModMenu.Parsing {
                 if (fieldInfo.FieldType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
                     ConfigEntryBase entry = (ConfigEntryBase) fieldInfo.GetValue(instance);
                     category = entry.Definition.Section;
-                    field = new BepInField(modInfo, entry);
+                    field = new BepInField(modInfo, info, entry);
                 }
                 else {
                     field = new PlainField(modInfo, fieldInfo, instance);
                 }
             }
             else {
-                return;
+                return null;
             }
 
             // Parse attributes
-            ParseMetadata(field, info);
+            ParseMetadata(field);
 
             // Parse the field into the categories
-            ParseField(category, field, info);
+            if (ParseField(category, field) == false) {
+                return null;
+            }
+
+            return field;
         }
 
         /**
@@ -253,12 +259,29 @@ namespace ModMenu.Parsing {
             // If a CategoryAttribute doesn't exist, just default to the name of the type
             string category = type.Name;
 
+            // Custom category name
             CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(type);
             if (categoryAttr != null) {
                 category = categoryAttr.name;
             }
 
+            // IncludeAll
             IncludeAllAttribute includeAll = GetAttr<IncludeAllAttribute>(type);
+
+            // Find all listeners
+            List<MethodInfo> listeners = new List<MethodInfo>();
+            foreach (ListenerAttribute attr in GetAttrs<ListenerAttribute>(type)) {
+                MethodInfo method = AccessTools.Method(
+                    attr.type, attr.name, new[] { typeof(MemberInfo), typeof(object) }, attr.generics
+                );
+
+                if (method == null) {
+                    string listenerName = $"{attr.type}.{attr.name}.(MemberInfo, object)";
+                    Plugin.LogError($"{category}: Unable to find listener `{listenerName}`");
+                }
+
+                listeners.Add(method);
+            }
 
             foreach (MemberInfo info in members) {
                 // Check if this even has a field attribute
@@ -273,10 +296,21 @@ namespace ModMenu.Parsing {
                     continue;
                 }
 
-                ParseMember<T>(
+                // Try parsing the field
+                BaseField field = ParseMember<T>(
                     category, info,
                     (IsStatic<T>(info) == true) ? null : obj
                 );
+
+                // Check for failures
+                if (field == null) {
+                    continue;
+                }
+
+                // Otherwise, add extra listeners
+                foreach (MethodInfo listener in listeners) {
+                    field.AddClassListener(listener);
+                }
             }
         }
 
@@ -310,7 +344,7 @@ namespace ModMenu.Parsing {
                 entriesInfo.Invoke(configFile, new object[] {});
 
             foreach (KeyValuePair<ConfigDefinition, ConfigEntryBase> entry in entries) {
-                BepInField field = new BepInField(modInfo, entry.Value);
+                BepInField field = new BepInField(modInfo, null, entry.Value);
                 string category = entry.Value.Definition.Section;
 
                 if (field.GuessFieldType(true) == false) {

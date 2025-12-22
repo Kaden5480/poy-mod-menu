@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using BepInEx.Configuration;
 
 namespace ModMenu.Parsing {
@@ -19,10 +21,11 @@ namespace ModMenu.Parsing {
          * Initializes a BepIn field.
          * </summary>
          * <param name="modInfo>The mod this field is for</param>
+         * <param name="memberInfo">This field's member info</param>
          * <param name="entry">The entry to wrap around</param>
          */
-        internal BepInField(ModInfo modInfo, ConfigEntryBase entry)
-            : base(modInfo, entry.SettingType)
+        internal BepInField(ModInfo modInfo, MemberInfo memberInfo, ConfigEntryBase entry)
+            : base(modInfo, memberInfo, entry.SettingType)
         {
             this.entry = entry;
             name = entry.Definition.Key;

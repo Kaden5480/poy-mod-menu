@@ -72,7 +72,7 @@ namespace ModMenu.Parsing {
          * <param name="instance">The instance to access this property with</param>
          */
         internal PlainProperty(ModInfo modInfo, PropertyInfo info, object instance)
-            : base(modInfo, info.PropertyType)
+            : base(modInfo, info, info.PropertyType)
         {
             this.info = info;
             parentInstance = instance;

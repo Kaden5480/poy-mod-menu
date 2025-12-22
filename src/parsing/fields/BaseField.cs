@@ -19,9 +19,11 @@ namespace ModMenu.Parsing {
         // The mod this field is for
         internal ModInfo modInfo { get; private set; }
 
-        // Information about the parent class this
-        // is stored in
+        // An instance of the parent (if non-static)
         protected object parentInstance = null;
+
+        // The member info for this field
+        internal MemberInfo memberInfo { get; private set; }
 
         // The underlying type this field holds
         internal Type type { get; private set; }
@@ -34,6 +36,7 @@ namespace ModMenu.Parsing {
         internal List<MethodInfo> predicates = new List<MethodInfo>();
 
         // Listeners to invoke
+        internal List<MethodInfo> classListeners = new List<MethodInfo>();
         internal List<MethodInfo> listeners = new List<MethodInfo>();
 
         internal string name         = null;
@@ -61,10 +64,12 @@ namespace ModMenu.Parsing {
          * Initializes a base field.
          * </summary>
          * <param name="modInfo">The mod this field is for</param>
+         * <param name="memberInfo">This field's member info</param>
          * <param name="type">The underlying type this field wraps around</param>
          */
-        internal BaseField(ModInfo modInfo, Type type) {
+        internal BaseField(ModInfo modInfo, MemberInfo memberInfo, Type type) {
             this.modInfo = modInfo;
+            this.memberInfo = memberInfo;
             this.type = type;
         }
 
@@ -96,7 +101,11 @@ namespace ModMenu.Parsing {
             this.value = value;
 
             foreach (MethodInfo listener in listeners) {
-                listener.Invoke(null, new object[] { value });
+                listener.Invoke(null, new[] { value });
+            }
+
+            foreach (MethodInfo listener in classListeners) {
+                listener.Invoke(null, new[] { memberInfo, value });
             }
         }
 
@@ -153,6 +162,26 @@ namespace ModMenu.Parsing {
             }
 
             return null;
+        }
+
+        /**
+         * <summary>
+         * Adds a class listener to this field.
+         * </summary>
+         * <param name="listener">The listener to add</param>
+         */
+        internal void AddClassListener(MethodInfo listener) {
+            if (classListeners.Contains(listener) == true) {
+                LogError($"The class listener `{listener}` has already been specified");
+                return;
+            }
+
+            if (listener.IsStatic == false) {
+                LogError($"Can't use non-static class listener `{listener}`");
+                return;
+            }
+
+            classListeners.Add(listener);
         }
 
         /**

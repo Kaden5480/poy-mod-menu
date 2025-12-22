@@ -8,15 +8,22 @@ namespace ModMenu.Config {
      *
      * Listeners *must* be static methods.
      *
-     * They must also take a single value, which must be of the type of the field
+     * For listener attributes applied to fields:
+     * - They must take a single value, which must match the type of the field
+     * - If you use a `ConfigEntry&lt;T&gt;`, Mod Menu will unwrap this type
+     *   and use the inner `T` instead.
      *
-     * NOTE:
-     * If you use a `ConfigEntry&lt;T&gt;`, Mod Menu will unwrap this type
-     * and use the inner `T` instead.
+     * For listener attributes applied to classes:
+     * - They must take two values, which are a
+     *   <see cref="System.Reflection.MemberInfo"/> and an <see cref="object"/>
+     *   (in this order).
+     * - The first argument is the `MemberInfo` of the field/property which was updated
+     * - The second argument is the value it was set to
      * </summary>
      */
     [AttributeUsage(
-        AttributeTargets.Field
+        AttributeTargets.Class
+        | AttributeTargets.Field
         | AttributeTargets.Property,
         AllowMultiple=true
     )]

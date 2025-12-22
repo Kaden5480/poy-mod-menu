@@ -1,9 +1,12 @@
+using System.Reflection;
+
 using BepInEx.Configuration;
 using ModMenu.Config;
 using UILib.Notifications;
 
 namespace ModMenuExamples {
     [Category("Custom Category")]
+    [Listener(typeof(Config), nameof(Config.ClassListener))]
     [IncludeAll]
     internal class Config {
         [Category("Another category override")]
@@ -27,6 +30,10 @@ namespace ModMenuExamples {
             }
 
             return null;
+        }
+
+        private static void ClassListener(MemberInfo info, object value) {
+            Notifier.Notify("Mod Menu Examples", $"{info} changed to {value}");
         }
 
         private static void TestListener(float value) {

@@ -67,7 +67,7 @@ namespace ModMenu.Parsing {
          * <param name="instance">The instance to access this field with</param>
          */
         internal PlainField(ModInfo modInfo, FieldInfo info, object instance)
-            : base(modInfo, info.FieldType)
+            : base(modInfo, info, info.FieldType)
         {
             this.info = info;
             parentInstance = instance;
