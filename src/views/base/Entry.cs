@@ -361,6 +361,7 @@ namespace ModMenu.Views {
             area.Add(labelArea);
 
             SmallLabel label = new SmallLabel(name, 25);
+            label.text.verticalOverflow = VerticalWrapMode.Overflow;
             label.SetFill(FillType.All);
             if (metaData != null) {
                 label.SetTooltip(metaData.description);
