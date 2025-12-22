@@ -60,10 +60,15 @@ namespace ModMenu {
                 listing.SetFill(FillType.All);
 
                 // The name of the mod
+                Area nameArea = new Area(350f, 40f);
+                nameArea.SetContentLayout(LayoutType.Vertical);
+                nameArea.SetElementAlignment(AnchorType.MiddleRight);
+                listing.Add(nameArea);
+
                 Label name = new Label($"{modInfo.name} ({modInfo.version})", 25);
-                name.SetAlignment(AnchorType.MiddleRight);
-                name.SetSize(350f, 40f);
-                listing.Add(name);
+                name.SetFill(FillType.All);
+                name.SetTooltip(modInfo.description);
+                nameArea.Add(name);
 
                 // The mod's edit button
                 Area buttonArea = new Area();
