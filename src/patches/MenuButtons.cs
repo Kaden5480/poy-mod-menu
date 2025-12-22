@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UEButton = UnityEngine.UI.Button;
 
+using UILib;
 using UILib.Notifications;
 
 namespace ModMenu.Patches {
@@ -81,6 +82,7 @@ namespace ModMenu.Patches {
             // Add a new button
             UEButton button = obj.AddComponent<UEButton>();
             button.onClick.AddListener(() => {
+                Audio.PlayNavigation();
                 EventSystem.current.SetSelectedGameObject(null);
                 if (Plugin.ui != null) {
                     Plugin.ui.Show();

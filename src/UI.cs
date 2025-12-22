@@ -98,6 +98,7 @@ namespace ModMenu {
                 new[] { Plugin.config.toggleKeybind }
             );
             toggleShortcut.onTrigger.AddListener(() => {
+                Audio.PlayNavigation();
                 ToggleVisibility();
             });
             UIRoot.AddShortcut(toggleShortcut);
@@ -204,6 +205,8 @@ namespace ModMenu {
             if (overlay.isVisible == false) {
                 return;
             }
+
+            Audio.PlayNavigation();
 
             // If on mod list view, close
             if (currentView == modListView) {
