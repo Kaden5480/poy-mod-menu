@@ -179,7 +179,6 @@ namespace ModMenu.Parsing {
          * <param name="category">The category the member is in</param>
          * <param name="member">The member to parse</param>
          * <param name="instance">The parent instance</param>
-         * <returns>The generated field, if valid</returns>
          */
         private void ParseMember<T>(string category, MemberInfo info, object instance) {
             BaseField field;
