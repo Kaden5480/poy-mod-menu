@@ -37,22 +37,28 @@ namespace ModMenu.Config {
 
         /**
          * <summary>
-         * Initializes a field attribute with a specified name.
+         * Initializes a field attribute with a specified name
+         * and optional description.
          * </summary>
          * <param name="name">The display name to use</param>
+         * <param name="description">The description to display in a tooltip</param>
          */
-        public FieldAttribute(string name) {
+        public FieldAttribute(string name, string description = null) {
             this.name = name;
+            this.description = description;
         }
 
         /**
          * <summary>
-         * Initializes a field attribute with a specified field type.
+         * Initializes a field attribute with a specified field type
+         * and an optional description.
          * </summary>
          * <param name="fieldType">The field type to use</param>
+         * <param name="description">The description to display in a tooltip</param>
          */
-        public FieldAttribute(FieldType fieldType) {
+        public FieldAttribute(FieldType fieldType, string description = null) {
             this.fieldType = fieldType;
+            this.description = description;
         }
 
         /**
@@ -65,6 +71,21 @@ namespace ModMenu.Config {
          */
         public FieldAttribute(string name, FieldType fieldType) {
             this.name = name;
+            this.fieldType = fieldType;
+        }
+
+        /**
+         * <summary>
+         * Initializes a field attribute with a specified
+         * name, description, and field type.
+         * </summary>
+         * <param name="name">The display name to use</param>
+         * <param name="description">The description to display in a tooltip</param>
+         * <param name="fieldType">The field type to use</param>
+         */
+        public FieldAttribute(string name, string description, FieldType fieldType) {
+            this.name = name;
+            this.description = description;
             this.fieldType = fieldType;
         }
 
@@ -86,10 +107,11 @@ namespace ModMenu.Config {
          * <summary>
          * A brief description of this field.
          *
+         * This will display in a tooltip.
+         *
          * Unspecified (null) descriptions behave like so:
          * - `ConfigEntry`: The description configured in the `ConfigEntry` will be used
          * - Plain: The description will be left blank
-         *
          * </summary>
          */
         public virtual string description {

@@ -26,11 +26,11 @@ namespace ModMenu {
 
         // Extra custom read-only fields
         [Category("Keybinds")]
-        [Field("Go Back")]
+        [Field("Go Back", "The keybind to go back")]
         private const string goBack = "Escape";
 
         [Category("Keybinds")]
-        [Field("Search")]
+        [Field("Search", "The keybind to start searching")]
         private const string search = "Ctrl + F";
 
         /**
