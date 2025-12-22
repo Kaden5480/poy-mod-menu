@@ -27,8 +27,8 @@ namespace ModMenu.Views {
          */
         internal Entry(BaseField field) {
             this.field = field;
-            component = BuildInputArea(field.name, BuildField(field));
             metaData = new MetaData(field);
+            component = BuildInputArea(field.name, BuildField(field));
         }
 
         /**
@@ -40,8 +40,8 @@ namespace ModMenu.Views {
          * <param name="metaData">The search metadata</param>
          */
         internal Entry(string name, UIComponent component, MetaData metaData) {
-            this.component = BuildInputArea(name, component);
             this.metaData = metaData;
+            this.component = BuildInputArea(name, component);
         }
 
         /**
@@ -52,8 +52,8 @@ namespace ModMenu.Views {
          * <param name="metaData">The search metadata</param>
          */
         internal Entry(UIComponent component, MetaData metaData) {
-            this.component = component;
             this.metaData = metaData;
+            this.component = component;
         }
 
         /**
@@ -353,11 +353,21 @@ namespace ModMenu.Views {
             area.SetContentLayout(LayoutType.Horizontal);
             area.SetElementSpacing(70);
 
-            SmallLabel label = new SmallLabel(name, 25);
-            label.SetSize(500f, 60f);
-            label.SetAlignment(AnchorType.MiddleRight);
-            area.Add(label);
+            // The title for the input
+            Area labelArea = new Area();
+            labelArea.SetSize(500f, 60f);
+            labelArea.SetContentLayout(LayoutType.Vertical);
+            labelArea.SetElementAlignment(AnchorType.MiddleRight);
+            area.Add(labelArea);
 
+            SmallLabel label = new SmallLabel(name, 25);
+            label.SetFill(FillType.All);
+            if (metaData != null) {
+                label.SetTooltip(metaData.description);
+            }
+            labelArea.Add(label);
+
+            // Add the input itself
             Area controlArea = new Area();
             controlArea.SetSize(500f, 60f);
             controlArea.Add(component);
