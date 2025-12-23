@@ -160,12 +160,14 @@ namespace ModMenu.Config {
          * <summary>
          * The default value.
          *
+         * Currently unused.
+         *
          * Unspecified (null) defaults behave like so:
          * - `ConfigEntry`: The default value configured in the `ConfigEntry` will be used
          * - Plain: There will be no default value
          * </summary>
          */
-        public virtual object defaultValue {
+        internal virtual object defaultValue {
             get => _defaultValue;
             set => _defaultValue = value;
         }
