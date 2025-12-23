@@ -103,13 +103,6 @@ namespace ModMenu {
 
         /**
          * <summary>
-         * A link to the source code for this mod.
-         * </summary>
-         */
-        public string sourceCode = null;
-
-        /**
-         * <summary>
          * This mod's license.
          * </summary>
          */

@@ -9,7 +9,7 @@ namespace ModMenu.Config {
      * Predicates *must* be static methods.
      *
      * When the predicate returns `null`, the field can be updated.
-     * Any valid string prevents the field from updating.
+     * If a string is returned, this prevents the field from updating.
      *
      * The predicate attribute takes a `type` and a `name`
      * indicating which type holds the predicate method

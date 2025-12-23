@@ -78,7 +78,7 @@ namespace ModMenu.Views {
 
         /**
          * <summary>
-         * Adds a UIComponent as a custom entry.
+         * Adds a `UIComponent` as a custom entry.
          * </summary>
          * <param name="entry">The entry to add</param>
          * <param name="metaData">Optional metdata to provide (for searching)</param>
@@ -104,11 +104,11 @@ namespace ModMenu.Views {
 
         /**
          * <summary>
-         * Adds a UIComponent under a given category.
+         * Adds a `UIComponent` under a given category.
          * </summary>
          * <param name="category">The name of the category to add under</param>
          * <param name="component">The component to add</param>
-         * <param name="metaData">Optional metadata to provide (for searching)</param>
+         * <param name="metaData">Optional metadata to provide</param>
          */
         public void Add(string category, UIComponent component, MetaData metaData = null) {
             if (metaData != null) {
@@ -119,15 +119,15 @@ namespace ModMenu.Views {
 
         /**
          * <summary>
-         * Adds a UIComponent under a given category with a specified name.
+         * Adds a `UIComponent` under a given category with a specified name.
          *
-         * This will display the provided UIComponent with a label, like other inputs
+         * This will display the provided `UIComponent` with a label, like other inputs
          * which Mod Menu generates.
          * </summary>
          * <param name="category">The name of the category to add under</param>
          * <param name="name">The name to display in the label</param>
          * <param name="component">The component to add</param>
-         * <param name="metaData">Optional metadata to provide (for searching)</param>
+         * <param name="metaData">Optional metadata to provide</param>
          */
         public void Add(string category, string name, UIComponent component, MetaData metaData = null) {
             if (metaData == null) {

@@ -23,7 +23,7 @@ namespace ModMenu.Views {
          * <summary>
          * Initializes metadata from a variety of tags.
          *
-         * Optionally, you can also provide a description, which
+         * Optionally, you can also provide a description which
          * will be displayed in a tooltip.
          * </summary>
          * <param name="tags">The tags to use</param>
@@ -70,7 +70,7 @@ namespace ModMenu.Views {
          * <summary>
          * Adds more tags to the metadata.
          * </summary>
-         * <param name="tags">The tags to add</params>
+         * <param name="tags">The tags to add</param>
          */
         public void Add(IList<string> tags) {
             if (tags == null) {

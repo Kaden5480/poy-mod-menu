@@ -12,6 +12,14 @@ using ModMenu.Parsing;
 using ModMenu.Views;
 
 namespace ModMenu {
+    /**
+     * <summary>
+     * Handles building and displaying a mod's config page.
+     *
+     * It's worth checking out <see cref="View"/> for the extra
+     * functionality this class provides.
+     * </summary>
+     */
     public class ModView : View {
         // The mod info
         private ModInfo modInfo;
