@@ -25,7 +25,7 @@ namespace ModMenu {
         internal static int cachedViews = 0;
 
         // The mod info
-        private ModInfo modInfo;
+        internal ModInfo modInfo { get; private set; }
 
         // The header and footer
         private UIComponent header;
@@ -262,6 +262,7 @@ namespace ModMenu {
          */
         internal override void Destroy() {
             base.Destroy();
+            modInfo.Destroy();
             cachedViews--;
         }
     }

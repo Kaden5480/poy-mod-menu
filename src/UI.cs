@@ -184,8 +184,17 @@ namespace ModMenu {
          * <param name="view">The mod to switch to</param>
          */
         internal void SwitchView(View view) {
+            // Hold the old view
             if (currentView != null) {
                 currentView.Hide();
+
+                // Check if the view should be destroyed
+                if (currentView != modListView
+                    && Plugin.config.cacheUIs.Value == false
+                ) {
+                    currentView.Destroy();
+                    modListView.UpdateCache();
+                }
             }
 
             currentView = view;

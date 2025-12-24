@@ -195,11 +195,6 @@ namespace ModMenu {
          * </summary>
          */
         private void Generate() {
-            if (config != null) {
-                logger.LogError("Config has already been generated");
-                return;
-            }
-
             config = new TypeParser(
                 this, configTypes, configObjects, configFiles
             ).Parse();
@@ -242,7 +237,6 @@ namespace ModMenu {
             }
 
             if (view != null) {
-                view.Destroy();
                 view = null;
             }
         }

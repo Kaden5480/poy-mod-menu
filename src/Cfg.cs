@@ -17,6 +17,9 @@ namespace ModMenu {
         [Field("Auto Search")]
         internal ConfigEntry<bool> autoSearch { get; private set; }
 
+        [Field("Cache UIs")]
+        internal ConfigEntry<bool> cacheUIs { get; private set; }
+
         [Field("Enable Thumbnail Downloads")]
         internal ConfigEntry<bool> enableThumbnailDownloads { get; private set; }
 
@@ -47,6 +50,10 @@ namespace ModMenu {
             autoSearch = configFile.Bind(
                 "General", "autoSearch", true,
                 "Whether to automatically search while typing the search query."
+            );
+            cacheUIs = configFile.Bind(
+                "General", "cacheUIs", true,
+                "Whether mod page UIs should be cached."
             );
 
             toggleKeybind = configFile.Bind(

@@ -62,6 +62,15 @@ namespace ModMenu {
 
         /**
          * <summary>
+         * Updates the cache label.
+         * </summary>
+         */
+        internal void UpdateCache() {
+            cachedLabel.SetText($"{ModView.cachedViews}");
+        }
+
+        /**
+         * <summary>
          * Builds the mod list view.
          * </summary>
          */
@@ -123,7 +132,7 @@ namespace ModMenu {
                 edit.onClick.AddListener(() => {
                     modInfo.Build(Plugin.ui);
                     Plugin.ui.SwitchView(modInfo.view);
-                    cachedLabel.SetText($"{ModView.cachedViews}");
+                    UpdateCache();
                 });
                 buttonArea.Add(edit);
 
@@ -141,10 +150,14 @@ namespace ModMenu {
          */
         private void ClearCache() {
             foreach (ModInfo info in ModManager.mods.Values) {
-                info.Destroy();
+                if (info.view == null) {
+                    continue;
+                }
+
+                info.view.Destroy();
             }
 
-            cachedLabel.SetText($"{ModView.cachedViews}");
+            UpdateCache();
         }
     }
 }
