@@ -144,12 +144,11 @@ namespace ModMenu.Views {
          * Builds a single info entry.
          * </summary>
          * <param name="title">The title of the entry</param>
-         * <param name="value">The value of the entry</param>
+         * <param name="valueComponent">The component to display</param>
          * <param name="titleLabel">The title label which was built</param>
-         * <param name="valueLabel">The value label which was built</param>
          * <returns>The entry which was built</returns>
          */
-        internal Area BuildInfoEntry(string title, string value, out Label titleLabel, out SmallLabel valueLabel) {
+        internal Area BuildInfoEntry(string title, UIComponent valueComponent, out Label titleLabel) {
             Area area = new Area();
             area.SetContentLayout(LayoutType.Horizontal);
             area.SetElementSpacing(70);
@@ -167,17 +166,44 @@ namespace ModMenu.Views {
             titleLabel.SetFill(FillType.Horizontal);
             titleArea.Add(titleLabel);
 
-            // and the corresponding value
+            // and the corresponding component
             Area valueArea = new Area(200f, 35f);
+            valueComponent.SetOffset(-50f, 0f);
+            valueArea.Add(valueComponent);
             area.Add(valueArea);
 
+            return area;
+        }
+
+        /**
+         * <summary>
+         * Builds a single info entry.
+         * </summary>
+         * <param name="title">The title of the entry</param>
+         * <param name="valueComponent">The component to display</param>
+         * <returns>The entry which was built</returns>
+         */
+        internal Area BuildInfoEntry(string title, UIComponent valueComponent) {
+            return BuildInfoEntry(title, valueComponent, out Label titleLabel);
+
+        }
+
+        /**
+         * <summary>
+         * Builds a single info entry.
+         * </summary>
+         * <param name="title">The title of the entry</param>
+         * <param name="value">The value of the entry</param>
+         * <param name="titleLabel">The title label which was built</param>
+         * <param name="valueLabel">The value label which was built</param>
+         * <returns>The entry which was built</returns>
+         */
+        internal Area BuildInfoEntry(string title, string value, out Label titleLabel, out SmallLabel valueLabel) {
             valueLabel = new SmallLabel(value, 25);
-            valueLabel.SetOffset(-50f, 0f);
             valueLabel.SetSize(0f, 35f);
             valueLabel.SetFill(FillType.Horizontal);
-            valueArea.Add(valueLabel);
 
-            return area;
+            return BuildInfoEntry(title, valueLabel, out titleLabel);
         }
 
         /**
