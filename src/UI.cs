@@ -38,7 +38,7 @@ namespace ModMenu {
         internal UI() {
             overlay = new Overlay(0f, 0f);
             overlay.SetFill(FillType.All);
-            overlay.SetSortable(false);
+            overlay.SetSortingMode(Overlay.SortingMode.Recede);
 
             // Lock navigation inputs
             overlay.SetLockMode(
