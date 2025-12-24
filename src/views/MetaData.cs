@@ -99,7 +99,15 @@ namespace ModMenu.Views {
          * <returns>Whether it matches</returns>
          */
         internal bool Matches(string query) {
-            return metadata.Contains(query) || description.ToLower().Contains(query);
+            if (metadata.Contains(query) == true) {
+                return true;
+            }
+
+            if (description != null) {
+                return description.ToLower().Contains(query);
+            }
+
+            return false;
         }
     }
 }
