@@ -141,6 +141,72 @@ namespace ModMenu.Views {
 
         /**
          * <summary>
+         * Builds a single info entry.
+         * </summary>
+         * <param name="title">The title of the entry</param>
+         * <param name="value">The value of the entry</param>
+         * <param name="titleLabel">The title label which was built</param>
+         * <param name="valueLabel">The value label which was built</param>
+         * <returns>The entry which was built</returns>
+         */
+        internal Area BuildInfoEntry(string title, string value, out Label titleLabel, out SmallLabel valueLabel) {
+            Area area = new Area();
+            area.SetContentLayout(LayoutType.Horizontal);
+            area.SetElementSpacing(70);
+            area.SetFill(FillType.All);
+
+            // Add a title
+            Area titleArea = new Area(200f, 35f);
+            titleArea.SetContentLayout(LayoutType.Vertical);
+            titleArea.SetElementAlignment(AnchorType.MiddleRight);
+            area.Add(titleArea);
+
+            titleLabel = new Label(title, 25);
+            titleLabel.SetSize(0f, 35f);
+            titleLabel.SetAlignment(AnchorType.MiddleRight);
+            titleLabel.SetFill(FillType.Horizontal);
+            titleArea.Add(titleLabel);
+
+            // and the corresponding value
+            Area valueArea = new Area(200f, 35f);
+            area.Add(valueArea);
+
+            valueLabel = new SmallLabel(value, 25);
+            valueLabel.SetOffset(-50f, 0f);
+            valueLabel.SetSize(0f, 35f);
+            valueLabel.SetFill(FillType.Horizontal);
+            valueArea.Add(valueLabel);
+
+            return area;
+        }
+
+        /**
+         * <summary>
+         * Builds a single info entry.
+         * </summary>
+         * <param name="title">The title of the entry</param>
+         * <param name="value">The value of the entry</param>
+         * <returns>The entry which was built</returns>
+         */
+        internal Area BuildInfoEntry(string title, string value) {
+            return BuildInfoEntry(title, value, out Label titleLabel, out SmallLabel valueLabel);
+        }
+
+        /**
+         * <summary>
+         * Builds a single info entry.
+         * </summary>
+         * <param name="title">The title of the entry</param>
+         * <param name="value">The value of the entry</param>
+         * <param name="valueLabel">The value label which was built</param>
+         * <returns>The entry which was built</returns>
+         */
+        internal Area BuildInfoEntry(string title, string value, out SmallLabel valueLabel) {
+            return BuildInfoEntry(title, value, out Label titleLabel, out valueLabel);
+        }
+
+        /**
+         * <summary>
          * Builds the info group.
          * </summary>
          */
@@ -221,6 +287,24 @@ namespace ModMenu.Views {
         internal virtual void BuildAll() {
             BuildBase();
             BuildSections();
+        }
+
+        /**
+         * <summary>
+         * Destroys this view.
+         * </summary>
+         */
+        internal virtual void Destroy() {
+            if (root != null) {
+                root.Destroy();
+            }
+
+            if (infoGroup != null) {
+                infoGroup.Destroy();
+            }
+
+            sections.Clear();
+            customEntries.Clear();
         }
 
         /**

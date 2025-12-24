@@ -21,6 +21,9 @@ namespace ModMenu {
      * </summary>
      */
     public class ModView : View {
+        // The number of cached views
+        internal static int cachedViews = 0;
+
         // The mod info
         private ModInfo modInfo;
 
@@ -70,33 +73,6 @@ namespace ModMenu {
          */
         public void SetFooter(UIComponent footer) {
             this.footer = footer;
-        }
-
-        /**
-         * <summary>
-         * Builds a single info entry.
-         * </summary>
-         * <param name="title">The title of the entry</param>
-         * <param name="value">The value of the entry</param>
-         * <returns>The entry which was built</returns>
-         */
-        private Area BuildInfoEntry(string title, string value) {
-            Area area = new Area();
-            area.SetContentLayout(LayoutType.Horizontal);
-            area.SetElementSpacing(10);
-            area.SetFill(FillType.All);
-
-            // Add a title
-            Label titleLabel = new Label(title, 25);
-            titleLabel.SetSize(100f, 30f);
-            area.Add(titleLabel);
-
-            // and the corresponding value
-            SmallLabel valueLabel = new SmallLabel(value, 25);
-            valueLabel.SetSize(100f, 30f);
-            area.Add(valueLabel);
-
-            return area;
         }
 
         /**
@@ -214,6 +190,8 @@ namespace ModMenu {
             // Apply the mod's theme
             root.SetTheme(modInfo.theme);
             infoGroup.SetTheme(modInfo.theme);
+
+            cachedViews++;
         }
 
         /**
@@ -275,6 +253,16 @@ namespace ModMenu {
                     field.Update();
                 }
             }
+        }
+
+        /**
+         * <summary>
+         * Destroys this view.
+         * </summary>
+         */
+        internal override void Destroy() {
+            base.Destroy();
+            cachedViews--;
         }
     }
 }

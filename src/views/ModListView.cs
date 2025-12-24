@@ -13,12 +13,52 @@ namespace ModMenu {
      * </summary>
      */
     internal class ModListView : View {
+        // Cached count label
+        private SmallLabel cachedLabel;
+
         /**
          * <summary>
          * Initializes the mod list view.
          * </summary>
          */
         internal ModListView() {}
+
+        /**
+         * <summary>
+         * Builds the info group for displaying
+         * current statistics.
+         * </summary>
+         */
+        private void BuildStats() {
+            // Make sure the info group exists
+            BuildInfoGroup();
+
+            // Add the title
+            Label title = new Label("Statistics", 35);
+            title.SetSize(340f, 40f);
+            info.Add(title);
+
+            info.Add(new Area(0f, 10f));
+
+            info.Add(BuildInfoEntry("Installed Mods", ModManager.mods.Count.ToString()));
+            info.Add(BuildInfoEntry(
+                "Cached Mods", $"{ModView.cachedViews}",
+                out Label cachedTitle, out cachedLabel
+            ));
+
+            cachedTitle.SetTooltip("The number of mod page UIs currently cached.");
+
+            info.Add(new Area(0f, 10f));
+
+            UIButton clearButton = new UIButton("Clear Cache", 25);
+            clearButton.SetTooltip("Clears all currently built mod page UIs.");
+            clearButton.SetSize(200f, 40f);
+            clearButton.onClick.AddListener(() => {
+                ClearCache();
+            });
+            info.Add(clearButton);
+
+        }
 
         /**
          * <summary>
@@ -41,6 +81,8 @@ namespace ModMenu {
             root.Add(spacing);
 
             BuildListings();
+
+            BuildStats();
         }
 
         /**
@@ -81,6 +123,7 @@ namespace ModMenu {
                 edit.onClick.AddListener(() => {
                     modInfo.Build(Plugin.ui);
                     Plugin.ui.SwitchView(modInfo.view);
+                    cachedLabel.SetText($"{ModView.cachedViews}");
                 });
                 buttonArea.Add(edit);
 
@@ -89,6 +132,19 @@ namespace ModMenu {
                 // Add the listing for searching
                 AddCustom(listing, new MetaData(modInfo));
             }
+        }
+
+        /**
+         * <summary>
+         * Clears the mod view cache.
+         * </summary>
+         */
+        private void ClearCache() {
+            foreach (ModInfo info in ModManager.mods.Values) {
+                info.Destroy();
+            }
+
+            cachedLabel.SetText($"{ModView.cachedViews}");
         }
     }
 }

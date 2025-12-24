@@ -210,14 +210,15 @@ namespace ModMenu {
          * Build the UI for this mod.
          * </summary>
          * <param name="ui">The UI to build onto</param>
+         * <returns>Whether the UI was built</returns>
          */
-        internal void Build(UI ui) {
+        internal bool Build(UI ui) {
             if (config == null) {
                 Generate();
             }
 
             if (view != null) {
-                return;
+                return false;
             }
 
             view = new ModView(this);
@@ -227,6 +228,23 @@ namespace ModMenu {
 
             // Fully build the UI
             view.BuildAll();
+            return true;
+        }
+
+        /**
+         * <summary>
+         * Destroys the cached config and UI for this mod.
+         * </summary>
+         */
+        internal void Destroy() {
+            if (config != null) {
+                config = null;
+            }
+
+            if (view != null) {
+                view.Destroy();
+                view = null;
+            }
         }
     }
 }
