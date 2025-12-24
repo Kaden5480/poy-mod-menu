@@ -4,6 +4,7 @@ using BepInEx;
 using UILib;
 using UILib.Components;
 using UILib.Layouts;
+using UILib.Patches;
 using UIButton = UILib.Components.Button;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -39,8 +40,10 @@ namespace ModMenu {
             overlay.SetFill(FillType.All);
             overlay.SetSortable(false);
 
-            // Lock vanilla inputs
-            overlay.SetInputLock(true);
+            // Lock navigation inputs
+            overlay.SetLockMode(
+                LockMode.Default | LockMode.Navigation
+            );
 
             background = new Image();
             background.SetFill(FillType.All);
