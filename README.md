@@ -49,7 +49,7 @@ dotnet build -c <configuration>
 ```
 
 ## Visual Studio build
-To build with Visual Studio, open ModMenu.sln and build by pressing ctrl + shift + b,
+To build with Visual Studio, open `ModMenu.sln` and build by pressing ctrl + shift + b,
 or by selecting Build -> Build Solution.
 
 ## Build configuration
@@ -59,7 +59,7 @@ The following can be configured:
 
 Note that both of these properties are optional.
 
-The configuration file must be in the root of this repository and must be called "Config.props".
+The configuration file must be in the root of this repository and must be called `Config.props`.
 ```xml
 <Project>
   <PropertyGroup>
