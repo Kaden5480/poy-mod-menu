@@ -93,6 +93,12 @@ namespace ModMenu {
             BuildListings();
 
             BuildStats();
+
+            // Prevent theme inheriting
+            root.SetInheritTheme(false);
+
+            // Attach to UI
+            Plugin.ui.scrollView.scrollContent.Add(root);
         }
 
         /**

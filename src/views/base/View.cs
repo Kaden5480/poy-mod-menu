@@ -266,10 +266,11 @@ namespace ModMenu.Views {
             info.SetElementSpacing(10);
             infoScroll.Add(info);
 
-            // Attach the info group to the main UI scroll view directly
-            infoGroup.gameObject.transform.SetParent(
-                Plugin.ui.scrollView.gameObject.transform, false
-            );
+            // Prevent theme inheriting
+            infoGroup.SetInheritTheme(false);
+
+            // Attach to UI
+            Plugin.ui.scrollView.AddDirect(infoGroup);
         }
 
         /**
@@ -299,10 +300,11 @@ namespace ModMenu.Views {
             root.SetContentPadding(top: 40, bottom: 40);
             root.SetElementSpacing(40);
 
+            // Prevent theme inheriting
+            root.SetInheritTheme(false);
+
             // Attach the root to the main UI scroll view
-            root.gameObject.transform.SetParent(
-                Plugin.ui.scrollView.scrollContent.gameObject.transform, false
-            );
+            Plugin.ui.scrollView.scrollContent.Add(root);
         }
 
         /**

@@ -167,11 +167,6 @@ namespace ModMenu {
             modListView = new ModListView();
             modListView.BuildAll();
 
-            // Add manually to prevent theme recursion
-            modListView.root.gameObject.transform.SetParent(
-                scrollView.scrollContent.gameObject.transform, false
-            );
-
             SwitchView(modListView);
         }
 
