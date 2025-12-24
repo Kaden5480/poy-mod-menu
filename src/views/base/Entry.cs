@@ -249,6 +249,11 @@ namespace ModMenu.Views {
             });
             area.Add(textField);
 
+            // Set the slider for whole number types
+            if (TypeChecks.IsInteger(field.type) == true) {
+                slider.UseWholeNumbers();
+            }
+
             return area;
         }
 
