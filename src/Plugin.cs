@@ -27,7 +27,7 @@ namespace ModMenu {
                 ui = new UI();
             });
 
-            SceneLoads.onLoad.AddListener(
+            SceneLoads.AddLoadListener(
                 Patches.MenuButtons.Inject
             );
 
