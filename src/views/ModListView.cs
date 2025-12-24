@@ -34,24 +34,25 @@ namespace ModMenu {
             BuildInfoGroup();
 
             // Add the title
-            Label title = new Label("Statistics", 35);
+            Label title = new Label("Mod Menu", 35);
             title.SetSize(340f, 40f);
             info.Add(title);
 
             info.Add(new Area(0f, 10f));
 
+            info.Add(BuildInfoEntry("Version", PluginInfo.PLUGIN_VERSION));
             info.Add(BuildInfoEntry("Installed Mods", ModManager.mods.Count.ToString()));
             info.Add(BuildInfoEntry(
-                "Cached Mods", $"{ModView.cachedViews}",
+                "Cached Pages", $"{ModView.cachedViews}",
                 out Label cachedTitle, out cachedLabel
             ));
 
-            cachedTitle.SetTooltip("The number of mod page UIs currently cached.");
+            cachedTitle.SetTooltip("The number of cached mod pages.");
 
             info.Add(new Area(0f, 10f));
 
             UIButton clearButton = new UIButton("Clear Cache", 25);
-            clearButton.SetTooltip("Clears all currently built mod page UIs.");
+            clearButton.SetTooltip("Clears all cached mod pages.");
             clearButton.SetSize(200f, 40f);
             clearButton.onClick.AddListener(() => {
                 ClearCache();
