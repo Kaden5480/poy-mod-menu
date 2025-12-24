@@ -76,7 +76,7 @@ namespace ModMenuExamples {
             ModInfo info = ModManager.Register(this);
             info.theme = customTheme;
             info.thumbnailUrl = "https://avatars.githubusercontent.com/u/67208843";
-            info.license = "GPLv3.0";
+            info.license = "GPL-3.0";
             info.description = "A mod for testing Mod Menu."
                 + " This provides a variety of examples demonstrating how"
                 + " you can interact with Mod Menu."
