@@ -53,7 +53,7 @@ namespace ModMenu {
 
             UIButton clearButton = new UIButton("Clear Cache", 25);
             clearButton.SetTooltip("Clears all cached mod pages.");
-            clearButton.SetSize(200f, 40f);
+            clearButton.SetSize(160f, 40f);
             clearButton.onClick.AddListener(() => {
                 ClearCache();
             });
