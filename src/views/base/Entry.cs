@@ -230,10 +230,13 @@ namespace ModMenu.Views {
             Slider slider = new Slider((float) field.min, (float) field.max);
             slider.SetValue((float) field.value);
             slider.SetSize(0.6f*compWidth, 10f);
-            slider.onValueChanged.AddListener((float value) => {
+            slider.onSubmit.AddListener((float value) => {
                 if (SetFieldValue(field, value) == true) {
                     textField.SetValue(field.ToString());
                 }
+            });
+            slider.onValueChanged.AddListener((float value) => {
+                textField.SetValue(value.ToString());
             });
 
             field.onValueChanged.AddListener((object value) => {
