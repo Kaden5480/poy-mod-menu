@@ -54,8 +54,8 @@ or by selecting Build -> Build Solution.
 
 ## Build configuration
 The following can be configured:
-- The path Peaks of Yore is installed at
-- Whether the mod should automatically install on build
+- The path Peaks of Yore is installed at.
+- Whether the mod should automatically install on build.
 
 Note that both of these properties are optional.
 
