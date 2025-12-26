@@ -43,6 +43,9 @@ namespace ModMenuExamples {
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> myFl;
 
+        [Field(FieldType.Slider, min=0f, max=100f)]
+        internal ConfigEntry<float> nullFloat;
+
         /**
          * <summary>
          * Predicates must take one argument of the same

@@ -9,6 +9,7 @@ using ModMenu.Config;
 
 namespace ModMenu.Parsing {
     internal class TypeParser {
+        private Logger logger = new Logger(typeof(TypeParser));
         private ModInfo modInfo;
 
         // Things to parse
@@ -191,6 +192,11 @@ namespace ModMenu.Parsing {
 
                 if (propInfo.PropertyType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
                     ConfigEntryBase entry = (ConfigEntryBase) propInfo.GetValue(instance);
+                    if (entry == null) {
+                        logger.LogError($"{info.Name}: this property isn't set to an instance, Mod Menu can't do anything with this");
+                        return null;
+                    }
+
                     category = entry.Definition.Section;
                     field = new BepInField(modInfo, info, entry);
                 }
@@ -204,6 +210,11 @@ namespace ModMenu.Parsing {
 
                 if (fieldInfo.FieldType.IsSubclassOf(typeof(ConfigEntryBase)) == true) {
                     ConfigEntryBase entry = (ConfigEntryBase) fieldInfo.GetValue(instance);
+                    if (entry == null) {
+                        logger.LogError($"{info.Name}: this field isn't set to an instance, Mod Menu can't do anything with this");
+                        return null;
+                    }
+
                     category = entry.Definition.Section;
                     field = new BepInField(modInfo, info, entry);
                 }
