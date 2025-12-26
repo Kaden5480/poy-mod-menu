@@ -25,7 +25,26 @@ namespace ModMenuExamples {
             config = new Config(this.Config);
 
             // Build the UI when UILib is ready
-            UIRoot.onInit.AddListener(BuildUI);
+            UIRoot.onInit.AddListener(() => {
+                BuildUI();
+
+                // Also assign a shortcut
+                Shortcut shortcut = new Shortcut(new[] { config.coolShortcut });
+                shortcut.onTrigger.AddListener(() => {
+                    Notifier.Notify("Mod Menu Example", "You pressed the shortcut!");
+                });
+                UIRoot.AddShortcut(shortcut);
+
+                // Note:
+                // This shortcut was made using a ConfigEntry. Any changes to
+                // the `Value` on the ConfigEntry will automatically update
+                // within the shortcut.
+                //
+                // So there is no reason to have a listener on the `coolShortcut` field
+                // to re-update the shortcut every time Mod Menu changes it.
+                //
+                // This helps simplify larger configs with many keybinds.
+            });
 
             // This is an example of how you could make Mod Menu
             // an optional dependency at runtime

@@ -3,6 +3,7 @@ using System.Reflection;
 using BepInEx.Configuration;
 using ModMenu.Config;
 using UILib.Notifications;
+using UnityEngine;
 
 namespace ModMenuExamples {
     // By default, category attributes applied to types
@@ -45,6 +46,13 @@ namespace ModMenuExamples {
 
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> nullFloat;
+
+        // Note:
+        // You don't need listeners to update shortcuts from UILib.
+        // Specifically if you provide the shortcut using `ConfigEntry` types.
+        // See Plugin.cs for more information.
+        [Field("Cool Shortcut")]
+        internal ConfigEntry<KeyCode> coolShortcut;
 
         /**
          * <summary>
@@ -118,6 +126,10 @@ namespace ModMenuExamples {
             myRandomInt = configFile.Bind(
                 "General", "random", 123,
                 "A random int."
+            );
+            coolShortcut = configFile.Bind(
+                "General", "coolShortcut", KeyCode.PageDown,
+                "A cool shortcut that sends a notification."
             );
         }
     }
