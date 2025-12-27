@@ -44,6 +44,8 @@ namespace ModMenuExamples {
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> myFl;
 
+        // Mod Menu doesn't work with null values, this will log
+        // an error as it's never assigned to in the Config constructor below.
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> nullFloat;
 
