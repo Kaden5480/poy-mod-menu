@@ -7,6 +7,7 @@ using UILib.Patches;
 using UnityEngine;
 
 namespace ModMenu {
+    [BepInDependency("com.github.Kaden5480.poy-ui-lib")]
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu", "Mod Menu", PluginInfo.PLUGIN_VERSION)]
     internal class Plugin : BaseUnityPlugin {
         internal static Plugin instance { get; private set; }
