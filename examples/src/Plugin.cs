@@ -11,6 +11,11 @@ using UIButton = UILib.Components.Button;
 using UnityEngine;
 
 namespace ModMenuExamples {
+    [BepInDependency("com.github.Kaden5480.poy-ui-lib")]
+    [BepInDependency(
+        "com.github.Kaden5480.poy-mod-menu",
+        BepInDependency.DependencyFlags.SoftDependency
+    )]
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu-examples", "Mod Menu Examples", "0.1.0")]
     internal class Plugin : BaseUnityPlugin {
         private Config config;
