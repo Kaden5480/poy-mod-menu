@@ -197,7 +197,9 @@ namespace ModMenu.Parsing {
                         return null;
                     }
 
-                    category = entry.Definition.Section;
+                    if (category == null) {
+                        category = entry.Definition.Section;
+                    }
                     field = new BepInField(modInfo, info, entry);
                 }
                 else {
@@ -215,7 +217,9 @@ namespace ModMenu.Parsing {
                         return null;
                     }
 
-                    category = entry.Definition.Section;
+                    if (category == null) {
+                        category = entry.Definition.Section;
+                    }
                     field = new BepInField(modInfo, info, entry);
                 }
                 else {
