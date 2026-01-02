@@ -179,11 +179,15 @@ namespace ModMenu.Parsing {
          * Parses a member, generating a BaseField.
          * </summary>
          * <param name="category">The category the member is in</param>
+         * <param name="canUpdateCategory">Whether the provided category can be changed</param>
          * <param name="member">The member to parse</param>
          * <param name="instance">The parent instance</param>
          * <returns>The field which was created if successful, null otherwise</returns>
          */
-        private BaseField ParseMember<T>(string category, MemberInfo info, object instance) {
+        private BaseField ParseMember<T>(
+            string category, bool canUpdateCategory,
+            MemberInfo info, object instance
+        ) {
             BaseField field;
 
             // Properties
@@ -197,9 +201,10 @@ namespace ModMenu.Parsing {
                         return null;
                     }
 
-                    if (category == null) {
+                    if (category == null || canUpdateCategory == true) {
                         category = entry.Definition.Section;
                     }
+
                     field = new BepInField(modInfo, info, entry);
                 }
                 else {
@@ -217,9 +222,10 @@ namespace ModMenu.Parsing {
                         return null;
                     }
 
-                    if (category == null) {
+                    if (category == null || canUpdateCategory == true) {
                         category = entry.Definition.Section;
                     }
+
                     field = new BepInField(modInfo, info, entry);
                 }
                 else {
@@ -273,11 +279,15 @@ namespace ModMenu.Parsing {
         private void ParseMembers<T>(Type type, object obj, IList<T> members) where T : MemberInfo {
             // If a CategoryAttribute doesn't exist, just default to the name of the type
             string category = type.Name;
+            bool canUpdateCategory = true;
 
             // Custom category name
             CategoryAttribute categoryAttr = GetAttr<CategoryAttribute>(type);
             if (categoryAttr != null) {
                 category = categoryAttr.name;
+
+                // Category attributes must take precedence
+                canUpdateCategory = false;
             }
 
             // IncludeAll
@@ -313,7 +323,7 @@ namespace ModMenu.Parsing {
 
                 // Try parsing the field
                 BaseField field = ParseMember<T>(
-                    category, info,
+                    category, canUpdateCategory, info,
                     (IsStatic<T>(info) == true) ? null : obj
                 );
 
