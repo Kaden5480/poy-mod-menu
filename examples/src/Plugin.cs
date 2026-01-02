@@ -85,7 +85,7 @@ namespace ModMenuExamples {
             customTheme.font               = arial;
             customTheme.fontAlt            = arial;
             customTheme.fontLineSpacing    = 1f;
-            customTheme.fontScaler         = 0.98f;
+            customTheme.fontScaler         = 0.90f;
             customTheme.fontScalerAlt      = 1f;
             customTheme.background         = Colors.HSL(240, 10, 10);
             customTheme.foreground         = Colors.HSL(240, 100, 90);
