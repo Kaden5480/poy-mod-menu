@@ -218,9 +218,9 @@ namespace ModMenu {
             }
 
             // Otherwise, update the texture and display it
-            thumbnail.SetTexture((
-                (DownloadHandlerTexture) request.downloadHandler
-            ).texture);
+            Texture2D tex = ((DownloadHandlerTexture) request.downloadHandler).texture;
+            tex.wrapMode = TextureWrapMode.Clamp;
+            thumbnail.SetTexture(tex);
             thumbnail.Show();
         }
 
