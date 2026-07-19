@@ -19,6 +19,7 @@ namespace ModMenuExamples {
     [BepInPlugin("com.github.Kaden5480.poy-mod-menu-examples", "Mod Menu Examples", "0.1.0")]
     internal class Plugin : BaseUnityPlugin {
         private Config config;
+        private Inherit inheritedConfig;
         private Window window;
 
         /**
@@ -28,6 +29,7 @@ namespace ModMenuExamples {
          */
         private void Awake() {
             config = new Config(this.Config);
+            inheritedConfig = new Inherit(this.Config);
 
             // Build the UI when UILib is ready
             UIRoot.onInit.AddListener(() => {
@@ -109,6 +111,7 @@ namespace ModMenuExamples {
 
             // Add some configs to display on the mod's config view
             info.Add(config);
+            info.Add(inheritedConfig);
             info.Add(typeof(StaticConfig));
 
             // You can also build in some extra custom components
