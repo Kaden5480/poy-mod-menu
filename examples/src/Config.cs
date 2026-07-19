@@ -44,10 +44,16 @@ namespace ModMenuExamples {
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> myFl;
 
+// Just disabling the warning for this, since it can be ignored
+// This is intentional as part of explaining ModMenu's behavior
+#pragma warning disable CS0649
+
         // Mod Menu doesn't work with null values, this will log
         // an error as it's never assigned to in the Config constructor below.
         [Field(FieldType.Slider, min=0f, max=100f)]
         internal ConfigEntry<float> nullFloat;
+
+#pragma warning restore CS0649
 
         // Note:
         // You don't need listeners to update shortcuts from UILib.
