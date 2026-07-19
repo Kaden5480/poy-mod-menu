@@ -347,6 +347,15 @@ namespace ModMenu.Parsing {
          * <param name="obj">The instance to generate config info for</param>
          */
         private void Parse(Type type, object obj) {
+            if (GetAttr<InheritFieldsAttribute>(type) != null) {
+                if (obj == null) {
+                    Plugin.LogError($"{type}: annotated with [InheritFields], but is static!");
+                }
+                else {
+                    Parse(type.BaseType, obj);
+                }
+            }
+
             // Parse fields and properties
             ParseMembers<FieldInfo>(type, obj, AccessTools.GetDeclaredFields(type));
             ParseMembers<PropertyInfo>(type, obj, AccessTools.GetDeclaredProperties(type));
