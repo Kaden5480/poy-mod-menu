@@ -101,11 +101,21 @@ namespace ModMenu.Parsing {
             this.value = value;
 
             foreach (MethodInfo listener in listeners) {
-                listener.Invoke(null, new[] { value });
+                if (listener.GetParameters().Length < 1) {
+                    listener.Invoke(null, new object[] {});
+                }
+                else {
+                    listener.Invoke(null, new[] { value });
+                }
             }
 
             foreach (MethodInfo listener in classListeners) {
-                listener.Invoke(null, new[] { memberInfo, value });
+                if (listener.GetParameters().Length < 1) {
+                    listener.Invoke(null, new object[] {});
+                }
+                else {
+                    listener.Invoke(null, new[] { memberInfo, value });
+                }
             }
         }
 

@@ -8,6 +8,9 @@ namespace ModMenu.Config {
      *
      * Listeners *must* be static methods.
      *
+     * Your listeners may take *zero arguments* if you wish not to
+     * receive any extra information about a config update, or:
+     *
      * For listener attributes applied to fields:
      * - They must take a single value, which must match the type of the field
      * - If you use a `ConfigEntry&lt;T&gt;`, Mod Menu will unwrap this type

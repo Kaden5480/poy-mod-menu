@@ -136,9 +136,18 @@ namespace ModMenu.Parsing {
                     attr.type, attr.name, new Type[] { field.type }, attr.generics
                 );
 
+                // Try another approach
                 if (method == null) {
-                    string listenerName = $"{attr.type}.{attr.name}.({field.type})";
+                    method = AccessTools.Method(
+                        attr.type, attr.name, new Type[] {}, attr.generics
+                    );
+                }
+
+                // See if method was found at all
+                if (method == null) {
+                    string listenerName = $"{attr.type}.{attr.name}";
                     Plugin.LogError($"{field.name}: Unable to find listener `{listenerName}`");
+                    continue;
                 }
 
                 field.AddListener(method);
@@ -300,9 +309,18 @@ namespace ModMenu.Parsing {
                     attr.type, attr.name, new[] { typeof(MemberInfo), typeof(object) }, attr.generics
                 );
 
+                // Try another approach
                 if (method == null) {
-                    string listenerName = $"{attr.type}.{attr.name}.(MemberInfo, object)";
+                    method = AccessTools.Method(
+                        attr.type, attr.name, new Type[] {}, attr.generics
+                    );
+                }
+
+                // See if method was found at all
+                if (method == null) {
+                    string listenerName = $"{attr.type}.{attr.name}";
                     Plugin.LogError($"{category}: Unable to find listener `{listenerName}`");
+                    continue;
                 }
 
                 listeners.Add(method);
