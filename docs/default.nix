@@ -13,6 +13,7 @@ in
             dotnet tool update --local docfx
         fi
 
+        dotnet tool restore
         dotnet docfx
         exit
         '';
