@@ -75,6 +75,69 @@ namespace ModMenu.Parsing {
 
         /**
          * <summary>
+         * Checks whether the parameters of a given method match
+         * the order and type of the provided arguments.
+         * </summary>
+         */
+        private static bool MatchMethodArgs(MethodInfo info, Type[] args) {
+            ParameterInfo[] @params = info.GetParameters();
+
+            if (@params.Length != args.Length) {
+                return false;
+            }
+
+            for (int i = 0; i < @params.Length; i++) {
+                if (@params[i].ParameterType != args[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * <summary>
+         * Gets a method from a given type with a specified name
+         * and provided generics.
+         * </summary>
+         */
+        private static MethodInfo GetMethod(
+            Type type,
+            string name,
+            Type[] args,
+            Type[] generics = null
+        ) {
+            MethodInfo info = null;
+            MethodInfo[] infos = type.GetMethods(BindingFlags.Instance
+                | BindingFlags.Static
+                | BindingFlags.Public
+                | BindingFlags.NonPublic
+            );
+
+            foreach (MethodInfo i in infos) {
+                if (i.Name.Equals(name) == false) {
+                    continue;
+                }
+
+                if (MatchMethodArgs(i, args) == true) {
+                    info = i;
+                    break;
+                }
+            }
+
+            if (info == null) {
+                return null;
+            }
+
+            if (generics != null) {
+                return info.MakeGenericMethod(generics);
+            }
+
+            return info;
+        }
+
+        /**
+         * <summary>
          * Parses extra metadata from attributes on a given field.
          * </summary>
          * <param name="field">The field to add metadata to</param>
@@ -132,13 +195,13 @@ namespace ModMenu.Parsing {
 
             // Extract listeners
             foreach (ListenerAttribute attr in GetAttrs<ListenerAttribute>(field.memberInfo)) {
-                MethodInfo method = AccessTools.Method(
+                MethodInfo method = GetMethod(
                     attr.type, attr.name, new Type[] { field.type }, attr.generics
                 );
 
                 // Try another approach
                 if (method == null) {
-                    method = AccessTools.Method(
+                    method = GetMethod(
                         attr.type, attr.name, new Type[] {}, attr.generics
                     );
                 }
@@ -305,13 +368,15 @@ namespace ModMenu.Parsing {
             // Find all listeners
             List<MethodInfo> listeners = new List<MethodInfo>();
             foreach (ListenerAttribute attr in GetAttrs<ListenerAttribute>(type)) {
-                MethodInfo method = AccessTools.Method(
-                    attr.type, attr.name, new[] { typeof(MemberInfo), typeof(object) }, attr.generics
+                MethodInfo method = GetMethod(
+                    attr.type, attr.name,
+                    new[] { typeof(MemberInfo), typeof(object) },
+                    attr.generics
                 );
 
                 // Try another approach
                 if (method == null) {
-                    method = AccessTools.Method(
+                    method = GetMethod(
                         attr.type, attr.name, new Type[] {}, attr.generics
                     );
                 }
